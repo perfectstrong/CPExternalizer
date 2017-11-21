@@ -1,0 +1,21 @@
+{
+  "name": "cpexternalizer",
+  "version": "0.0.1",
+  "description": "Simplify Adobe Captivate HTML5 exported module*",
+  "main": "cpext.js",
+  "scripts": {},
+  "keywords": [
+    "Adobe Captivate",
+    "HTML5"
+  ],
+  "author": "TRAN Quoc Nhat Han",
+  "license": "MIT",
+  "dependencies": {
+    "diff": "^3.4.0",
+    "js-beautify": "^1.7.4"
+  },
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/perfectstrong/CPExternalizer.git"
+  }
+}
