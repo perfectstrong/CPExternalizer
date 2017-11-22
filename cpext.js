@@ -3,6 +3,7 @@ var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'));
 var beautify = require('js-beautify').js_beautify;
 var jsdiff = require('diff');
+const path = require('path');
 /**
  * Default options
  * @type {Object}
@@ -20,7 +21,6 @@ let options = {
      * @type {String}
      */
     sample: './resources/CPM-sample.js',
-    // sample: './test/2.js',
 
     /**
      * Location to store the output
@@ -30,10 +30,10 @@ let options = {
 };
 
 let settings = {
-    input: './test/CPM-A1.js',
+    // input: './test/CPM-A11.js',
     // input: './test/1.js',
-    outputCPProjInit: options.outputDir + 'CPProjInit.js',
-    outputAutoShape: options.outputDir + 'AutoShape.js'
+    // outputCPProjInit: options.outputDir + 'CPProjInit.js',
+    // outputAutoShape: options.outputDir + 'AutoShape.js'
 };
 
 // Custom style of log
@@ -110,6 +110,15 @@ function compare(sample, input) {
 ///////////////
 // Main body //
 ///////////////
+
+let args = process.argv.slice(2);
+let input = args[0];
+// let input = './test/1.js';
+// options.sample = './test/2.js';
+settings.input = input;
+settings.outputCPProjInit = options.outputDir + path.basename(input, path.extname(input)) + '-CPProjInit.js';
+settings.outputAutoShape = options.outputDir + path.basename(input, path.extname(input)) + '-AutoShape.js';
+
 Promise.all([prepare(options.sample, 'sample'), prepare(settings.input, 'input')])
     .then(function(array) {
         console.log('Data sample and input prepared.');
