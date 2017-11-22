@@ -2,7 +2,11 @@
 var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'));
 var beautify = require('js-beautify').js_beautify;
-var jsdiff = require('diff');
+// var jsdiff = require('diff');
+// var fdiff = require('fast-diff');
+// var pdiff = require('prettydiff').api;
+var tdiff = new (require('text-diff'))({timeout: 30});
+const path = require('path');
 /**
  * Default options
  * @type {Object}
@@ -20,7 +24,6 @@ let options = {
      * @type {String}
      */
     sample: './resources/CPM-sample.js',
-    // sample: './test/2.js',
 
     /**
      * Location to store the output
@@ -30,10 +33,10 @@ let options = {
 };
 
 let settings = {
-    input: './test/CPM-A1.js',
+    // input: './test/CPM-A11.js',
     // input: './test/1.js',
-    outputCPProjInit: options.outputDir + 'CPProjInit.js',
-    outputAutoShape: options.outputDir + 'AutoShape.js'
+    // outputCPProjInit: options.outputDir + 'CPProjInit.js',
+    // outputAutoShape: options.outputDir + 'AutoShape.js'
 };
 
 // Custom style of log
@@ -92,17 +95,34 @@ function prepare(filepath, tag) {
 function compare(sample, input) {
     // Comparing those 2 data
     console.log('Comparing data...');
-    var diff = jsdiff.diffTrimmedLines(sample, input)
-        .filter(part => part.added)
+    // var diff = jsdiff.diffLines(sample, input)
+    //     .filter(part => part.added)
+    //     .map((part) => {
+    //         return part.value;
+    //     });
+    // var diff = fdiff(sample, input)
+    //     .filter(part => part[0] === 1)
+    //     .map((part) => {
+    //         return part[1];
+    //     });
+    // var diff = pdiff({
+    //     source: sample,
+    //     diff: input,
+    //     lang: 'javascript',
+    //     diffspaceignore: true,
+    // });
+    var diff = tdiff.main(sample, input)
+        .filter(part => part[0] === 1)
         .map((part) => {
-            return part.value;
+            return part[1];
         });
+    console.log(diff.length);
     // There will be two elements of differences
     // The first contains general objects defined in module
     // The second contains shapes' definition
     return Promise.resolve({
-        CPProjInit: diff[0],
-        AutoShape: diff[1]
+        CPProjInit: diff.shift() || '',
+        AutoShape: diff.join('\r\n') || ''
     });
 }
 
@@ -110,10 +130,25 @@ function compare(sample, input) {
 ///////////////
 // Main body //
 ///////////////
+
+let args = process.argv.slice(2);
+let input = args[0];
+// input = './test/a.js';
+// options.sample = './test/b.js';
+settings.input = input;
+settings.outputCPProjInit = options.outputDir + path.basename(input, path.extname(input)) + '-CPProjInit.js';
+settings.outputAutoShape = options.outputDir + path.basename(input, path.extname(input)) + '-AutoShape.js';
+
 Promise.all([prepare(options.sample, 'sample'), prepare(settings.input, 'input')])
     .then(function(array) {
         console.log('Data sample and input prepared.');
-        return compare(array[0], array[1]);
+        return exportData(array[1], './test/input-beautified.js','input')
+        .then(function () {
+            return exportData(array[0], './test/sample-beautified.js', 'sample');
+        })
+        .then(function () {
+            return compare(array[0], array[1]);
+        });
     })
     .then(function(ingredients) {
         return Promise.all([
@@ -121,7 +156,7 @@ Promise.all([prepare(options.sample, 'sample'), prepare(settings.input, 'input')
             .then(function(CPProjInit) {
                 return exportData(CPProjInit, settings.outputCPProjInit, 'CPProjInit');
             }),
-            normalize(ingredients.AutoShape)
+            normalize(ingredients.AutoShape, 'AutoShape')
             .then(function(AutoShape) {
                 return exportData(AutoShape, settings.outputAutoShape, 'AutoShape');
             })

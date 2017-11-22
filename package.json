@@ -13,7 +13,10 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "diff": "^3.4.0",
-    "js-beautify": "^1.7.4"
+    "fast-diff": "^1.1.2",
+    "js-beautify": "^1.7.4",
+    "prettydiff": "^99.0.1",
+    "text-diff": "^1.0.1"
   },
   "repository": {
     "type": "git",
