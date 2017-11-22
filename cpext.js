@@ -101,8 +101,8 @@ function compare(sample, input) {
     // The first contains general objects defined in module
     // The second contains shapes' definition
     return Promise.resolve({
-        CPProjInit: diff[0],
-        AutoShape: diff[1]
+        CPProjInit: diff[0] || '',
+        AutoShape: diff[1] || ''
     });
 }
 
@@ -113,7 +113,7 @@ function compare(sample, input) {
 
 let args = process.argv.slice(2);
 let input = args[0];
-// let input = './test/1.js';
+// input = './test/1.js';
 // options.sample = './test/2.js';
 settings.input = input;
 settings.outputCPProjInit = options.outputDir + path.basename(input, path.extname(input)) + '-CPProjInit.js';
@@ -130,7 +130,7 @@ Promise.all([prepare(options.sample, 'sample'), prepare(settings.input, 'input')
             .then(function(CPProjInit) {
                 return exportData(CPProjInit, settings.outputCPProjInit, 'CPProjInit');
             }),
-            normalize(ingredients.AutoShape)
+            normalize(ingredients.AutoShape, 'AutoShape')
             .then(function(AutoShape) {
                 return exportData(AutoShape, settings.outputAutoShape, 'AutoShape');
             })
