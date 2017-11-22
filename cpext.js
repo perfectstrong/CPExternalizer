@@ -2,10 +2,7 @@
 var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'));
 var beautify = require('js-beautify').js_beautify;
-// var jsdiff = require('diff');
-// var fdiff = require('fast-diff');
-// var pdiff = require('prettydiff').api;
-var tdiff = new (require('text-diff'))({timeout: 30});
+var jsdiff = require('diff');
 const path = require('path');
 /**
  * Default options
@@ -133,8 +130,8 @@ function compare(sample, input) {
 
 let args = process.argv.slice(2);
 let input = args[0];
-// input = './test/a.js';
-// options.sample = './test/b.js';
+// input = './test/1.js';
+// options.sample = './test/2.js';
 settings.input = input;
 settings.outputCPProjInit = options.outputDir + path.basename(input, path.extname(input)) + '-CPProjInit.js';
 settings.outputAutoShape = options.outputDir + path.basename(input, path.extname(input)) + '-AutoShape.js';
