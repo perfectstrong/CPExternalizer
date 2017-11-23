@@ -2,8 +2,9 @@
 var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'));
 var beautify = require('js-beautify').js_beautify;
-var jsdiff = require('diff');
+var tdiff = new (require('text-diff'))();
 const path = require('path');
+const markLine = 'cp.sbw = 0;';
 /**
  * Default options
  * @type {Object}
@@ -89,38 +90,34 @@ function prepare(filepath, tag) {
         });
 }
 
-function compare(sample, input) {
-    // Comparing those 2 data
-    console.log('Comparing data...');
-    // var diff = jsdiff.diffLines(sample, input)
-    //     .filter(part => part.added)
-    //     .map((part) => {
-    //         return part.value;
-    //     });
-    // var diff = fdiff(sample, input)
-    //     .filter(part => part[0] === 1)
-    //     .map((part) => {
-    //         return part[1];
-    //     });
-    // var diff = pdiff({
-    //     source: sample,
-    //     diff: input,
-    //     lang: 'javascript',
-    //     diffspaceignore: true,
-    // });
-    var diff = tdiff.main(sample, input)
-        .filter(part => part[0] === 1)
-        .map((part) => {
-            return part[1];
-        });
-    console.log(diff.length);
-    // There will be two elements of differences
-    // The first contains general objects defined in module
-    // The second contains shapes' definition
-    return Promise.resolve({
-        CPProjInit: diff.shift() || '',
-        AutoShape: diff.join('\r\n') || ''
-    });
+// function compare(sample, input) {
+//     // Comparing those 2 data
+//     console.log('Comparing data...');
+//     var diff = tdiff.main(sample, input)
+//         .filter(part => part[0] === 1)
+//         .map((part) => {
+//             return part[1];
+//         });
+//     console.log(diff.length);
+//     // There will be two elements of differences
+//     // The first contains general objects defined in module
+//     // The second contains shapes' definition
+//     return Promise.resolve({
+//         CPProjInit: diff.shift() || '',
+//         AutoShape: diff.join('\r\n') || ''
+//     });
+// }
+
+function extract(data, tag) {
+    console.tlog(tag, 'Finding cut point...');
+    let cutPoint = data.indexOf(markLine);
+    if (cutPoint !== -1) {
+        console.tlog(tag, 'Cut point found:' + cutPoint);
+        console.tlog(tag, 'Extracting CPProjInit...');
+        return Promise.resolve(data.substring(0, cutPoint - 1));
+    } else {
+        return Promise.reject('Cut point not found.');
+    }
 }
 
 
@@ -136,33 +133,48 @@ settings.input = input;
 settings.outputCPProjInit = options.outputDir + path.basename(input, path.extname(input)) + '-CPProjInit.js';
 settings.outputAutoShape = options.outputDir + path.basename(input, path.extname(input)) + '-AutoShape.js';
 
-Promise.all([prepare(options.sample, 'sample'), prepare(settings.input, 'input')])
-    .then(function(array) {
-        console.log('Data sample and input prepared.');
-        return exportData(array[1], './test/input-beautified.js','input')
-        .then(function () {
-            return exportData(array[0], './test/sample-beautified.js', 'sample');
-        })
-        .then(function () {
-            return compare(array[0], array[1]);
-        });
+// Promise.all([prepare(options.sample, 'sample'), prepare(settings.input, 'input')])
+//     .then(function(array) {
+//         console.log('Data sample and input prepared.');
+//         return exportData(array[1], './test/input-beautified.js','input')
+//         .then(function () {
+//             return exportData(array[0], './test/sample-beautified.js', 'sample');
+//         })
+//         .then(function () {
+//             return compare(array[0], array[1]);
+//         });
+//     })
+//     .then(function(ingredients) {
+//         return Promise.all([
+//             normalize(ingredients.CPProjInit, 'CPProjInit')
+//             .then(function(CPProjInit) {
+//                 return exportData(CPProjInit, settings.outputCPProjInit, 'CPProjInit');
+//             }),
+//             normalize(ingredients.AutoShape, 'AutoShape')
+//             .then(function(AutoShape) {
+//                 return exportData(AutoShape, settings.outputAutoShape, 'AutoShape');
+//             })
+//         ]);
+//     })
+//     .then(function() {
+//         console.log('Comparision completed.');
+//     })
+//     .catch(function(reason) {
+//         console.log('Comparision failed.');
+//         console.error(reason);
+//     });
+
+prepare(settings.input, 'input')
+    .then(function (data) {
+        return extract(data, 'input');
     })
-    .then(function(ingredients) {
-        return Promise.all([
-            normalize(ingredients.CPProjInit, 'CPProjInit')
-            .then(function(CPProjInit) {
-                return exportData(CPProjInit, settings.outputCPProjInit, 'CPProjInit');
-            }),
-            normalize(ingredients.AutoShape, 'AutoShape')
-            .then(function(AutoShape) {
-                return exportData(AutoShape, settings.outputAutoShape, 'AutoShape');
-            })
-        ]);
+    .then(function (extraction) {
+        return exportData(extraction, settings.outputCPProjInit, 'CPProjInit');
     })
     .then(function() {
-        console.log('Comparision completed.');
+        console.tlog('input', 'Extraction completed.');
     })
     .catch(function(reason) {
-        console.log('Comparision failed.');
+        console.tlog('input', 'Extraction failed.');
         console.error(reason);
     });
