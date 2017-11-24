@@ -1,8 +1,8 @@
 /* jshint esversion: 6 */
-var Promise = require('bluebird');
-var fs = Promise.promisifyAll(require('fs'));
-var beautify = require('js-beautify').js_beautify;
-var tdiff = new (require('text-diff'))();
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs'));
+const beautify = require('js-beautify').js_beautify;
+const tdiff = new (require('text-diff'))();
 const path = require('path');
 const markLine = 'cp.sbw = 0;';
 /**

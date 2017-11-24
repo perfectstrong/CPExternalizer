@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.5.1",
+    "command-line-args": "^4.0.7",
     "js-beautify": "^1.7.4",
     "text-diff": "^1.0.1"
   },
