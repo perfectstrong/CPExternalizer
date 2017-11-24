@@ -7,7 +7,7 @@
 function tlog() {
 	let args = Array.from(arguments),
 		tag = args.shift();
-	console.log(tag + '::'  + args.join(' '));
+	console.log(tag + ' >>>>  '  + args.join(' '));
 }
 
 

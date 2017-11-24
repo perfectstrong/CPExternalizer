@@ -13,9 +13,9 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "command-line-args": "^4.0.7",
-    "diff": "^3.4.0",
     "js-beautify": "^1.7.4",
-    "sander": "^0.6.0"
+    "sander": "^0.6.0",
+    "text-diff": "^1.0.1"
   },
   "repository": {
     "type": "git",
