@@ -406,4 +406,4 @@
             this.tr && b.applyTransform(this.actualParent, this.tr)
         }
     }
-})(window.cp)
+})(window.cp);

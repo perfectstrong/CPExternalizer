@@ -90,23 +90,23 @@ function prepare(filepath, tag) {
         });
 }
 
-// function compare(sample, input) {
-//     // Comparing those 2 data
-//     console.log('Comparing data...');
-//     var diff = tdiff.main(sample, input)
-//         .filter(part => part[0] === 1)
-//         .map((part) => {
-//             return part[1];
-//         });
-//     console.log(diff.length);
-//     // There will be two elements of differences
-//     // The first contains general objects defined in module
-//     // The second contains shapes' definition
-//     return Promise.resolve({
-//         CPProjInit: diff.shift() || '',
-//         AutoShape: diff.join('\r\n') || ''
-//     });
-// }
+function compare(sample, input) {
+    // Comparing those 2 data
+    console.log('Comparing data...');
+    var diff = tdiff.main(sample, input)
+        .filter(part => part[0] === 1)
+        .map((part) => {
+            return part[1];
+        });
+    console.log(diff.length);
+    // There will be two elements of differences
+    // The first contains general objects defined in module
+    // The second contains shapes' definition
+    return Promise.resolve({
+        CPProjInit: diff.shift() || '',
+        AutoShape: diff.join('\r\n') || ''
+    });
+}
 
 function extract(data, tag) {
     console.tlog(tag, 'Finding cut point...');
@@ -178,3 +178,4 @@ prepare(settings.input, 'input')
         console.tlog('input', 'Extraction failed.');
         console.error(reason);
     });
+

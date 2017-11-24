@@ -51,3 +51,4 @@ cp.InteractiveItemQuestion.prototype.setQuestionSpecificScoreProperties = functi
     void 0 != a && (a.m_answerOrderArrayAsString = "")
 };
 cp.InteractiveItemQuestion.prototype.restoreFromQuestionSpecificScoreProperties = function() {
+};
