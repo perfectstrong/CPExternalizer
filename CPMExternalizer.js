@@ -3,13 +3,15 @@ const Promise = require('bluebird');
 const {
     exportData,
     importData,
-    importDataSync
+    importDataSync,
+    prepareData
 } = require('./util/IOPromise');
 const tdiff = new(require('text-diff'))({
     timeout: 0
 });
 const tlog = require('./util/tlog');
 const jsbeautify = require('./util/Normalizer').jsbeautify;
+
 /**
  * Extract the customized js code from assets/js/CPM.js
  * into CPProjInit.js and ExtraComponents.js
@@ -17,45 +19,36 @@ const jsbeautify = require('./util/Normalizer').jsbeautify;
 class CPMExternalizer {
     /**
      * Define a new processor
-     * @param  {String} samplePath Path to the sample CPM
-     * @param  {String} inputPath  Path to CPM.js to be compared
-     * @param  {Object} outputPath Where to save the result of CPProjInit and ExtraComponents
+     * @param {{srcPath: String, cpPath: String, xcomPath: String}} pathsDescriptior {srcPath: path to input file, cpPath: path to output CPProjInit, xcomPath: path to output ExtraComponents}
      */
-    constructor(samplePath, inputPath, outputPath) {
-        this.samplePath = samplePath;
-        this.inputPath = inputPath;
-        this.outputPath = outputPath;
+    constructor(pathsDescriptior) {
+        this.inputPath = pathsDescriptior.srcPath;
+        this.cpPath = pathsDescriptior.cpPath;
+        this.xcomPath = pathsDescriptior.xcomPath;
         this._cache = {};
     }
 
     /**
-     * Read data and beautify it
-     * @param  {String} filepath Path
-     * @param  {String} tag type of data
-     * @return {Promise}          Containing beautified data
+     * Prepare the input data
+     * @returns {Promise.<String>} beautified read input
+     * @memberof CPMExternalizer
      */
-    prepare(filepath, tag) {
-        tlog(tag, 'Preparing ' + filepath + '...');
+    prepareInput() {
         let self = this;
-        if (this._cache[filepath]) {
-            return Promise.resolve(self._cache[filepath]);
+        if (self._cache[self.inputPath]) {
+            return Promise.resolve(self._cache[self.inputPath]);
         } else {
-            return importData(filepath, tag)
-                .then(function(data) {
-                    return jsbeautify(data, tag);
-                })
+            return prepareData(self.inputPath, 'input')
                 .then(function(beautifiedData) {
-                    // Caching
-                    self._cache[filepath] = beautifiedData;
-                    tlog(tag, filepath + ' prepared.');
-                    return Promise.resolve();
+                    self._cache[self.inputPath] = beautifiedData;
+                    return Promise.resolve(beautifiedData);
                 });
         }
     }
 
-
     /**
      * Detect the initiation of module.
+     * @returns {Promise}
      */
     extractCPProjInit() {
         const markLine = 'cp.sbw = 0;';
@@ -64,7 +57,7 @@ class CPMExternalizer {
         /**
          * Extract CPProjInit
          * @param  {String} data Whole text of CPM.js
-         * @return {Promise}      
+         * @return {Promise.<String>}      
          */
         function extract(data) {
             tlog(cptag, 'Finding cut point...');
@@ -80,9 +73,11 @@ class CPMExternalizer {
 
         var self = this;
 
-        extract(self._cache[self.inputPath])
+        // Real work
+        return prepareInput()
+            .then(extract)
             .then(function(extraction) {
-                return exportData(extraction, self.outputPath.CPProjInit, cptag);
+                return exportData(extraction, self.cpPath, cptag);
             })
             .then(function() {
                 tlog(cptag, 'Extraction completed.');
@@ -94,9 +89,11 @@ class CPMExternalizer {
     }
 
     /**
-     * Detect the extra functions adding to CPM and writing it to a file.
+     * Detect the extra functions adding to CPM.
+     * @param {String} sample CPM-basic.js
+     * @returns {Promise}
      */
-    extractExtraComponents() {
+    extractExtraComponents(sample) {
 
         var self = this;
         const intag = self.inputPath + ':ExtraComponents';
@@ -104,7 +101,7 @@ class CPMExternalizer {
          * Compare to extract components
          * @param  {String} sample Sample resource
          * @param  {String} input  CPM.js to be compared
-         * @return {Promise}        {ExtraComponents: String}
+         * @return {Promise}        A string value
          */
         function compare(sample, input) {
             // Comparing those 2 data
@@ -122,12 +119,16 @@ class CPMExternalizer {
             return Promise.resolve(diff.join(' ') || '');
         }
 
-        compare(self._cache[self.samplePath], self._cache[self.inputPath])
+        // Real work
+        return prepareInput()
+            .then(function(input) {
+                return compare(sample, input);
+            })
             .then(function(components) {
                 return jsbeautify(components, intag);
             })
             .then(function(beautifiedComponents) {
-                return exportData(beautifiedComponents, self.outputPath.ExtraComponents, intag);
+                return exportData(beautifiedComponents, self.xcomPath, intag);
             })
             .then(function() {
                 tlog(intag, 'Components extracting completed.');

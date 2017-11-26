@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
 const tlog = require('./tlog');
 const sander = require('sander');
+const jsbeautify = require('./Normalizer').jsbeautify;
 
 /**
  * Export data
@@ -13,7 +14,7 @@ const sander = require('sander');
 function exportData(data, filepath, tag, encoding) {
     tlog(tag, 'Exporting data to ' + filepath);
     encoding = encoding || 'utf8';
-    return sander.writeFile(filepath, data, {encoding: encoding});
+    return sander.writeFile(filepath, data, { encoding: encoding });
 }
 
 /**
@@ -26,7 +27,7 @@ function exportData(data, filepath, tag, encoding) {
 function importData(filepath, tag, encoding) {
     tlog(tag, 'Reading data from ' + filepath + '...');
     encoding = encoding || 'utf8';
-    return sander.readFile(filepath, {encoding: encoding});
+    return sander.readFile(filepath, { encoding: encoding });
 }
 
 /**
@@ -37,13 +38,28 @@ function importData(filepath, tag, encoding) {
  * @return {Promise} Data
  */
 function importDataSync(filepath, tag, encoding) {
-	tlog(tag, 'Synchronously reading data from ' + filepath + '...');
+    tlog(tag, 'Synchronously reading data from ' + filepath + '...');
     encoding = encoding || 'utf8';
-    return sander.readFileSync(filepath, {encoding: encoding});
+    return sander.readFileSync(filepath, { encoding: encoding });
+}
+
+/**
+ * Read data and beautify it
+ * @param  {String} filepath Path
+ * @param  {String} tag type of data
+ * @return {Promise}          Beautified data
+ */
+function prepareData(filepath, tag) {
+    tlog(tag, 'Preparing ' + filepath + '...');
+    return importData(filepath, tag)
+        .then(function(data) {
+            return jsbeautify(data, tag);
+        });
 }
 
 module.exports = {
     exportData: exportData,
     importData: importData,
-    importDataSync: importDataSync
+    importDataSync: importDataSync,
+    prepareData: prepareData
 };
