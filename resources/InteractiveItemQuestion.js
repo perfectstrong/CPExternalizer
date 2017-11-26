@@ -50,4 +50,4 @@ cp.InteractiveItemQuestion.prototype.disableAllOptions = function() {
 cp.InteractiveItemQuestion.prototype.setQuestionSpecificScoreProperties = function(a) {
     void 0 != a && (a.m_answerOrderArrayAsString = "")
 };
-cp.InteractiveItemQuestion.prototype.restoreFromQuestionSpecificScoreProperties = function() {
+cp.InteractiveItemQuestion.prototype.restoreFromQuestionSpecificScoreProperties = function() {};

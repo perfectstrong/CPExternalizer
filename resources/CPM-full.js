@@ -13269,7 +13269,7 @@ Array.indexOf || (Array.prototype.indexOf = function(m) {
                         if (typeof g === "object")
                             for (var j in g) d.push(g[j]);
                         else d.push(g);
-                    (g = e.uImg) && d.push(g);
+                        (g = e.uImg) && d.push(g);
                     (g = e.hImg) && d.push(g);
                     (g = e.pImg) && d.push(g);
                     (g = e.imgf) &&
@@ -35778,7 +35778,8 @@ MediaPlayer.models.SessionToken.prototype = {
     getKeyStatuses: function() {
         return null;
     }
-};var msBeautify = msBeautify || {};
+};
+var msBeautify = msBeautify || {};
 (function(b) {
     function R(e, d, x) {
         var j, Y, i, d = b.extend(!0, {
@@ -36942,7 +36943,8 @@ MediaPlayer.models.SessionToken.prototype = {
         }
     });
     b.fn.msDropdown = b.fn.msDropDown
-})(jQuery);cp.AutoShape = function(c, a, d) {
+})(jQuery);
+cp.AutoShape = function(c, a, d) {
     function f(a, c, d) {
         e.AutoShapeState = 2;
         e.changeStateOnMouseEvents && e.changeStateOnMouseEvents("mousedown", d)
@@ -37926,7 +37928,8 @@ cp.AutoShape.prototype.HandleMouseEventOnStateItems = function(c, a, d) {
             asPartOfStateChange: !0
         })
     }
-};cp.AutoShape = function(c, a, d) {
+};
+cp.AutoShape = function(c, a, d) {
     function f(a, c, d) {
         e.AutoShapeState = 2;
         e.changeStateOnMouseEvents && e.changeStateOnMouseEvents("mousedown", d)
@@ -38910,7 +38913,8 @@ cp.AutoShape.prototype.HandleMouseEventOnStateItems = function(c, a, d) {
             asPartOfStateChange: !0
         })
     }
-};(function(a) {
+};
+(function(a) {
     a.HighlightBox = function(q, j) {
         a.HighlightBox.baseConstructor.call(this, q);
         this.baseItemBoundingRect = null;
@@ -39294,7 +39298,8 @@ cp.AutoShape.prototype.HandleMouseEventOnStateItems = function(c, a, d) {
                 ((c = a.D[this.parentDivName].selfAnimationScript) && eval(c), this.playEffectsOnStart = !1)
         }
     }
-})(window.cp);(function(a) {
+})(window.cp);
+(function(a) {
     a.Line = function(k, o) {
         a.Line.baseConstructor.call(this, k);
         this.baseItemBoundingRect = null;
@@ -39662,7 +39667,8 @@ cp.AutoShape.prototype.HandleMouseEventOnStateItems = function(c, a, d) {
             a.isVisible(this) && this.playEffectsOnStart && ((e = a.D[this.parentDivName].selfAnimationScript) && eval(e), this.playEffectsOnStart = !1)
         }
     }
-})(window.cp);(function(a) {
+})(window.cp);
+(function(a) {
     a.TypingText = function(g, f) {
         a.TypingText.baseConstructor.call(this, g, f);
         this.id = this.getAttribute("id");
@@ -39747,7 +39753,8 @@ cp.AutoShape.prototype.HandleMouseEventOnStateItems = function(c, a, d) {
             this.playKeyTap && a.movie.playKeyTap && a.movie.am.playKeyTap()
         }
     }
-})(window.cp);(function() {
+})(window.cp);
+(function() {
     var ENABLE_PPTX_LOGS = !0;
     (function() {
         function u() {
@@ -42314,7 +42321,8 @@ cp.AutoShape.prototype.HandleMouseEventOnStateItems = function(c, a, d) {
             j.AddExternalAudioCb(c.RegisterPPTXAudioCb)
         }
     })();
-})();(function(b) {
+})();
+(function(b) {
     b.WebObject = function(a, d) {
         b.WebObject.baseConstructor.call(this, a);
         this.baseItemBoundingRect = null;
@@ -42754,7 +42762,8 @@ cp.AutoShape.prototype.HandleMouseEventOnStateItems = function(c, a, d) {
             c.restore()
         }
     }
-})(window.cp);(function() {
+})(window.cp);
+(function() {
     function A(b, a, c, e, d, f) {
         for (var a = a.split(" "), g = "", h = 0; h < a.length; h++) {
             var k = a[h];
@@ -46786,7 +46795,8 @@ cp.AutoShape.prototype.HandleMouseEventOnStateItems = function(c, a, d) {
 cp.DDInteractionCallLaterData = function() {
     this.m_Function = null;
     this.m_Args = []
-};cp.QuizButtonCH = function(a) {
+};
+cp.QuizButtonCH = function(a) {
     if (!cp.disableInteractions) {
         a.stopPropagation && a.stopPropagation();
         var c = a.target.id,
@@ -47512,8 +47522,7 @@ cp.Question.prototype = {
         return a
     },
     setSelectedAnswers: function(a) {
-        this.m_selectedAnswersArr =
-            [];
+        this.m_selectedAnswersArr = [];
         this.m_selectedAnswersArr.push(a)
     },
     getAnswerOrder: function() {
@@ -48083,7 +48092,8 @@ cp.Question.prototype = {
             }
         }
     }
-};cp.MatchingItem = function(a, c) {
+};
+cp.MatchingItem = function(a, c) {
     cp.MatchingItem.baseConstructor.call(this, a, c);
     this.canvasDivName = this.getAttribute("cn");
     this.labelCanvasDivName = this.getAttribute("ln");
@@ -49421,7 +49431,8 @@ cp.MatchingQuestion.prototype.saveAnswerOrder = function() {
     }
     this.m_answerOrderArray = a;
     this.setSelectedAnswers()
-};cp.InteractiveItemQuestion = function(a, b) {
+};
+cp.InteractiveItemQuestion = function(a, b) {
     cp.InteractiveItemQuestion.baseConstructor.call(this, a, b);
     this.m_item = void 0
 };
@@ -49473,4 +49484,4 @@ cp.InteractiveItemQuestion.prototype.disableAllOptions = function() {
 cp.InteractiveItemQuestion.prototype.setQuestionSpecificScoreProperties = function(a) {
     void 0 != a && (a.m_answerOrderArrayAsString = "")
 };
-cp.InteractiveItemQuestion.prototype.restoreFromQuestionSpecificScoreProperties = function() {
+cp.InteractiveItemQuestion.prototype.restoreFromQuestionSpecificScoreProperties = function() {};
