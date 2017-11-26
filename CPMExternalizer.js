@@ -74,7 +74,7 @@ class CPMExternalizer {
         var self = this;
 
         // Real work
-        return prepareInput()
+        return self.prepareInput()
             .then(extract)
             .then(function(extraction) {
                 return exportData(extraction, self.cpPath, cptag);
@@ -90,10 +90,10 @@ class CPMExternalizer {
 
     /**
      * Detect the extra functions adding to CPM.
-     * @param {String} sample CPM-basic.js
+     * @param {String} preparedSample CPM-basic.js
      * @returns {Promise}
      */
-    extractExtraComponents(sample) {
+    extractExtraComponents(preparedSample) {
 
         var self = this;
         const intag = self.inputPath + ':ExtraComponents';
@@ -120,10 +120,8 @@ class CPMExternalizer {
         }
 
         // Real work
-        return prepareInput()
-            .then(function(input) {
-                return compare(sample, input);
-            })
+        return Promise.all([Promise.resolve(preparedSample), self.prepareInput()])
+            .spread(compare)
             .then(function(components) {
                 return jsbeautify(components, intag);
             })
