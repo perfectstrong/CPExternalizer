@@ -34,7 +34,7 @@ function importData(filepath, tag, encoding) {
  * Import data synchronously
  * @param  {String} input filepath
  * @param  {String} tag type of data
- * @param  {String} encoding
+ * @param  {String} [encoding=utf8]
  * @return {Promise} Data
  */
 function importDataSync(filepath, tag, encoding) {
