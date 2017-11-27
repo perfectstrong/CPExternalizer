@@ -19,7 +19,7 @@ function exportData(data, filepath, tag, encoding) {
 
 /**
  * Import data
- * @param  {String} input filepath
+ * @param  {String} filepath filepath
  * @param  {String} tag type of data
  * @param  {String} [encoding=utf8]
  * @return {Promise.<String>} Data
