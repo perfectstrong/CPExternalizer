@@ -67,21 +67,13 @@ const soundfixOptDef = [
     },
     {
         /**
-         * CPProjInit.js
+         * CPProjInit.js and/or directory to find CPProjInit.js
          */
-        name: 'cpfile',
-        alias: 'f',
+        name: 'src',
+        alias: 's',
         type: String,
-        multiple: true
-    },
-    {
-        /**
-         * Folder contains all modules.
-         */
-        name: 'cpdir',
-        alias: 'd',
-        type: String,
-        multiple: true
+        multiple: true,
+        defaultOption: true
     }
 ];
 
