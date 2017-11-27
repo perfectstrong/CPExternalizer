@@ -8,7 +8,7 @@ const jsbeautify = require('./Normalizer').jsbeautify;
  * @param  {String} data data to be written
  * @param  {String} input filepath
  * @param  {String} tag type of data
- * @param  {String} encoding
+ * @param  {String} [encoding=utf8]
  * @return {Promise} Data
  */
 function exportData(data, filepath, tag, encoding) {
@@ -21,8 +21,8 @@ function exportData(data, filepath, tag, encoding) {
  * Import data
  * @param  {String} input filepath
  * @param  {String} tag type of data
- * @param  {String} encoding
- * @return {Promise} Data
+ * @param  {String} [encoding=utf8]
+ * @return {Promise.<String>} Data
  */
 function importData(filepath, tag, encoding) {
     tlog(tag, 'Reading data from ' + filepath + '...');
@@ -35,7 +35,7 @@ function importData(filepath, tag, encoding) {
  * @param  {String} input filepath
  * @param  {String} tag type of data
  * @param  {String} [encoding=utf8]
- * @return {Promise} Data
+ * @return {String} Data
  */
 function importDataSync(filepath, tag, encoding) {
     tlog(tag, 'Synchronously reading data from ' + filepath + '...');
@@ -47,7 +47,7 @@ function importDataSync(filepath, tag, encoding) {
  * Read data and beautify it
  * @param  {String} filepath Path
  * @param  {String} tag type of data
- * @return {Promise}          Beautified data
+ * @return {Promise.<String>}          Beautified data
  */
 function prepareData(filepath, tag) {
     tlog(tag, 'Preparing ' + filepath + '...');
