@@ -2,19 +2,29 @@
  * Definition of options for extracing
  * @type {Array}
  */
-const extractOptDef = [{
+const extractOptDef = [
+    {
+        /**
+         * Exported CPM.js by Adobe Captivate
+         */
         name: 'src',
         type: String,
         multiple: true,
-        // defaultOption: true
+        defaultOption: true
     },
     {
+        /**
+         * Where to save
+         */
         name: 'outdir',
         type: String,
         alias: 'd',
         defaultValue: './'
     },
     {
+        /**
+         * Prefix of each output
+         */
         name: 'outprefix',
         type: String,
         alias: 'p',
@@ -22,12 +32,18 @@ const extractOptDef = [{
         defaultValue: []
     },
     {
+        /**
+         * Flag for extracting CPProjInit
+         */
         name: 'cpproj',
         type: Boolean,
         alias: 'c',
         defaultValue: true,
     },
     {
+        /**
+         * Flag for extracting ExtraComponents
+         */
         name: 'extracomp',
         type: Boolean,
         alias: 'x',
@@ -41,16 +57,29 @@ const extractOptDef = [{
  */
 const soundfixOptDef = [
     {
-        name: 'ulsrc',
+        /**
+         * Unit loader source path.
+         * Where the loader is.
+         */
+        name: 'ulpath',
+        alias: 'u',
         type: String
     },
     {
-        name: 'cpsrc',
+        /**
+         * CPProjInit.js
+         */
+        name: 'cpfile',
+        alias: 'f',
         type: String,
         multiple: true
     },
     {
+        /**
+         * Folder contains all modules.
+         */
         name: 'cpdir',
+        alias: 'd',
         type: String,
         multiple: true
     }
