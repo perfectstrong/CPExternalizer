@@ -3,12 +3,18 @@ const Promise = require('bluebird');
 const CPMExternalizer = require('./CPMExternalizer');
 const commandLineArgs = require('command-line-args');
 const prepareData = require('./util/IOPromise').prepareData;
+const commandLineCommands = require('command-line-commands');
 
-const optionsDefinition = [{
+const validCommands = [null, 'extract', 'soundfix', 'help'];
+/**
+ * Definition of options for extracing
+ * @type {Array}
+ */
+const extractOptDef = [{
         name: 'src',
         type: String,
         multiple: true,
-        defaultOption: true
+        // defaultOption: true
     },
     {
         name: 'outdir',
@@ -34,6 +40,27 @@ const optionsDefinition = [{
         type: Boolean,
         alias: 'x',
         defaultValue: false
+    }
+];
+
+/**
+ * Definition of options for fixing sound source
+ * @type {Object}
+ */
+const soundfixOptDef = [
+    {
+        name: 'ulsrc',
+        type: String
+    },
+    {
+        name: 'cpsrc',
+        type: String,
+        multiple: true
+    },
+    {
+        name: 'cpdir',
+        type: String,
+        multiple: true
     }
 ];
 
@@ -85,7 +112,20 @@ function initiateCPExts(inputs) {
 }
 
 // Parse the input command
-const cli = commandLineArgs(optionsDefinition);
+const {cmd, argv} = commandLineCommands(validCommands);
+switch(cmd) {
+    case null:
+    case 'extract':
+        break;
+    case 'soundfix':
+        break;
+    case 'help':
+        break;
+    default:
+        // call help
+}
+
+const cli = commandLineArgs(extractOptDef, {argv: argv});
 
 // Real work
 prepareData(settings.sample, 'sample')
