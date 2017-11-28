@@ -95,7 +95,7 @@ function extract(settings) {
  * @param {Array.<String>} srcPaths 
  * @returns {Promise.<Array<String>>}
  */
-function initiateCPSourceArray(srcPaths) {
+function initiateJSFilesArray(srcPaths) {
     /**
      * https://gist.github.com/kethinov/6658166 #reichert621
      * @param {String} dir A directory path
@@ -105,18 +105,12 @@ function initiateCPSourceArray(srcPaths) {
         try {
             return sander.readdirSync(dir)
                 .reduce((files, file) =>
-                    // Check if a directory
                     sander.statSync(path.join(dir, file)).isDirectory() ?
-                    // If yes, research in deep
                     files.concat(findJS(path.join(dir, file))) :
-                    // If no, it is a file
-                    // Check if it is js file
-                    path.extname(file).toLowerCase() === '.js' ?
-                    // If yes, pick it up
-                    files.concat(path.join(dir, file)) :
-                    // Otherwise, do nothing
-                    '', [])
+                    files.concat(path.join(dir, file)), [])
+                .filter(p => path.extname(p).toLowerCase() === '.js')
         } catch (error) {
+            console.log(error);
             return [];
         }
     };
@@ -140,14 +134,32 @@ function initiateCPSourceArray(srcPaths) {
 }
 
 /**
- * Fixing the path to audio source
+ * Check if the file is a cp initiator (containing CPProjInit)
  * 
+ * @param {String} text 
+ * @returns {Promise.<String>} text itself if true, otherwise ignore
+ */
+function checkCPProjInit(text) {
+    if (text.indexOf('cp.CPProjInit') > -1) {
+        return Promise.resolve(text);
+    } else {
+        return Promise.reject('');
+    }
+}
+
+/**
+ * Fixing the path to audio source. If src path is not a cpprojinit, it will be ignored.
+ * 
+ * @param {String} text content of file (should be verified by checkCPProjInit beforehand)
  * @param {String} srcPath source path
  * @param {String} ulPath unit loader path
+ * @returns {Promise.<String>} data after fixing all audio source
  */
-function replaceAudioSrc(srcPath, ulPath) {
+function replaceAudioSrc(text, srcPath, ulPath) {
 
     /**
+     * Calculate the difference in path
+     * 
      * @param {String} from 
      * @param {String} to 
      * @returns {Promise.<String>}
@@ -171,10 +183,10 @@ function replaceAudioSrc(srcPath, ulPath) {
      * @returns {Promise.<String>}
      */
     function replace(text, diffpath) {
-        return Promise.resolve(text.replace(/src(\s*:\s*)'(ar\/.*)'/gi, "src$1'" + diffpath + "/$2'"));
+        return Promise.resolve(text.replace(/src(\s*:\s*)'.*(ar\/.*)'/gi, "src$1'" + diffpath + "/$2'"));
     }
 
-    return Promise.all([io.importData(srcPath, 'input'), diffpath(ulPath, srcPath)]).spread(replace);
+    return diffpath(ulPath, srcPath).then((dp) => replace(text, dp));
 }
 
 /**
@@ -182,26 +194,25 @@ function replaceAudioSrc(srcPath, ulPath) {
  * 
  * @param {Object} settings parsed options from command
  * @param {Array.<String>} settings.src file path or directory to find CPProjInit
+ * @param {String} settings.ulpath file path or directory of common unit loader
  */
 function soundfix(settings) {
-    initiateCPSourceArray(settings.src)
-        .then(function (jspaths) {
-            console.log('JS files picked up:');
-            console.log(jspaths);
-            Promise.all(
-                jspaths.map((p) =>
-                    replaceAudioSrc(p, settings.ulpath)
-                    .then((fixedData) => {
-                        // Write data
-                        return io.exportData(fixedData, p, 'output');
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        return Promise.resolve('');
-                    }))
-            );
-        })
-        .catch(console.log);
+    initiateJSFilesArray(settings.src)
+        .then(
+            (jspaths) => Promise.all(
+                jspaths.map(
+                    p => io.importData(p, 'input').then(checkCPProjInit).then(
+                        // If a cpprojinit
+                        // Fix it and export it
+                        (text) => replaceAudioSrc(text, p, settings.ulpath).then((fixedData) => io.exportData(fixedData, p, 'output')),
+                        // Else
+                        // Do nothing
+                        () => {}
+                    )
+                )
+            )
+        )
+        .catch(console.error);
 }
 
 ////////////////////////////////////////////////////////////
@@ -211,8 +222,7 @@ function soundfix(settings) {
 ////////////////////////////////////////////////////////////
 
 function help() {
-    const sections = [
-        {
+    const sections = [{
             header: 'CPExternalizer',
             content: 'A piece of code to slim down HTML5 module exported by [bold]{Adobe Captivate}.'
         },
@@ -224,8 +234,7 @@ function help() {
         },
         {
             header: 'Command List',
-            content: [
-                {
+            content: [{
                     name: 'extract',
                     summary: 'Extracting CPProjInit (initiator of module) or/and Extra Components (questions, effects,etc.). This is the default command, executed when no specific command given.'
                 },
@@ -234,14 +243,14 @@ function help() {
                     summary: 'Fixing audio source in CPProjInit. Use it when the common loader does not find out the audio files.'
                 },
                 {
-                    name:'help',
+                    name: 'help',
                     summary: 'Manual of this tool.'
                 }
             ]
         },
         {
             header: '[bold]{extract} options',
-            optionList : optdef.extract
+            optionList: optdef.extract
         },
         {
             header: '[bold]{soundfix} options',

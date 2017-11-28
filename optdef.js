@@ -51,7 +51,7 @@ const soundfixOptDef = [
         name: 'ulpath',
         alias: 'u',
         type: String,
-        description: 'Unit loader source path. Usually, the path from unit loader to module should be "down-straight", which means no [bold]{climb} up to any other directory.'
+        description: 'Unit loader path. Usually, the path from unit loader to module should be "down-straight", which means no [bold]{climb} up to any other directory.'
     },
     {
         name: 'src',
@@ -60,7 +60,7 @@ const soundfixOptDef = [
         multiple: true,
         defaultOption: true,
         defaultValue: [],
-        description: 'CPProjInit files and/or directories to find CPProjInit.'
+        description: 'Initiator files and/or directories to find initiators. Only accept js files containing "cp.ProjInit". All others are ignored. Advice: Follow the guideline about minimizing module.'
     }
 ];
 
