@@ -73,7 +73,8 @@ const soundfixOptDef = [
         alias: 's',
         type: String,
         multiple: true,
-        defaultOption: true
+        defaultOption: true,
+        defaultValue: []
     }
 ];
 
