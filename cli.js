@@ -2,7 +2,7 @@
 const commandLineArgs = require('command-line-args');
 const commandLineCommands = require('command-line-commands');
 const optdef = require('./optdef');
-const funcs = require('./funcs');
+const api = require('./api');
 const importDataSync = require('./util/iopromise').importDataSync;
 
 // Parse the input command
@@ -24,13 +24,13 @@ switch(command) {
     case null:
     case 'extract':
         // default action
-        funcs.extract(commandLineArgs(optdef.extract, {argv: argv}));
+        api.extract(commandLineArgs(optdef.extract, {argv: argv}));
         break;
     case 'soundfix':
-        funcs.soundfix(commandLineArgs(optdef.soundfix, {argv: argv}));
+        api.soundfix(commandLineArgs(optdef.soundfix, {argv: argv}));
         break;
     case 'help':
-        funcs.help();
+        api.help();
         break;
     default:
         // call help
