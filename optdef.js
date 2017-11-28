@@ -4,50 +4,41 @@
  */
 const extractOptDef = [
     {
-        /**
-         * Exported CPM.js by Adobe Captivate
-         */
         name: 'src',
+        alias: 's',
         type: String,
         multiple: true,
-        defaultOption: true
+        defaultOption: true,
+        description: 'File paths to exported CPM.js by Adobe Captivate'
     },
     {
-        /**
-         * Where to save
-         */
         name: 'outdir',
         type: String,
         alias: 'd',
-        defaultValue: './'
+        defaultValue: './',
+        description: 'Where to save output. Default is the current directory of cli.js'
     },
     {
-        /**
-         * Prefix of each output
-         */
         name: 'outprefix',
         type: String,
         alias: 'p',
         multiple: true,
-        defaultValue: []
+        defaultValue: [],
+        description: 'Prefix of each output. If not defined, it will be calculated automatically.'
     },
     {
-        /**
-         * Flag for extracting CPProjInit
-         */
         name: 'cpproj',
         type: Boolean,
         alias: 'c',
         defaultValue: true,
+        description: 'Flag for extracting CPProjInit. Default: [bold]{true}.'
     },
     {
-        /**
-         * Flag for extracting ExtraComponents
-         */
         name: 'extracomp',
         type: Boolean,
         alias: 'x',
-        defaultValue: false
+        defaultValue: false,
+        description: 'Flag for extracting ExtraComponents. Default: [bold]{false}.'
     }
 ];
 
@@ -57,24 +48,19 @@ const extractOptDef = [
  */
 const soundfixOptDef = [
     {
-        /**
-         * Unit loader source path.
-         * Where the loader is.
-         */
         name: 'ulpath',
         alias: 'u',
-        type: String
+        type: String,
+        description: 'Unit loader source path. Usually, the path from unit loader to module should be "down-straight", which means no [bold]{climb} up to any other directory.'
     },
     {
-        /**
-         * CPProjInit.js and/or directory to find CPProjInit.js
-         */
         name: 'src',
         alias: 's',
         type: String,
         multiple: true,
         defaultOption: true,
-        defaultValue: []
+        defaultValue: [],
+        description: 'CPProjInit files and/or directories to find CPProjInit.'
     }
 ];
 

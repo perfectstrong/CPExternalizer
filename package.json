@@ -14,7 +14,7 @@
     "bluebird": "^3.5.1",
     "command-line-args": "^4.0.7",
     "command-line-commands": "^2.0.1",
-    "commander": "^2.12.2",
+    "command-line-usage": "^4.0.1",
     "js-beautify": "^1.7.4",
     "sander": "^0.6.0",
     "text-diff": "^1.0.1"
