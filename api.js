@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 const Promise = require('bluebird');
-const CPMExternalizer = require('./CPMExternalizer');
-const io = require('./util/IOPromise');
+const CPMExternalizer = require('./util/cpmexternalizer');
+const io = require('./util/iopromise');
 const sander = require('sander');
 const path = require('path');
 

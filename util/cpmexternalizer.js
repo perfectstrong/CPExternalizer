@@ -5,12 +5,12 @@ const {
     importData,
     importDataSync,
     prepareData
-} = require('./util/IOPromise');
+} = require('./iopromise');
 const tdiff = new(require('text-diff'))({
     timeout: 0
 });
-const tlog = require('./util/tlog');
-const jsbeautify = require('./util/Normalizer').jsbeautify;
+const tlog = require('./tlog');
+const jsbeautify = require('./normalizer').jsbeautify;
 
 /**
  * Extract the customized js code from assets/js/CPM.js

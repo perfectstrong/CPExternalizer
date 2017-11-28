@@ -3,7 +3,7 @@ const commandLineArgs = require('command-line-args');
 const commandLineCommands = require('command-line-commands');
 const optdef = require('./optdef');
 const funcs = require('./funcs');
-const importDataSync = require('./util/IOPromise').importDataSync;
+const importDataSync = require('./util/iopromise').importDataSync;
 
 // Parse the input command
 const validCommands = [null, 'extract', 'soundfix', 'help'];
