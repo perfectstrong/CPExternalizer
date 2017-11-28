@@ -4,7 +4,6 @@ const CPMExternalizer = require('./CPMExternalizer');
 const io = require('./util/IOPromise');
 const sander = require('sander');
 const path = require('path');
-const find = require('find');
 
 ////////////////////////////////////////////////////////////
 // Extract
@@ -102,7 +101,7 @@ function initiateCPSourceArray(srcPaths) {
      */
     const findJS = (dir) => {
         try {
-            sander.readdirSync(dir)
+            return sander.readdirSync(dir)
                 .reduce((files, file) =>
                     // Check if a directory
                     sander.statSync(path.join(dir, file)).isDirectory() ?
@@ -110,7 +109,7 @@ function initiateCPSourceArray(srcPaths) {
                     files.concat(findJS(path.join(dir, file))) :
                     // If no, it is a file
                     // Check if it is js file
-                    path.extname(file) === 'js' ?
+                    path.extname(file).toLowerCase() === '.js' ?
                     // If yes, pick it up
                     files.concat(path.join(dir, file)) :
                     // Otherwise, do nothing
@@ -119,19 +118,20 @@ function initiateCPSourceArray(srcPaths) {
             return [];
         }
     };
+    console.log('Finding all js files...');
     let jspaths = [];
     srcPaths.forEach(p => {
         try {
-            sander.statSync(p).isDirectory ?
-                jspaths = jspaths.concat(findJS(p)) :
-                // Check if the file exists & it is a js file
-                (sander.existsSync(p) && path.extname(p) === 'js') ?
-                // If yes, pick it up
-                jspaths.push(p) :
-                // Else, do nothing
-                ''
+            console.log('Checking ' + p);
+            if (sander.statSync(p).isDirectory()) {
+                console.log(p + ' is a dir.');
+                jspaths = jspaths.concat(findJS(p));
+            } else if (path.extname(p).toLowerCase() === '.js') {
+                console.log(p + ' is a js file.');
+                jspaths.push(p);
+            }
         } catch (error) {
-            // Do nothing
+            console.log(error);
         }
     });
     return Promise.resolve(jspaths);
@@ -146,17 +146,19 @@ function initiateCPSourceArray(srcPaths) {
 function replaceAudioSrc(srcPath, ulPath) {
 
     /**
-     * Path to access to p2 from p1
-     * 
-     * @param {String} p1 
-     * @param {String} p2 
+     * @param {String} from 
+     * @param {String} to 
      * @returns {Promise.<String>}
      */
-    function diffpath(p1, p2) {
+    function diffpath(from, to) {
         function filterFilename(p) {
-            return p.replace(/[^\/.]*\.[^\/.]+/, "");
+            if (path.extname(p) !== '') {
+                return p.replace(path.basename(p), "");
+            } else {
+                return p;
+            }
         }
-        return Promise.resolve(path.relative(filterFilename(p1), filterFilename(p2)).replace(new RegExp('\\' + path.sep, 'g'), '/'));
+        return Promise.resolve(path.relative(filterFilename(from), filterFilename(to)).replace(new RegExp('\\' + path.sep, 'g'), '/'));
     }
 
     /**
@@ -167,10 +169,10 @@ function replaceAudioSrc(srcPath, ulPath) {
      * @returns {Promise.<String>}
      */
     function replace(text, diffpath) {
-        return Promise.resolve(text.replace(/src: '(ar\/.*)'/gi, "src: '" + diffpath + "/$1'"));
+        return Promise.resolve(text.replace(/src(\s*:\s*)'(ar\/.*)'/gi, "src$1'" + diffpath + "/$2'"));
     }
 
-    return Promise.all([io.importData(srcPath, 'input'), diffpath(srcPath, ulPath)]).spread(replace);
+    return Promise.all([io.importData(srcPath, 'input'), diffpath(ulPath, srcPath)]).spread(replace);
 }
 
 /**
@@ -182,6 +184,8 @@ function replaceAudioSrc(srcPath, ulPath) {
 function soundfix(settings) {
     initiateCPSourceArray(settings.src)
         .then(function (jspaths) {
+            console.log('JS files picked up:');
+            console.log(jspaths);
             Promise.all(
                 jspaths.map((p) =>
                     replaceAudioSrc(p, settings.ulpath)
