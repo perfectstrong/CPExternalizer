@@ -91,26 +91,50 @@ function extract(settings) {
 /**
  * Finding all CPProjInit files, which has .js and contains cp.CPProjInit
  * 
- * @param {Object} parsedOpt 
+ * @param {Array.<String>} srcPaths 
  * @returns {Promise.<Array<String>>}
  */
-function initiateCPSourceArray(parsedOpt) {
-    // WRITE ME
-    function walkSync(params) {
-        
-    }
-    let fpathsArray = [];
-    parsedOpt.forEach(p => {
-        if (path.extname(p) !== '') {
-            // If this is a file
-            path.extname(p) === 'js' ? fpathsArray.push(path.resolve(p)) : null;
-        } else {
-            // If this is a path
-            // We search in deep and find all js files
-            // WRITE ME
+function initiateCPSourceArray(srcPaths) {
+    /**
+     * https://gist.github.com/kethinov/6658166 #reichert621
+     * @param {String} dir A directory path
+     * @returns {Array.<String>} contains all js file path in dir
+     */
+    const findJS = (dir) => {
+        try {
+            sander.readdirSync(dir)
+                .reduce((files, file) =>
+                    // Check if a directory
+                    sander.statSync(path.join(dir, file)).isDirectory() ?
+                    // If yes, research in deep
+                    files.concat(findJS(path.join(dir, file))) :
+                    // If no, it is a file
+                    // Check if it is js file
+                    path.extname(file) === 'js' ?
+                    // If yes, pick it up
+                    files.concat(path.join(dir, file)) :
+                    // Otherwise, do nothing
+                    '', [])
+        } catch (error) {
+            return [];
+        }
+    };
+    let jspaths = [];
+    srcPaths.forEach(p => {
+        try {
+            sander.statSync(p).isDirectory ?
+                jspaths = jspaths.concat(findJS(p)) :
+                // Check if the file exists & it is a js file
+                (sander.existsSync(p) && path.extname(p) === 'js') ?
+                // If yes, pick it up
+                jspaths.push(p) :
+                // Else, do nothing
+                ''
+        } catch (error) {
+            // Do nothing
         }
     });
-    return Promise.resolve([''])
+    return Promise.resolve(jspaths);
 }
 
 /**
@@ -149,15 +173,21 @@ function replaceAudioSrc(srcPath, ulPath) {
     return Promise.all([io.importData(srcPath, 'input'), diffpath(srcPath, ulPath)]).spread(replace);
 }
 
+/**
+ * Fix the audio path in CPProjInit. All non-js files will be ignored.
+ * 
+ * @param {Object} settings parsed options from command
+ * @param {Array.<String>} settings.src file path or directory to find CPProjInit
+ */
 function soundfix(settings) {
-    initiateCPSourceArray(settings)
-        .then(function (srcPathArray) {
+    initiateCPSourceArray(settings.src)
+        .then(function (jspaths) {
             Promise.all(
-                srcPathArray.map((srcPath) =>
-                    replaceAudioSrc(srcPath, settings.ulpath)
+                jspaths.map((p) =>
+                    replaceAudioSrc(p, settings.ulpath)
                     .then((fixedData) => {
                         // Write data
-                        return io.exportData(fixedData, srcPath, 'output');
+                        return io.exportData(fixedData, p, 'output');
                     })
                     .catch((error) => {
                         console.log(error);
