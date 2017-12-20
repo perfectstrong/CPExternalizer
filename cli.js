@@ -4,6 +4,7 @@ const commandLineCommands = require('command-line-commands');
 const optdef = require('./optdef');
 const api = require('./api');
 const importDataSync = require('./util/iopromise').importDataSync;
+const tlog = require('./util/tlog');
 
 // Parse the input command
 const validCommands = [null, 'extract', 'soundfix', 'help'];
@@ -14,17 +15,17 @@ let settings = {};
 try {
     let d = importDataSync('./config.json', 'settings');
     settings = JSON.parse(d);
-    console.log('Settings loaded');
+    tlog('settings', 'Loaded.');
 } catch (error) {
-    console.log('Settings unloadable.');
-    console.error(error);
+    tlog('settings', 'Loading failed.');
+    tlog('error', error);
 }
 
 switch(command) {
     case null:
     case 'extract':
         // default action
-        api.extract(commandLineArgs(optdef.extract, {argv: argv}));
+        api.extract(commandLineArgs(optdef.extract, {argv: argv}), settings.samplePath);
         break;
     case 'soundfix':
         api.soundfix(commandLineArgs(optdef.soundfix, {argv: argv}));

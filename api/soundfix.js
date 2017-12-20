@@ -21,8 +21,8 @@ function initiateJSFilesArray(srcPaths) {
             return sander.readdirSync(dir)
                 .reduce((files, file) =>
                     sander.statSync(path.join(dir, file)).isDirectory() ?
-                    files.concat(findJS(path.join(dir, file))) :
-                    files.concat(path.join(dir, file)), [])
+                        files.concat(findJS(path.join(dir, file))) :
+                        files.concat(path.join(dir, file)), [])
                 .filter(p => path.extname(p).toLowerCase() === '.js')
         } catch (error) {
             console.log(error);
@@ -114,18 +114,18 @@ function replaceAudioSrc(text, srcPath, ulPath) {
 function soundfix(settings) {
     initiateJSFilesArray(settings.src)
         .then(
-            (jspaths) => Promise.all(
-                jspaths.map(
-                    p => io.importData(p, 'input').then(checkCPProjInit).then(
-                        // If a cpprojinit
-                        // Fix it and export it
-                        (text) => replaceAudioSrc(text, p, settings.ulpath).then((fixedData) => io.exportData(fixedData, p, 'output')),
-                        // Else
-                        // Do nothing
-                        () => {}
-                    )
+        (jspaths) => Promise.all(
+            jspaths.map(
+                p => io.importData(p, 'input').then(checkCPProjInit).then(
+                    // If a cpprojinit
+                    // Fix it and export it
+                    (text) => replaceAudioSrc(text, p, settings.ulpath).then((fixedData) => io.exportData(fixedData, p, 'output')),
+                    // Else
+                    // Do nothing
+                    () => { }
                 )
             )
+        )
         )
         .catch(console.error);
 }

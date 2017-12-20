@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 const getUsage = require('command-line-usage');
-const optdef = require('./optdef');
+const optdef = require('../optdef');
 
 function help() {
     const sections = [{
