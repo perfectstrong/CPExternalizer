@@ -101,7 +101,7 @@ class CPMExternalizer {
          * Compare to extract components
          * @param  {String} sample Sample resource
          * @param  {String} input  CPM.js to be compared
-         * @return {Promise}        A string value
+         * @return {Promise.String}
          */
         function compare(sample, input) {
             // Comparing those 2 data
@@ -123,10 +123,7 @@ class CPMExternalizer {
         return Promise.all([Promise.resolve(preparedSample), self.prepareInput()])
             .spread(compare)
             .then(function(components) {
-                return jsbeautify(components, intag);
-            })
-            .then(function(beautifiedComponents) {
-                return exportData(beautifiedComponents, self.xcomPath, intag);
+                return exportData(components, self.xcomPath, intag);
             })
             .then(function() {
                 tlog(intag, 'Components extracting completed.');
