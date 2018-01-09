@@ -60,28 +60,39 @@ function runExtraComponentsExtractor(cpext, arguments) {
 }
 
 /**
+ * Prepare the sample data. Return directly what has been cached for multiple parallel process.
+ * 
+ * @param {Object} arguments 
+ * @param {String} samplePath 
+ * @returns {Object} the arguments including the sample data (if loaded successuflly)
+ */
+function prepareSampleData(arguments, samplePath) {
+    if (arguments.cachedSampleData) {
+        return Promise.resolve(arguments);
+    } else {
+        return io.prepareData(samplePath, 'sample')
+            .then((sampleData) => {
+                // On success
+                // Caching sample data
+                arguments.cachedSampleData = sampleData;
+                return Promise.resolve(arguments);
+            })
+            .catch((reason) => {
+                console.log('CPM-sample.js cannot be loaded. This might cause problem for extracting ExtraComponents.');
+                console.error(reason);
+                return Promise.resolve(arguments);
+            });
+    }
+}
+
+/**
  * Extracting CPMProjInit and/or ExtraComponents
  * 
  * @param {Object} arguments configuration of extracting
  * @param {String} samplePath path to CPM-sample.js
  */
 function extract(arguments, samplePath) {
-    io.prepareData(samplePath, 'sample')
-        .catch((reason) => {
-            console.log('CPM-sample.js cannot be loaded. This might cause problem for extracting ExtraComponents.');
-            console.error(reason);
-            return Promise.reject('');
-        })
-        .then((sampleData) => {
-            // On success
-            // Caching sample data
-            arguments.cachedSampleData = sampleData;
-            return Promise.resolve(arguments);
-        }, () => {
-            // On failure
-            // Do nothing. Just redirect flow
-            return Promise.resolve(arguments);
-        })
+    prepareSampleData(arguments, samplePath)
         .then(initiateCPExtConfig)
         .then(initiateCPExts)
         .then((cpexts) => {
