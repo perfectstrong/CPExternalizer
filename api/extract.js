@@ -56,7 +56,7 @@ function runCPProjInitExtractor(cpext, arguments) {
  * @returns {Promise}
  */
 function runExtraComponentsExtractor(cpext, arguments) {
-    return arguments.extracomp ? cpext.extractExtraComponents(arguments.cachedSampleData) : Promise.resolve(false);
+    return arguments.extracomp && arguments.cachedSampleData ? cpext.extractExtraComponents(arguments.cachedSampleData) : Promise.resolve(false);
 }
 
 /**
@@ -97,7 +97,8 @@ function extract(arguments, samplePath) {
         .then(initiateCPExts)
         .then((cpexts) => {
             Promise.all(cpexts.map((cpext) => {
-                return runCPProjInitExtractor(cpext, arguments).then(() => runExtraComponentsExtractor(cpext, arguments));
+                return runCPProjInitExtractor(cpext, arguments)
+                    .then(() => runExtraComponentsExtractor(cpext, arguments));
             }));
         })
         .catch(console.error);
