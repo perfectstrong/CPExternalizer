@@ -2,6 +2,7 @@
 const Promise = require('bluebird');
 const CPMExternalizer = require('../util/cpmexternalizer');
 const io = require('../util/iopromise');
+const sander = require('sander');
 
 /**
  * Configuration sheet for cpexternalizer
@@ -101,6 +102,25 @@ function extract(arguments, samplePath) {
                     .then(() => runExtraComponentsExtractor(cpext, arguments));
             }));
         })
+        .catch(console.error);
+}
+
+function dirProcessing(dir) {
+    sander.lstat(dir).then((stat) => {
+        if (stat.isDirectory()) {
+            
+        }
+    })
+}
+
+/**
+ * Process a folder (exported by Adobe Captivate) and return a "slimmed down" one containing only CPProjInit.js, ar and dr.
+ * 
+ * @param {Object} arguments the parsed options
+ */
+function dirExtract(arguments) {
+    let dirList = arguments.src || [];
+    Promise.all(dirList.map(dirProcessing))
         .catch(console.error);
 }
 

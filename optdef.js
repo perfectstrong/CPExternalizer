@@ -43,6 +43,36 @@ const extractOptDef = [
 ];
 
 /**
+ * Definition of directory extracting
+ * @type {Array}
+ */
+const dirextractOptDef = [
+    {
+        name: 'src',
+        alias: 's',
+        type: String,
+        multiple: true,
+        defaultOption: true,
+        description: 'Path to directory of exported modules'
+    },
+    {
+        name: 'outdir',
+        type: String,
+        alias: 'd',
+        defaultValue: './',
+        description: 'Where to save output. Default is the current directory of cli.js'
+    },
+    {
+        name: 'outprefix',
+        type: String,
+        alias: 'p',
+        multiple: true,
+        defaultValue: [],
+        description: 'Prefix of each output. If not defined, it will be calculated automatically.'
+    }
+];
+
+/**
  * Definition of options for fixing sound source
  * @type {Array}
  */
