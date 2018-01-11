@@ -3,7 +3,7 @@ const Promise = require('bluebird');
 const CPMExternalizer = require('../util/cpmexternalizer');
 const io = require('../util/iopromise');
 const sander = require('sander');
-
+const path = require('path');
 /**
  * Configuration sheet for cpexternalizer
  * 
@@ -105,12 +105,27 @@ function extract(arguments, samplePath) {
         .catch(console.error);
 }
 
-function dirProcessing(dir) {
-    sander.lstat(dir).then((stat) => {
+function dirProcessing(dir, outdir) {
+    let dest;
+    return sander.lstat(dir).then((stat) => {
         if (stat.isDirectory()) {
-            
+            dest = outdir + path.sep + path.basename(dir);
+        } else {
+            throw new Error(dir + ' is not a directory.');
         }
-    })
+    }).then(() => {
+        // Create the new directory at output place
+        return sander.mkdir(dest);
+    }).then(() => {
+        // Copy audio files
+        return sander.copydir(dir + path.sep + 'ar').to(dest + path.sep + 'ar');
+    }).then(() => {
+        // Copy images
+        return sander.copydir(dir + path.sep + 'dr').to(dest + path.sep + 'dr');
+    }).then(() => {
+        // Process the CPM.js
+        // TODO
+    }).catch(console.error);
 }
 
 /**
