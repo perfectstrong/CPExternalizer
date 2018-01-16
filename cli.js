@@ -7,7 +7,7 @@ const importDataSync = require('./util/iopromise').importDataSync;
 const tlog = require('./util/tlog');
 
 // Parse the input command
-const validCommands = [null, 'extract', 'soundfix', 'help'];
+const validCommands = [null, 'extract', 'soundfix', 'help', 'dirext'];
 const {
     command,
     argv
@@ -25,11 +25,13 @@ try {
     console.error(error);
 }
 
+let parsedOptions = {};
+
 switch (command) {
     case null:
     case 'extract':
         // default action
-        let parsedOptions = commandLineArgs(optdef.extract, {
+        parsedOptions = commandLineArgs(optdef.extract, {
             argv: argv
         });
         api.extract(parsedOptions.src,
@@ -41,8 +43,18 @@ switch (command) {
             }
         );
         break;
+    case 'dirext':
+        parsedOptions = commandLineArgs(optdef.dirextract, {
+            argv: argv
+        });
+        api.dirextract(
+            parsedOptions.src,
+            parsedOptions.outdir,
+            parsedOptions.outprefix
+        );
+        break;
     case 'soundfix':
-        let parsedOptions = commandLineArgs(optdef.soundfix, {
+        parsedOptions = commandLineArgs(optdef.soundfix, {
             argv: argv
         });
         api.soundfix(

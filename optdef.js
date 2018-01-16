@@ -96,5 +96,6 @@ const soundfixOptDef = [
 
 module.exports = {
     extract: extractOptDef,
+    dirextract: dirextractOptDef,
     soundfix: soundfixOptDef
 };

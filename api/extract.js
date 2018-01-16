@@ -16,17 +16,18 @@ let cachedSampleData = '';
  * @returns {Array.<{srcPath: String, cpPath: String, xcomPath: String}>}
  */
 function initiateCPExtConfig(src, outdir, outprefixes) {
-    console.log('Initiating CPExternalizer configuration sheets...')
+    console.log('Initiating CPExternalizer configuration sheets...');
+    let inputs = [];
     let count = 0;
-    const defaultOutprefix = 'result';
-    let inputs = src.map((srcPath, pos) => {
-        let outprefix = outprefixes[pos] || defaultOutprefix + (count++),
-            cpname = outprefix + '-CPProjInit.js',
-            xcomname = outprefix + '-ExtraComponents.js';
+    const defaultOutprefix = 'Result';
+    inputs = src.map((srcPath, pos) => {
+        let outprefix = '', // outprefixes[pos] || defaultOutprefix + (count++),
+            cpname = outprefix + 'CPProjInit.js',
+            xcomname = outprefix + 'ExtraComponents.js';
         return {
-            srcPath: srcPath,
-            cpPath: outdir + cpname,
-            xcomPath: outdir + xcomname
+            srcPath: path.resolve(srcPath),
+            cpPath: path.resolve(outdir, cpname),
+            xcomPath: path.resolve(outdir, xcomname)
         };
     });
     console.log('CPExternalizer configuration sheets initiated.');
@@ -39,7 +40,7 @@ function initiateCPExtConfig(src, outdir, outprefixes) {
  * @returns {Array.<CPMExternalizer>}
  */
 function initiateCPExts(inputs) {
-    return inputs.map((cfg) => new CPMExternalizer(cfg));
+    return inputs.map(cfg => new CPMExternalizer(cfg));
 }
 
 /**
@@ -49,7 +50,11 @@ function initiateCPExts(inputs) {
  * @returns {Promise}
  */
 function runCPProjInitExtractor(cpext, cpproj) {
-    return cpproj ? cpext.extractCPProjInit() : '';
+    if (cpproj) {
+        return cpext.extractCPProjInit()
+    } else {
+        return Promise.resolve();
+    }
 }
 
 /**
@@ -59,7 +64,11 @@ function runCPProjInitExtractor(cpext, cpproj) {
  * @returns {Promise}
  */
 function runExtraComponentsExtractor(cpext, extracomp) {
-    return extracomp && cachedSampleData ? cpext.extractExtraComponents(cachedSampleData) : '';
+    if (extracomp && cachedSampleData) {
+        return cpext.extractExtraComponents(cachedSampleData);
+    } else {
+        return Promise.resolve();
+    }
 }
 
 /**
@@ -96,7 +105,13 @@ function prepareSampleData(samplePath) {
  * @param {Boolean} flags.extracomp Flag for extracting ExtraComponents. Default: false.
  */
 function extract(src, outdir, outprefix, samplePath, flags) {
-    prepareSampleData(samplePath)
+    flags = flags || {cpproj: true, extracomp: false};
+    Promise.resolve()
+        .then(() => {
+            if (samplePath) {
+                return prepareSampleData(samplePath);
+            }
+        })
         .then(() => initiateCPExtConfig(src, outdir, outprefix))
         .then(initiateCPExts)
         .then(cpexts =>
@@ -109,37 +124,45 @@ function extract(src, outdir, outprefix, samplePath, flags) {
         .catch(console.error);
 }
 
-function dirProcessing(dir, outdir) {
-    let dest;
-    return sander.lstat(dir).then((stat) => {
-        if (stat.isDirectory()) {
-            dest = outdir + path.sep + path.basename(dir);
-        } else {
-            throw new Error(dir + ' is not a directory.');
-        }
-    }).then(() => {
-        // Create the new directory at output place
-        return sander.mkdir(dest);
-    }).then(() => {
-        // Copy audio files
-        return sander.copydir(dir + path.sep + 'ar').to(dest + path.sep + 'ar');
-    }).then(() => {
-        // Copy images
-        return sander.copydir(dir + path.sep + 'dr').to(dest + path.sep + 'dr');
-    }).then(() => {
-        // Process the CPM.js
-        // TODO
-    }).catch(console.error);
+/**
+ * Treat the dir and push the result to dest
+ * 
+ * @param {String} dir 
+ * @param {String} dest 
+ * @returns 
+ */
+function dirProcessing(dir, dest) {
+    // Create the new directory at output place
+    return sander.mkdir(dest)
+        .then(() => {
+            tlog(dir, 'Copying audio files...');
+            sander.copydir(dir, 'ar').to(dest, 'ar');
+        }).then(() => {
+            tlog(dir, 'Copying images files...');
+            sander.copydir(dir, 'dr').to(dest, 'dr');
+        }).then(() => {
+            let cpmpath = path.resolve(dir, 'assets/js/CPM.js');
+            tlog(cpmpath, 'Processing...');
+            console.log(dest);
+            extract([cpmpath], dest, ['']);
+        }).catch(console.error);
 }
 
 /**
- * Process a folder (exported by Adobe Captivate) and return a "slimmed down" one containing only CPProjInit.js, ar and dr.
+ * Process folders (exported by Adobe Captivate) and return a "slimmed down" one containing only CPProjInit.js, ar and dr.
  * 
- * @param {Object} arguments the parsed options
+ * @param {Array.<String>} src input folders
+ * @param {String} outdir where to save
+ * @param {Array.<String>} outprefixes prefix of result. 'Result' by default.
  */
-function dirExtract(arguments) {
-    let dirList = arguments.src || [];
-    Promise.all(dirList.map(dirProcessing))
+function dirExtract(src, outdir, outprefixes) {
+    let configs = src.map((dir, pos) => {
+        return {
+            dir: dir,
+            dest: outdir + path.basename(dir)
+        };
+    });
+    Promise.all(configs.map(cfg => dirProcessing(cfg.dir, cfg.dest)))
         .catch(console.error);
 }
 
