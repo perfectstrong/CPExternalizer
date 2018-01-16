@@ -25,7 +25,7 @@ function exportData(data, filepath, tag, encoding) {
  * @return {Promise.<String>} Data
  */
 function importData(filepath, tag, encoding) {
-    tlog(tag, 'Reading data from ' + filepath + '...');
+    tlog(tag, 'Reading data...');
     encoding = encoding || 'utf8';
     return sander.readFile(filepath, { encoding: encoding });
 }

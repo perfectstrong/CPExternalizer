@@ -5,30 +5,13 @@ const sander = require('sander');
 const path = require('path');
 
 /**
- * Finding all CPProjInit files, which has .js and contains cp.CPProjInit
+ * Finding all js files
  * 
  * @param {Array.<String>} srcPaths 
  * @returns {Promise.<Array<String>>}
  */
 function initiateJSFilesArray(srcPaths) {
-    /**
-     * https://gist.github.com/kethinov/6658166 #reichert621
-     * @param {String} dir A directory path
-     * @returns {Array.<String>} contains all js file path in dir
-     */
-    const findJS = (dir) => {
-        try {
-            return sander.readdirSync(dir)
-                .reduce((files, file) =>
-                    sander.statSync(path.join(dir, file)).isDirectory() ?
-                        files.concat(findJS(path.join(dir, file))) :
-                        files.concat(path.join(dir, file)), [])
-                .filter(p => path.extname(p).toLowerCase() === '.js')
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
-    };
+    const findJS = dir => sander.lsrSync(dir).filter(p => path.extname(p).toLowerCase() === '.js');
     console.log('Finding all js files...');
     let jspaths = [];
     srcPaths.forEach(p => {
@@ -58,7 +41,7 @@ function checkCPProjInit(text) {
     if (text.indexOf('cp.CPProjInit') > -1) {
         return Promise.resolve(text);
     } else {
-        return Promise.reject('');
+        return Promise.reject('Not a cp initiator. Ingored.');
     }
 }
 
@@ -107,25 +90,21 @@ function replaceAudioSrc(text, srcPath, ulPath) {
 /**
  * Fix the audio path in CPProjInit. All non-js files will be ignored.
  * 
- * @param {Object} settings parsed options from command
- * @param {Array.<String>} settings.src file path or directory to find CPProjInit
- * @param {String} settings.ulpath file path or directory of common unit loader
+ * @param {Array.<String>} src file path or directory to find CPProjInit
+ * @param {String} ulpath file path or directory of common unit loader
  */
-function soundfix(settings) {
-    initiateJSFilesArray(settings.src)
+function soundfix(src, ulpath) {
+    initiateJSFilesArray(src)
         .then(
-        (jspaths) => Promise.all(
-            jspaths.map(
-                p => io.importData(p, 'input').then(checkCPProjInit).then(
-                    // If a cpprojinit
-                    // Fix it and export it
-                    (text) => replaceAudioSrc(text, p, settings.ulpath).then((fixedData) => io.exportData(fixedData, p, 'output')),
-                    // Else
-                    // Do nothing
-                    () => { }
+            jspaths => Promise.all(
+                jspaths.map(
+                    p => io.importData(p, p + '::input').then(checkCPProjInit).then(
+                        // If a cpprojinit
+                        // Fix it and export it
+                        text => replaceAudioSrc(text, p, ulpath).then(fixedData => io.exportData(fixedData, p, p + '::output'))
+                    ).catch(console.error)
                 )
             )
-        )
         )
         .catch(console.error);
 }

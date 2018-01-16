@@ -42,9 +42,13 @@ switch (command) {
         );
         break;
     case 'soundfix':
-        api.soundfix(commandLineArgs(optdef.soundfix, {
+        let parsedOptions = commandLineArgs(optdef.soundfix, {
             argv: argv
-        }));
+        });
+        api.soundfix(
+            parsedOptions.src,
+            parsedOptions.ulpath
+        );
         break;
     case 'help':
         api.help();
