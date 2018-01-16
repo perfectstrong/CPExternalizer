@@ -8,27 +8,43 @@ const tlog = require('./util/tlog');
 
 // Parse the input command
 const validCommands = [null, 'extract', 'soundfix', 'help'];
-const {command, argv} = commandLineCommands(validCommands);
+const {
+    command,
+    argv
+} = commandLineCommands(validCommands);
 
 // Loading the config
 let settings = {};
+let cfgpath = './config.json';
 try {
-    let d = importDataSync('./config.json', 'settings');
+    let d = importDataSync(cfgpath, cfgpath + '::settings');
     settings = JSON.parse(d);
-    tlog('settings', 'Loaded.');
+    tlog(cfgpath + '::settings', 'Loaded.');
 } catch (error) {
-    tlog('settings', 'Loading failed.');
-    tlog('error', error);
+    tlog(cfgpath + '::settings', 'Loading failed.');
+    console.error(error);
 }
 
-switch(command) {
+switch (command) {
     case null:
     case 'extract':
         // default action
-        api.extract(commandLineArgs(optdef.extract, {argv: argv}), settings.samplePath);
+        let parsedOptions = commandLineArgs(optdef.extract, {
+            argv: argv
+        });
+        api.extract(parsedOptions.src,
+            parsedOptions.outdir,
+            parsedOptions.outprefix,
+            settings.samplePath, {
+                cpproj: parsedOptions.cpproj,
+                extracomp: parsedOptions.extracomp
+            }
+        );
         break;
     case 'soundfix':
-        api.soundfix(commandLineArgs(optdef.soundfix, {argv: argv}));
+        api.soundfix(commandLineArgs(optdef.soundfix, {
+            argv: argv
+        }));
         break;
     case 'help':
         api.help();

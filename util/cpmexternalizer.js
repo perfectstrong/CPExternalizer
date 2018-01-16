@@ -38,7 +38,7 @@ class CPMExternalizer {
         if (self._cache[self.inputPath]) {
             return Promise.resolve(self._cache[self.inputPath]);
         } else {
-            return prepareData(self.inputPath, 'input')
+            return prepareData(self.inputPath, self.inputPath + '::input')
                 .then(function(beautifiedData) {
                     self._cache[self.inputPath] = beautifiedData;
                     return Promise.resolve(beautifiedData);
@@ -52,7 +52,7 @@ class CPMExternalizer {
      */
     extractCPProjInit() {
         const markLine = 'cp.sbw = 0;';
-        const cptag = this.inputPath + ':CPProjInit';
+        const cptag = this.inputPath + '::CPProjInit';
 
         /**
          * Extract CPProjInit
@@ -96,7 +96,7 @@ class CPMExternalizer {
     extractExtraComponents(preparedSample) {
 
         var self = this;
-        const intag = self.inputPath + ':ExtraComponents';
+        const intag = self.inputPath + '::ExtraComponents';
         /**
          * Compare to extract components
          * @param  {String} sample Sample resource

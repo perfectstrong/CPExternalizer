@@ -38,7 +38,7 @@ function importData(filepath, tag, encoding) {
  * @return {String} Data
  */
 function importDataSync(filepath, tag, encoding) {
-    tlog(tag, 'Synchronously reading data from ' + filepath + '...');
+    tlog(tag, 'Reading data...');
     encoding = encoding || 'utf8';
     return sander.readFileSync(filepath, { encoding: encoding });
 }

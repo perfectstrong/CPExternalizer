@@ -5,7 +5,7 @@ const help = require('./api/help');
 
 module.exports = {
     extract: extract.extract,
-    dext: extract.dext,
+    dirextract: extract.dirextract,
     soundfix: soundfix,
     help: help
 };
