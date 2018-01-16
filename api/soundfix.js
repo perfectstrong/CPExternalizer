@@ -129,3 +129,5 @@ function soundfix(settings) {
         )
         .catch(console.error);
 }
+
+module.exports = soundfix;
