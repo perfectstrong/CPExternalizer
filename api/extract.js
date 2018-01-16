@@ -139,4 +139,7 @@ function dirExtract(arguments) {
         .catch(console.error);
 }
 
-module.exports = extract;
+module.exports = {
+    extract: extract,
+    dext: dirExtract
+};
