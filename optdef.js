@@ -19,14 +19,6 @@ const extractOptDef = [
         description: 'Where to save output. Default is the current directory of cli.js'
     },
     {
-        name: 'outprefix',
-        type: String,
-        alias: 'p',
-        multiple: true,
-        defaultValue: [],
-        description: 'Prefix of each output. If not defined, it will be calculated automatically.'
-    },
-    {
         name: 'cpproj',
         type: Boolean,
         alias: 'c',
@@ -61,14 +53,6 @@ const dirextractOptDef = [
         alias: 'd',
         defaultValue: './',
         description: 'Where to save output. Default is the current directory of cli.js'
-    },
-    {
-        name: 'outprefix',
-        type: String,
-        alias: 'p',
-        multiple: true,
-        defaultValue: [],
-        description: 'Prefix of each output. If not defined, it will be calculated automatically.'
     }
 ];
 

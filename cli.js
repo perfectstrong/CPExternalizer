@@ -36,7 +36,6 @@ switch (command) {
         });
         api.extract(parsedOptions.src,
             parsedOptions.outdir,
-            parsedOptions.outprefix,
             settings.samplePath, {
                 cpproj: parsedOptions.cpproj,
                 extracomp: parsedOptions.extracomp
@@ -49,8 +48,7 @@ switch (command) {
         });
         api.dirextract(
             parsedOptions.src,
-            parsedOptions.outdir,
-            parsedOptions.outprefix
+            parsedOptions.outdir
         );
         break;
     case 'soundfix':

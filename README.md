@@ -14,7 +14,6 @@ A piece of code to slim down HTML5 module exported by Adobe Captivate.
 ## extract options
 *  **-s, --src**                  File paths to exported CPM.js by Adobe Captivate. Can be multiple.
 *  **-d, --outdir**               Where to save output. Default is the current directory of cli.js
-*  **-p, --outprefix**            Prefix of each output. If not defined, it will be calculated automatically.
 *  **-c, --cpproj**               Flag for extracting CPProjInit. Default: **true**.
 *  **-x, --extracomp**            Flag for extracting ExtraComponents. Default: **false**. Currently _unstable_. Use with your own risk.
 ## soundfix options

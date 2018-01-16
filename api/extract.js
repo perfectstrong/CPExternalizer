@@ -12,24 +12,29 @@ let cachedSampleData = '';
  * 
  * @param {Array.<String>} src
  * @param {Array.<String>} outdir
- * @param {Array.<String>} outprefixes
  * @returns {Array.<{srcPath: String, cpPath: String, xcomPath: String}>}
  */
-function initiateCPExtConfig(src, outdir, outprefixes) {
+function initiateCPExtConfig(src, outdir) {
     console.log('Initiating CPExternalizer configuration sheets...');
     let inputs = [];
-    let count = 0;
-    const defaultOutprefix = 'Result';
-    inputs = src.map((srcPath, pos) => {
-        let outprefix = '', // outprefixes[pos] || defaultOutprefix + (count++),
+    if (src.length > 1) {
+        inputs = src.map((srcPath, pos) => {
+            let outprefix = path.dirname(srcPath),
             cpname = outprefix + 'CPProjInit.js',
             xcomname = outprefix + 'ExtraComponents.js';
-        return {
-            srcPath: path.resolve(srcPath),
-            cpPath: path.resolve(outdir, cpname),
-            xcomPath: path.resolve(outdir, xcomname)
-        };
-    });
+            return {
+                srcPath: path.resolve(srcPath),
+                cpPath: path.resolve(outdir, cpname),
+                xcomPath: path.resolve(outdir, xcomname)
+            };
+        });
+    } else {
+        inputs = [{
+            srcPath: path.resolve(src[0]),
+            cpPath: path.resolve(outdir, 'CPProjInit.js'),
+            xcomPath: path.resolve(outdir, 'ExtraComponents.js')
+        }];
+    }
     console.log('CPExternalizer configuration sheets initiated.');
     return inputs;
 }
@@ -98,13 +103,12 @@ function prepareSampleData(samplePath) {
  * 
  * @param {Array.<String>} src File paths to exported CPM.js by Adobe Captivate
  * @param {String} outdir Where to save output. Default is the current directory
- * @param {Array.<String>} outprefix Prefix of each output. If not defined, it will be 'result'.
  * @param {String} samplePath path to CPM-sample.js
  * @param {Object} flags
  * @param {Boolean} flags.cpproj Flag for extracting CPProjInit. Default: true.
  * @param {Boolean} flags.extracomp Flag for extracting ExtraComponents. Default: false.
  */
-function extract(src, outdir, outprefix, samplePath, flags) {
+function extract(src, outdir, samplePath, flags) {
     flags = flags || {cpproj: true, extracomp: false};
     Promise.resolve()
         .then(() => {
@@ -112,7 +116,7 @@ function extract(src, outdir, outprefix, samplePath, flags) {
                 return prepareSampleData(samplePath);
             }
         })
-        .then(() => initiateCPExtConfig(src, outdir, outprefix))
+        .then(() => initiateCPExtConfig(src, outdir))
         .then(initiateCPExts)
         .then(cpexts =>
             Promise.all(cpexts.map(cpext =>
@@ -143,8 +147,7 @@ function dirProcessing(dir, dest) {
         }).then(() => {
             let cpmpath = path.resolve(dir, 'assets/js/CPM.js');
             tlog(cpmpath, 'Processing...');
-            console.log(dest);
-            extract([cpmpath], dest, ['']);
+            extract([cpmpath], dest);
         }).catch(console.error);
 }
 
@@ -153,9 +156,8 @@ function dirProcessing(dir, dest) {
  * 
  * @param {Array.<String>} src input folders
  * @param {String} outdir where to save
- * @param {Array.<String>} outprefixes prefix of result. 'Result' by default.
  */
-function dirExtract(src, outdir, outprefixes) {
+function dirExtract(src, outdir) {
     let configs = src.map((dir, pos) => {
         return {
             dir: dir,
