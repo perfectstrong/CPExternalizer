@@ -17,11 +17,12 @@ let cachedSampleData = '';
 function initiateCPExtConfig(src, outdir) {
     console.log('Initiating CPExternalizer configuration sheets...');
     let inputs = [];
+    let count = -1;
     if (src.length > 1) {
         inputs = src.map((srcPath, pos) => {
-            let outprefix = path.dirname(srcPath),
-            cpname = outprefix + 'CPProjInit.js',
-            xcomname = outprefix + 'ExtraComponents.js';
+            let (count++),
+                cpname = 'CPProjInit' + '_' + count + '.js',
+                xcomname = 'ExtraComponents' + '_' + count + '.js';
             return {
                 srcPath: path.resolve(srcPath),
                 cpPath: path.resolve(outdir, cpname),
@@ -109,7 +110,10 @@ function prepareSampleData(samplePath) {
  * @param {Boolean} flags.extracomp Flag for extracting ExtraComponents. Default: false.
  */
 function extract(src, outdir, samplePath, flags) {
-    flags = flags || {cpproj: true, extracomp: false};
+    flags = flags || {
+        cpproj: true,
+        extracomp: false
+    };
     Promise.resolve()
         .then(() => {
             if (samplePath) {
