@@ -7,7 +7,7 @@ const importDataSync = require('./util/iopromise').importDataSync;
 const tlog = require('./util/tlog');
 
 // Parse the input command
-const validCommands = [null, 'extract', 'soundfix', 'help', 'dirext'];
+const validCommands = [null, 'extract', 'soundfix', 'help', 'dirext', 'xcpext'];
 const {
     command,
     argv
@@ -49,6 +49,16 @@ switch (command) {
         api.dirextract(
             parsedOptions.src,
             parsedOptions.outdir
+        );
+        break;
+    case 'xcpext':
+        parsedOptions = commandLineArgs(optdef.extract, {
+            argv: argv
+        });
+        api.xcpextract(
+            parsedOptions.src,
+            parsedOptions.outdir,
+            settings.samplePath
         );
         break;
     case 'soundfix':

@@ -21,7 +21,7 @@ function initiateCPExtConfig(src, outdir) {
     if (src.length > 1) {
         inputs = src.map((srcPath, pos) => {
             let (count++),
-                cpname = 'CPProjInit' + '_' + count + '.js',
+            cpname = 'CPProjInit' + '_' + count + '.js',
                 xcomname = 'ExtraComponents' + '_' + count + '.js';
             return {
                 srcPath: path.resolve(srcPath),
@@ -50,34 +50,6 @@ function initiateCPExts(inputs) {
 }
 
 /**
- * 
- * @param {CPMExternalizer} cpext Extractor
- * @param {Boolean} cpproj true to extract the CPProjInit part
- * @returns {Promise}
- */
-function runCPProjInitExtractor(cpext, cpproj) {
-    if (cpproj) {
-        return cpext.extractCPProjInit()
-    } else {
-        return Promise.resolve();
-    }
-}
-
-/**
- * 
- * @param {CPMExternalizer} cpext Extractor
- * @param {Boolean} extracomp true to extract the components that CPM-full.js does not have yet.
- * @returns {Promise}
- */
-function runExtraComponentsExtractor(cpext, extracomp) {
-    if (extracomp && cachedSampleData) {
-        return cpext.extractExtraComponents(cachedSampleData);
-    } else {
-        return Promise.resolve();
-    }
-}
-
-/**
  * Prepare the sample data. Return directly what has been cached for multiple parallel process.
  * 
  * @param {String} samplePath 
@@ -90,44 +62,42 @@ function prepareSampleData(samplePath) {
                 // On success
                 // Caching sample data
                 cachedSampleData = sampleData;
-                tlog(samplePath + '::sample', 'Data cached & prepared.');
-            })
-            .catch((reason) => {
-                console.warn('CPM-sample.js cannot be loaded. This might cause problem for extracting ExtraComponents.');
-                console.error(reason);
+                tlog(samplePath + '::sample', 'Cached & prepared.');
             });
+    } else {
+        return Promise.resolve();
     }
 }
 
 /**
- * Extracting CPMProjInit and/or ExtraComponents
+ * Extracting CPMProjInit
+ * 
+ * @param {Array.<String>} src File paths to CPM.js exported by Adobe Captivate
+ * @param {String} outdir Where to save output. Default is the current directory
+ */
+function extract(src, outdir) {
+    Promise.resolve()
+        .then(() => initiateCPExtConfig(src, outdir))
+        .then(initiateCPExts)
+        .then(cpexts =>
+            Promise.all(cpexts.map(cpext => cpext.extractCPProjInit().catch(console.error)))
+        )
+        .catch(console.error);
+}
+
+/**
+ * Extracting components in CPM.js which does not exist in CPM-sample.js at moment
  * 
  * @param {Array.<String>} src File paths to exported CPM.js by Adobe Captivate
  * @param {String} outdir Where to save output. Default is the current directory
  * @param {String} samplePath path to CPM-sample.js
- * @param {Object} flags
- * @param {Boolean} flags.cpproj Flag for extracting CPProjInit. Default: true.
- * @param {Boolean} flags.extracomp Flag for extracting ExtraComponents. Default: false.
  */
-function extract(src, outdir, samplePath, flags) {
-    flags = flags || {
-        cpproj: true,
-        extracomp: false
-    };
-    Promise.resolve()
-        .then(() => {
-            if (samplePath) {
-                return prepareSampleData(samplePath);
-            }
-        })
+function xcpExtract(src, outdir, samplePath) {
+    prepareSampleData(samplePath)
         .then(() => initiateCPExtConfig(src, outdir))
         .then(initiateCPExts)
         .then(cpexts =>
-            Promise.all(cpexts.map(cpext =>
-                runCPProjInitExtractor(cpext, flags.cpproj)
-                .then(() => runExtraComponentsExtractor(cpext, flags.extracomp))
-                .catch(console.error)
-            ))
+            Promise.all(cpexts.map(cpext => cpext.extractExtraComponents(cachedSampleData).catch(console.error)))
         )
         .catch(console.error);
 }
@@ -174,5 +144,6 @@ function dirExtract(src, outdir) {
 
 module.exports = {
     extract: extract,
+    xcpextract: xcpExtract,
     dirextract: dirExtract
 };

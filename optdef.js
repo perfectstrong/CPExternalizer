@@ -1,5 +1,5 @@
 /**
- * Definition of options for extracing
+ * Definition of options for extracting cpprojinit or extra components
  * @type {Array}
  */
 const extractOptDef = [
@@ -17,20 +17,6 @@ const extractOptDef = [
         alias: 'd',
         defaultValue: './',
         description: 'Where to save output. Default is the current directory of cli.js'
-    },
-    {
-        name: 'cpproj',
-        type: Boolean,
-        alias: 'c',
-        defaultValue: true,
-        description: 'Flag for extracting CPProjInit. Default: [bold]{true}.'
-    },
-    {
-        name: 'extracomp',
-        type: Boolean,
-        alias: 'x',
-        defaultValue: false,
-        description: 'Flag for extracting ExtraComponents. Default: [bold]{false}.'
     }
 ];
 
