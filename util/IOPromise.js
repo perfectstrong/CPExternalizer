@@ -12,7 +12,7 @@ const jsbeautify = require('./Normalizer').jsbeautify;
  * @return {Promise} Data
  */
 function exportData(data, filepath, tag, encoding) {
-    tlog(tag, 'Exporting data to ' + filepath);
+    tlog(tag, 'Exporting to ' + filepath);
     encoding = encoding || 'utf8';
     return sander.writeFile(filepath, data, { encoding: encoding });
 }
@@ -25,7 +25,7 @@ function exportData(data, filepath, tag, encoding) {
  * @return {Promise.<String>} Data
  */
 function importData(filepath, tag, encoding) {
-    tlog(tag, 'Reading data...');
+    tlog(tag, 'Reading...');
     encoding = encoding || 'utf8';
     return sander.readFile(filepath, { encoding: encoding });
 }
@@ -38,7 +38,7 @@ function importData(filepath, tag, encoding) {
  * @return {String} Data
  */
 function importDataSync(filepath, tag, encoding) {
-    tlog(tag, 'Reading data...');
+    tlog(tag, 'Reading...');
     encoding = encoding || 'utf8';
     return sander.readFileSync(filepath, { encoding: encoding });
 }
@@ -50,7 +50,7 @@ function importDataSync(filepath, tag, encoding) {
  * @return {Promise.<String>}          Beautified data
  */
 function prepareData(filepath, tag) {
-    tlog(tag, 'Preparing ' + filepath + '...');
+    tlog(tag, 'Preparing...');
     return importData(filepath, tag)
         .then(function(data) {
             return jsbeautify(data, tag);

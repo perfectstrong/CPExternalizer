@@ -9,11 +9,13 @@ const tlog = require('./tlog');
  * @return {Promise}      a resolved promise
  */
 function jsbeautify(data, tag) {
-    tlog(tag, 'Data received. Length = ' + data.length);
+    tlog(tag, 'Received. Length = ' + data.length);
     // Beautify data
-    tlog(tag, 'Beautifying data...');
-    let newData = beautify(data, {});
-    tlog(tag, 'Data beautified.');
+    tlog(tag, 'Beautifying...');
+    let newData = beautify(data, {
+        "eol": "\r\n"
+    });
+    tlog(tag, 'Beautified.');
     return Promise.resolve(newData);
 }
 

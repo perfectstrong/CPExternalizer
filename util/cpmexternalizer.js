@@ -39,7 +39,7 @@ class CPMExternalizer {
             return Promise.resolve(self._cache[self.inputPath]);
         } else {
             return prepareData(self.inputPath, self.inputPath + '::input')
-                .then(function(beautifiedData) {
+                .then(function (beautifiedData) {
                     self._cache[self.inputPath] = beautifiedData;
                     return Promise.resolve(beautifiedData);
                 });
@@ -71,18 +71,18 @@ class CPMExternalizer {
             }
         }
 
-        var self = this;
+        let self = this;
 
         // Real work
         return self.prepareInput()
             .then(extract)
-            .then(function(extraction) {
+            .then(function (extraction) {
                 return exportData(extraction, self.cpPath, cptag);
             })
-            .then(function() {
+            .then(function () {
                 tlog(cptag, 'Extraction completed.');
             })
-            .catch(function(reason) {
+            .catch(function (reason) {
                 tlog(cptag, 'Extraction failed.');
                 console.error(reason);
             });
@@ -94,8 +94,8 @@ class CPMExternalizer {
      * @returns {Promise}
      */
     extractExtraComponents(preparedSample) {
-
-        var self = this;
+        const markLine = 'cp.sbw = 0;';
+        let self = this;
         const intag = self.inputPath + '::ExtraComponents';
         /**
          * Compare to extract components
@@ -104,31 +104,27 @@ class CPMExternalizer {
          * @return {Promise.String}
          */
         function compare(sample, input) {
+            // Optimize input
+            tlog(intag, 'Optimizing input...');
+            input = input.substr(input.indexOf(markLine));
             // Comparing those 2 data
             tlog(intag, 'Comparing input with sample...');
-            var diff = tdiff.main(sample, input)
-                .filter(part => part[0] === 1)
-                .map((part) => {
-                    return part[1];
-                });
-            // There will be two elements of differences.
-            // The first is CPProjInit
-            // containing general objects defined in module.
-            // The second is extra components
-            diff.shift(); // Eliminate CPProjInit
+            let diff = tdiff.main(sample, input);
+            tdiff.cleanupSemantic(diff);
+            diff = diff.filter(part => part[0] === 1).map(part => part[1]);
             return Promise.resolve(diff.join(' ') || '');
         }
 
         // Real work
         return Promise.all([Promise.resolve(preparedSample), self.prepareInput()])
             .spread(compare)
-            .then(function(components) {
+            .then(function (components) {
                 return exportData(components, self.xcomPath, intag);
             })
-            .then(function() {
+            .then(function () {
                 tlog(intag, 'Components extracting completed.');
             })
-            .catch(function(reason) {
+            .catch(function (reason) {
                 tlog(intag, 'Components extracting failed.');
                 console.error(reason);
             });
