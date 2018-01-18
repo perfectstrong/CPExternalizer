@@ -17,7 +17,15 @@ function help() {
             header: 'Command List',
             content: [{
                     name: 'extract',
-                    summary: 'Extracting CPProjInit (initiator of module) or/and Extra Components (questions, effects,etc.). This is the default command, executed when no specific command given.'
+                    summary: 'Extracting CPProjInit (initiator of module). This is the default command, executed when no specific command given.'
+                },
+                {
+                    name: 'xcpext',
+                    summary: 'Extracting extra components (questions, effects,etc.) which does not exist in CPM-sample.js.'
+                },
+                {
+                    name: 'dirext',
+                    summary: 'Slimming exported folders of Adobe Captivate.'
                 },
                 {
                     name: 'soundfix',
@@ -32,6 +40,14 @@ function help() {
         {
             header: '[bold]{extract} options',
             optionList: optdef.extract
+        },
+        {
+            header: '[bold]{xcpext} options',
+            optionList: optdef.extract
+        },
+        {
+            header: '[bold]{dirext} options',
+            optionList: optdef.dirextract
         },
         {
             header: '[bold]{soundfix} options',
