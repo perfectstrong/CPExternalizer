@@ -42730,7 +42730,8 @@ cp.AutoShape.prototype.HandleMouseEventOnStateItems = function(c, a, d) {
             this.tr && b.applyTransform(this.actualParent, this.tr)
         }
     }
-})(window.cp)(function(b) {
+})(window.cp);
+(function(b) {
     b.MouseClick = function(a, c) {
         b.MouseClick.baseConstructor.call(this, a, c);
         this.data = this.getAttribute("data")
@@ -48093,6 +48094,1774 @@ cp.Question.prototype = {
         }
     }
 };
+cp.FIBAnswer = function(a, d) {
+    cp.FIBAnswer.baseConstructor.call(this, a, d);
+    var c = this.getAttribute("b");
+    this.bounds = {
+        minX: c[0],
+        minY: c[1],
+        maxX: c[2],
+        maxY: c[3]
+    };
+    c = this.getAttribute("vb");
+    this.vbounds = {
+        minX: c[0],
+        minY: c[1],
+        maxX: c[2],
+        maxY: c[3]
+    };
+    this.args = d;
+    c = this.getAttribute("capN");
+    c = cp.D[cp.D[c].mdi];
+    this.sh = c.sh;
+    this.aid = this.getAttribute("aid");
+    cp.responsive && c && (this.answerAreaItemName = c.aan, this.responsiveCSS = c.css)
+};
+cp.inherits(cp.FIBAnswer, cp.Answer);
+cp.updateSelectElement = function(a, d) {
+    if (cp.responsive && a) {
+        var c = cp.D[d];
+        if (c && c[a.id]) {
+            for (var f = c[a.id].answerObjects, e = 0; e < f.length; ++e) {
+                var g = f[e].text,
+                    b = document.createElement("option");
+                b.value = g;
+                b.text = g;
+                b.style.wordWrap = "break-word";
+                b.style.whiteSpace = "pre-wrap";
+                a.appendChild(b)
+            }
+            c.setNewIndex ? c.setNewIndex(c[a.id].idx) : a.selectedIndex = -1
+        }
+    }
+};
+cp.FIBAnswer.prototype.getResponsiveLabelCombo = function(a, d) {
+    this.answerObjects = a.getAnswerObjects(this.element.id);
+    var c = cp.D[d.capN],
+        f = d.capN + this.aid;
+    c[f] || (c[f] = {});
+    c[f].answerObjects = this.answerObjects;
+    c[f].idx = -1;
+    var e = document.getElementById(f);
+    e.name = this.group;
+    cp.updateSelectElement(e, d.capN);
+    e.style.zIndex = 1E3;
+    var g = {},
+        b = this;
+    e.onchange = function() {
+        var a = document.getElementById(f);
+        b.element.oHandler.setIndex(a.selectedIndex)
+    };
+    g.getControlBoundingClientRect = function() {
+        var b = document.getElementById(f);
+        if (b) return b.getBoundingClientRect()
+    };
+    g.setNewIndex = function(a) {
+        var d = document.getElementById(f); - 1 != a ? (b.answerObj = b.answerObjects[a], d && (d.selectedIndex = a)) : (cp.verbose && cp.log("Inside setNewIndex : " + a), b.answerObj = void 0, d && (d.selectedIndex = -1, d.value = "", d.text = ""));
+        c[f].idx = a
+    };
+    c.setNewIndex = e.setNewIndex;
+    this.sh && (e = this.sh.a, cp.applyShadow(this.element.parentElement, this.sh.d * Math.cos(Math.PI * e / 180) + "px " + this.sh.d * Math.sin(Math.PI * e / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c,
+        1) + (this.sh.i ? " inset" : "")));
+    g.resetIndex = function() {
+        b.element.oHandler.setIndex(-1)
+    };
+    g.setIndex = function(a) {
+        b.element.oHandler.setNewIndex(a)
+    };
+    g.getIndex = function() {
+        var b = document.getElementById(f);
+        return !b ? -1 : b.selectedIndex
+    };
+    g.disable = function() {
+        var b = document.getElementById(f);
+        if (b) b.disabled = "disabled"
+    };
+    g.getWidth = function() {
+        var b = document.getElementById(f);
+        return !b ? 0 : parseFloat(b.style.width)
+    };
+    g.getText = function() {
+        var a = b.element.oHandler.getIndex();
+        return a == -1 ? "" : b.answerObjects[a].text
+    };
+    g.setText = function(a) {
+        if (a == "") b.element.oHandler.setIndex(-1);
+        else {
+            for (var c = -1, d = 0; d < b.answerObjects.length; ++d)
+                if (b.answerObjects[d].text == a) {
+                    c = d;
+                    break
+                }
+            b.element.oHandler.setIndex(c)
+        }
+    };
+    return g
+};
+cp.FIBAnswer.prototype.getResponsiveTextInputField = function(a, d) {
+    var c = {},
+        f = d.capN + this.aid,
+        e = document.getElementById(f),
+        g = this;
+    this.showScroll && (e.style.resize = "none");
+    void 0 != this.showBorder && !this.showBorder ? e.style.border = "0px" : (e.style.border = "1px solid", e.style.borderTopColor = "#696969", e.style.borderLeftColor = "#696969", e.style.borderRightColor = "#E6E6E6", e.style.borderBottomColor = "#E6E6E6");
+    e.style.borderRadius = "0px";
+    e.style.padding = "0px";
+    if (this.sh) {
+        var b = this.sh.a;
+        cp.applyShadow(e, this.sh.d *
+            Math.cos(Math.PI * b / 180) + "px " + this.sh.d * Math.sin(Math.PI * b / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, 1) + (this.sh.i ? " inset" : ""))
+    }
+    c.getControlBoundingClientRect = function() {
+        return document.getElementById(f).getBoundingClientRect()
+    };
+    c.resetText = function() {
+        var b = document.getElementById(f);
+        if (b) b.value = ""
+    };
+    c.setText = function(b) {
+        var a = document.getElementById(f);
+        if (a) a.value = b
+    };
+    c.getText = function() {
+        var b = document.getElementById(f);
+        return b ? b.value : ""
+    };
+    c.disable = function() {
+        g.enabled = false;
+        var b = document.getElementById(f);
+        b && b.setAttribute("readonly", "readonly")
+    };
+    c.getWidth = function() {
+        var b = document.getElementById(f);
+        return b ? parseFloat(b.style.width) : 0
+    };
+    return c
+};
+cp.FIBAnswer.prototype.getMaxCorrectAnswerWidth = function() {
+    if (!this.correctAnswersList || !this.correctAnswersList.length) return 0;
+    for (var a = 0, d = 0; d < this.correctAnswersList.length; ++d) a < this.correctAnswersList[d].length && (a = this.correctAnswersList[d].length);
+    d = document.createElement("input");
+    d.id = "DummyInputField";
+    d.type = "text";
+    d.size = a;
+    d.display = "none";
+    document.body.appendChild(d);
+    a = d.clientWidth;
+    document.body.removeChild(d);
+    return a
+};
+cp.FIBAnswer.prototype.linkedItemDrawingCompleteHandler = function(a) {
+    if (cp.responsive && this.drawForResponsive && this.answerAreaItemName) {
+        var d = cp.D[this.answerAreaItemName];
+        if (d && (d = cp.D[d.mdi], a.cpData && a.cpData.uid && a.cpData.uid == d.uid && (cp.verbose && cp.log("drawing " + this.element.id + ", for " + a.cpData.uid), a = this.getAttribute("capN"), a = cp.D[a]))) a = cp.getDisplayObjByKey(a.mdi), a.drawForResponsive && a.drawForResponsive(!0, cp.ReasonForDrawing.kLinkedToItemAppeared)
+    }
+};
+cp.FIBAnswer.prototype.drawForResponsive = function(a) {
+    if (this.m_questionObj && this.m_questionObj.getIsStarted()) {
+        if (!this.responsiveCSS) return !1;
+        if (this.isDrawn && !a) return !0;
+        var d = cp.getResponsiveCSS(this.responsiveCSS);
+        cp.getCSSFromLayouter(d, this);
+        var c = !1,
+            c = this.re || this.sh && !this.sh.i,
+            f = void 0 != this.tr;
+        if (this.currentCSS == d && !c && !f && !a) return !0;
+        this.currentCSS = d;
+        a = this.element.id;
+        this.enabled = !0;
+        if (cp.movie.playbackController && (d = cp.movie.playbackController.GetQuizController())) {
+            d.GetIsInReviewMode();
+            var e = this.m_questionObj.shouldDisableOptions();
+            cp.movie.stage.getSlideDiv();
+            this.group = this.m_questionObj.getAnswerGroupName();
+            d = cp.D[a];
+            this.isComboBox = d.sac;
+            this.isCaseSensitive = d.cs;
+            this.correctAnswersList = d.correctAnswers;
+            this.m_questionObj.setCaptionName(d.capN);
+            this.zIndex = cp.D[d.capN].zIndex;
+            var g = cp.movie.stage.getSlideDiv();
+            if (!this.isDrawn) {
+                var b = this;
+                this.selectedText = this.m_questionObj.getSelectedText(this.element.id);
+                this.isComboBox ? (cp.verbose && cp.log("Draw Combo Box"), this.element.oHandler =
+                    this.getResponsiveLabelCombo(this.m_questionObj, d)) : (cp.verbose && cp.log("Draw Text Field"), this.element.oHandler = this.getResponsiveTextInputField(this.m_questionObj, d));
+                d.oHandler = this.element.oHandler;
+                this.element.oHandler.setText(this.selectedText);
+                this.element.clearAnswer = function() {
+                    b.selectedText = "";
+                    b.isDrawn && b.element.oHandler.setText("")
+                };
+                this.element.removeOpenReviewAreas = function() {
+                    var a = document.getElementById(b.m_questionObj.getAssociatedObjName()),
+                        c = document.getElementById(b.element.id +
+                            "_correctfibReview");
+                    c != void 0 && a.parentNode.removeChild(c)
+                };
+                this.element.adjustReviewIcon = function() {
+                    var a = g.getBoundingClientRect(),
+                        c = b.element.oHandler.getControlBoundingClientRect(),
+                        d = c.left - a.left + "px",
+                        c = c.bottom - a.top + 5 + "px";
+                    if (b.reviewIconImage) {
+                        b.reviewIconImage.style.left = d;
+                        b.reviewIconImage.style.top = c
+                    }
+                    if (b.reviewButton) {
+                        d = b.reviewIconImage.getBoundingClientRect();
+                        b.reviewButton.style.left = d.right + 2 - a.left + "px";
+                        b.reviewButton.style.top = d.top - a.top + "px"
+                    }
+                };
+                var j = document.getElementById(b.m_questionObj.getAssociatedObjName());
+                this.element.addReviewButton = function() {
+                    var a = b.element,
+                        c = b.element.id + "_reviewButton";
+                    b.reviewButton = document.getElementById(c);
+                    if (!b.reviewButton) b.reviewButton = cp.newElem("img");
+                    b.reviewButton = b.reviewButton;
+                    b.reviewButton.id = c;
+                    cp.fixWebkitScaling(b.reviewButton);
+                    b.reviewButton.className = "sequenceReviewImage";
+                    b.reviewButton.style.position = "absolute";
+                    var d;
+                    d = document.getElementById(b.element.id + "_reviewIncorrect");
+                    c = g.getBoundingClientRect();
+                    b.element.oHandler.getControlBoundingClientRect();
+                    d = d.getBoundingClientRect();
+                    b.reviewButton.style.left = d.right + 2 - c.left + "px";
+                    b.reviewButton.style.top = d.top - c.top + "px";
+                    b.reviewButtonCH = function(c) {
+                        var d = a.id + "_correctfibReview",
+                            e = document.getElementById(d);
+                        e == void 0 && (e = cp.newElem("div"));
+                        cp.fixWebkitScaling(e);
+                        var f = "cp-reviewUL";
+                        cp.MSIE == cp.browser && (f = "cp-reviewULIE");
+                        for (var f = "<ul class='" + f + "' style='padding-left:20px;padding-right:20px'>", h = 0; h < b.correctAnswersList.length; ++h) f = f + ("<li>" + b.correctAnswersList[h] + "</li>");
+                        f = f + "</ul>" + ("<img id='fibReviewCloseButton' src='" +
+                            cp.movie.im.m_projectImages["assets/htmlimages/closeReviewButton.png"].nativeImage.src + "' style='right:6px;top:6px;position:absolute'>");
+                        e.id = d;
+                        e.className = "sequenceReviewArea";
+                        e.style.position = "absolute";
+                        d = g.getBoundingClientRect();
+                        h = b.reviewButton.getBoundingClientRect();
+                        e.style.left = h.right - d.left + "px";
+                        e.style.top = h.top - d.top + "px";
+                        e.innerHTML = f;
+                        c.stopPropagation && c.stopPropagation();
+                        b.m_questionObj.showReviewArea(e)
+                    };
+                    cp.registerGestureEvent(b.reviewButton, cp.GESTURE_EVENT_TYPES.TAP, b.reviewButtonCH);
+                    j.parentNode.appendChild(b.reviewButton);
+                    b.reviewButton.style.zIndex = 1E3
+                };
+                this.element.disableOption = function() {
+                    e = true;
+                    b.element.tabIndex = -1
+                };
+                this.lCorrectAnswersAreAlsoEmpty = !1;
+                for (d = 0; d < this.correctAnswersList.length; ++d) c = this.correctAnswersList[d], c = c.replace(/^\s*|\s*$/g, ""), this.lCorrectAnswersAreAlsoEmpty = this.lCorrectAnswersAreAlsoEmpty || "" == c;
+                this.element.isAttempted = function() {
+                    if (b.isComboBox) return b.element.oHandler.getIndex() != -1;
+                    var a = b.element.oHandler.getText(),
+                        a = a.replace(/^\s*|\s*$/g,
+                            "");
+                    return a != "" || b.lCorrectAnswersAreAlsoEmpty
+                };
+                this.element.isCorrectlyAnswered = function() {
+                    var a = "",
+                        a = b.element.oHandler.getText(),
+                        a = a.replace(/^\s*|\s*$/g, "");
+                    if (a == "" && !b.lCorrectAnswersAreAlsoEmpty) return false;
+                    for (var c = 0; c < b.correctAnswersList.length; ++c) {
+                        var d = b.correctAnswersList[c],
+                            d = d.replace(/^\s*|\s*$/g, "");
+                        if (b.isCaseSensitive) {
+                            if (d == a) return true
+                        } else if (d.toLowerCase() == a.toLowerCase()) return true
+                    }
+                    return false
+                };
+                e && (this.element.style.cursor = "default", this.element.tabIndex = -1, this.element.oHandler.disable(),
+                    this.m_questionObj.getWasJudged() && this.m_questionObj.canShowReviewIcons() && (this.m_questionObj.getAnsweredCorrectly() ? this.reviewIconImage || (this.reviewIconImage = cp.newElem("img"), this.reviewIconImage.id = a + "_reviewCorrect", this.reviewIconImage.src = cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src, this.reviewIconImage.tabIndex = -1, this.reviewIconImage.style.position = "absolute", this.element.parentNode.parentNode.appendChild(this.reviewIconImage), b.sh && (a = b.sh.a,
+                        cp.applyShadow(this.reviewIconImage, b.sh.d * Math.cos(Math.PI * a / 180) + "px " + b.sh.d * Math.sin(Math.PI * a / 180) + "px " + b.sh.b + "px " + cp.ConvertRGBToRGBA(b.sh.c, b.sh.o) + (b.sh.i ? " inset" : "") + (b.sh.i ? " inset" : "")))) : (d = this.element.isAttempted() ? this.element.isCorrectlyAnswered() ? cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src : cp.movie.im.m_projectImages["assets/htmlimages/incorrect_answer_normal.png"].nativeImage.src : cp.movie.im.m_projectImages["assets/htmlimages/skip_answer_normal.png"].nativeImage.src,
+                        this.reviewIconImage || (this.reviewIconImage = cp.newElem("img"), this.reviewIconImage.id = a + "_reviewIncorrect", this.reviewIconImage.src = d, this.reviewIconImage.tabIndex = -1, this.reviewIconImage.style.position = "absolute", j.parentNode.appendChild(this.reviewIconImage), this.reviewIconImage.onload = function() {
+                            b.isCorrect || b.element.addReviewButton()
+                        }, b.sh && (a = b.sh.a, cp.applyShadow(this.reviewIconImage, b.sh.d * Math.cos(Math.PI * a / 180) + "px " + b.sh.d * Math.sin(Math.PI * a / 180) + "px " + b.sh.b + "px " + cp.ConvertRGBToRGBA(b.sh.c,
+                            b.sh.o) + (b.sh.i ? " inset" : "")))))));
+                this.element.logicalAnswerObj = this;
+                this.m_questionObj.registerFIBAnswer(this.element)
+            }
+            this.isDrawn = !0;
+            this.visible || (this.element.style.visibility = "hidden");
+            return !0
+        }
+    }
+};
+cp.FIBAnswer.prototype.addAndGetLabelCombo = function(a, d) {
+    this.answerObjects = a.getAnswerObjects(this.element.id);
+    document.getElementById(d.answerTextCanvasHolder);
+    this.relatedCaptionData = cp.D[cp.D[d.capN].mdi];
+    var c = d.b[0],
+        f = d.b[1],
+        e = d.b[2] - d.b[0] + 1,
+        g = d.b[3] - d.b[1],
+        b = cp.newElem("div");
+    cp.fixWebkitScaling(b);
+    b.id = this.element.id + "_labelDD";
+    b.style.position = "absolute";
+    b.style.left = "0px";
+    b.style.top = "0px";
+    b.style.width = e + "px";
+    b.style.height = g + "px";
+    this.element.style.left = "0px";
+    this.element.style.top =
+        "0px";
+    this.element.style.width = "100%";
+    this.element.style.height = "100%";
+    this.element.style.display = "block";
+    this.element.style.position = "absolute";
+    this.element.style.zIndex = 10;
+    this.element.appendChild(b);
+    var j = a.defaultTitleImage,
+        i = cp.movie.im;
+    i && i.getImageDataURI(j, function(a) {
+        j = a
+    });
+    if ("" == b.innerHTML) {
+        var h;
+        h = "" + ("<select class='mydds' id='" + this.element.id + "_fibLabel' name='" + this.group + "'>");
+        for (var m = 0; m < this.answerObjects.length; ++m) {
+            var n = this.answerObjects[m],
+                r = n.text,
+                p = n.ip;
+            i && i.getImageDataURI(p,
+                function(a) {
+                    p = a
+                });
+            h += "<option value='" + r + "' style='word-wrap:break-word;white-space:pre-wrap;position:absolute;width:" + e + "px' title='" + p + "'>";
+            h += r;
+            h += "</option>"
+        }
+        document.getElementById(b.id).innerHTML = h + "</select> ";
+        var l = document.getElementById(this.element.id + "_fibLabel");
+        l.style.width = e + "px";
+        l.style.height = g + "px";
+        l.style.position = "absolute";
+        l.style.zIndex = 1E3;
+        if (cp.DESKTOP != cp.device) {
+            var q;
+            l.style.opacity = 0;
+            var k = this;
+            l.onchange = function() {
+                k.element.oHandler.setIndex(l.selectedIndex)
+            };
+            b = "<img id='" +
+                this.element.id + "_spanImage' src='" + j + "' title='" + j + "' style='position:absolute;top:2px; left:5px; width:" + (e - 10) + "px; height:" + g + "px;'/>";
+            b += "<img id='" + this.element.id + "_spanImageArrow' class='spanArrow' style='position:absolute;left:" + (e - 20) + "px;top:3px'/>";
+            i = cp.newElem("span");
+            i.id = "spanComboBoxTitleImage";
+            i.className = "spanComboBox";
+            i.innerHTML = b;
+            i.style.width = e + "px";
+            i.style.height = g + 3 + "px";
+            i.style.overflow = "none";
+            this.answerLabelDivElem.appendChild(i);
+            var o = document.getElementById(this.element.id +
+                "_spanImage");
+            l.setNewIndex = function(a) {
+                -1 != a ? (k.answerObj = k.answerObjects[a], q = k.answerObj.ip, l.selectedIndex = a) : (cp.verbose && cp.log("Inside setNewIndex : " + a), k.answerObj = void 0, q = j, l.selectedIndex = -1, l.value = "", l.text = "");
+                o.style.display = "none";
+                o.src = q;
+                o.onload = setTimeout(function() {
+                    o.style.display = "block"
+                }, 100)
+            };
+            this.answerLabelDivElem.style.position = "absolute";
+            this.answerLabelDivElem.style.left = c + "px";
+            this.answerLabelDivElem.style.top = f + "px";
+            this.answerLabelDivElem.style.width = e + "px";
+            this.answerLabelDivElem.style.height =
+                g + "px";
+            this.sh && (b = this.sh.a, cp.applyShadow(this.element.parentElement, this.sh.d * Math.cos(Math.PI * b / 180) + "px " + this.sh.d * Math.sin(Math.PI * b / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, 1) + (this.sh.i ? " inset" : "")));
+            l.resetIndex = function() {
+                k.element.oHandler.setIndex(-1)
+            };
+            l.setIndex = function(a) {
+                k.element.oHandler.setNewIndex(a)
+            };
+            l.getIndex = function() {
+                return k.element.oHandler.selectedIndex
+            };
+            l.disable = function() {
+                k.element.oHandler.disabled = "disabled"
+            };
+            l.getWidth = function() {
+                return parseFloat(k.element.oHandler.style.width)
+            };
+            h = l
+        } else {
+            parseFloat(l.style.left);
+            parseFloat(l.style.top);
+            l.style.position = "absolute";
+            l.style.left = "10px";
+            l.style.top = "0px";
+            l.style.width = e + "px";
+            l.style.height = g + "px";
+            b = jQuery("#" + this.element.id + "_fibLabel");
+            b.css("width", e);
+            b.css("height", g);
+            k = this;
+            h = jQuery("#" + this.element.id + "_fibLabel").msDropDown({
+                style: "position:fixed, z-index:1000;left:" + (c + 20) + "px, top:" + f + "px, height:" + g + "px",
+                on: {
+                    close: function() {
+                        var a = k.element.oHandler.get("selectedIndex"); - 1 != a && (k.answerObj = k.answerObjects[a])
+                    }
+                }
+            }, j).data("dd");
+            h.set("width", e);
+            h.set("height", g);
+            h.set("overflow", !0);
+            i = jQuery("#" + this.element.id + "_labelDD");
+            this.sh && (b = this.sh.a, cp.applyShadow(i[0], this.sh.d * Math.cos(Math.PI * b / 180) + "px " + this.sh.d * Math.sin(Math.PI * b / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, 1) + (this.sh.i ? " inset" : "")));
+            this.answerLabelDivElem.style.position = "absolute";
+            this.answerLabelDivElem.style.left = c + "px";
+            this.answerLabelDivElem.style.top = f + "px";
+            this.answerLabelDivElem.style.width = e + "px";
+            this.answerLabelDivElem.style.height =
+                g + "px";
+            var s = h.open;
+            h.open = function(a) {
+                k.element.parentElement.style.zIndex = 1E3;
+                a.preventDefault();
+                a.stopPropagation();
+                s()
+            };
+            cp.addDCHDiv(this.answerLabelDivElem, function(a) {
+                k.element.oHandler.open(a)
+            });
+            h.resetIndex = function() {
+                k.element.oHandler.setIndex(-1)
+            };
+            h.setIndex = function(a) {
+                k.element.oHandler.set("selectedIndex", a)
+            };
+            h.getIndex = function() {
+                return k.element.oHandler.get("selectedIndex")
+            };
+            h.disable = function() {
+                k.element.oHandler.set("disabled", true)
+            };
+            h.getWidth = function() {
+                return k.element.oHandler.get("width")
+            };
+            l.onchange = function(a) {
+                k.element.oHandler.setIndex(l.selectedIndex);
+                a.preventDefault();
+                return false
+            }
+        }
+    }
+    h.getText = function() {
+        var a = k.element.oHandler.getIndex();
+        return -1 == a ? "" : k.answerObjects[a].text
+    };
+    h.setText = function(a) {
+        if ("" == a) k.element.oHandler.setIndex(-1);
+        else {
+            for (var b = -1, c = 0; c < k.answerObjects.length; ++c)
+                if (k.answerObjects[c].text == a) {
+                    b = c;
+                    break
+                }
+            k.element.oHandler.setIndex(b)
+        }
+    };
+    return h
+};
+cp.FIBAnswer.prototype.addAndGetTextInputField = function(a, d) {
+    var c;
+    c = "";
+    this.font = this.getAttribute("font");
+    if ("" == this.element.innerHTML) {
+        this.font && (c = c + " -webkit-appearance:none;" + (" font-family:" + this.font.n + ";"), c += "font-size:" + this.font.s + "px;", c += "color: " + this.font.c + ";", this.font.B && (c += "font-weight:bold;"), this.font.u && (c += "text-decoration: underline;"), this.font.i && (c += "font-style: italic;"), this.showScroll && (c += "resize: none;"), c = void 0 != this.showBorder && !this.showBorder ? c + "border:0px;" :
+            c + "border:1px solid;border-top-color:#696969;border-left-color:#696969;border-right-color:#E6E6E6;border-bottom-color:#E6E6E6;", c += "border-radius:0px;padding:0px;");
+        var f = this.bounds.maxY - this.bounds.minY;
+        cp.MSIE == cp.browser && (f += 1);
+        void 0 == this.accstring && (this.accstring = "Fill in the Blank");
+        this.element.innerHTML += "<input type='text'" + (this.enabled ? "" : " readonly='readonly'") + " aria-label='" + this.accstring + "' id='" + this.element.id + "_inputField' style='left:0px; top:0px; width:" + (this.bounds.maxX -
+            this.bounds.minX - 2) + "px; height:" + f + "px;position:absolute;" + c + "'></input>"
+    }
+    this.inputField = document.getElementById(this.element.id + "_inputField");
+    this.sh && (c = this.sh.a, cp.applyShadow(this.inputField, this.sh.d * Math.cos(Math.PI * c / 180) + "px " + this.sh.d * Math.sin(Math.PI * c / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, 1) + (this.sh.i ? " inset" : "")));
+    var e = this;
+    this.inputField.resetText = function() {
+        e.element.oHandler.value = ""
+    };
+    this.inputField.setText = function(a) {
+        e.element.oHandler.value = a
+    };
+    this.inputField.getText =
+        function() {
+            return e.element.oHandler.value
+        };
+    this.inputField.disable = function() {
+        e.enabled = false;
+        e.element.oHandler.setAttribute("readonly", "readonly")
+    };
+    this.inputField.getWidth = function() {
+        return parseFloat(e.element.oHandler.style.width)
+    };
+    c = this.inputField;
+    var f = d.b[0],
+        g = d.b[1],
+        b = d.b[2] - d.b[0],
+        j = d.b[3] - d.b[1];
+    this.answerLabelDivElem.style.position = "absolute";
+    this.answerLabelDivElem.style.left = f + "px";
+    this.answerLabelDivElem.style.top = g + "px";
+    this.answerLabelDivElem.style.width = b + "px";
+    this.answerLabelDivElem.style.height =
+        j + "px";
+    return c
+};
+cp.FIBAnswer.prototype.addIfNeeded = function(a) {
+    if (!cp.responsive || !this.drawForResponsive(a))
+        if ((a = cp.getQuestionObject(this.relatedQuestionSlide)) && !this.isDrawn && a.getIsStarted()) {
+            var d = this.element.id;
+            this.enabled = !0;
+            if (cp.movie.playbackController) {
+                var c = cp.movie.playbackController.GetQuizController();
+                if (c) {
+                    c.GetIsInReviewMode();
+                    var f = a.shouldDisableOptions();
+                    cp.movie.stage.getSlideDiv();
+                    this.group = a.getAnswerGroupName();
+                    c = cp.D[d];
+                    this.isComboBox = c.sac;
+                    this.isCaseSensitive = c.cs;
+                    this.correctAnswersList =
+                        c.correctAnswers;
+                    var e, g;
+                    this.zIndex = cp.D[c.capN].zIndex;
+                    e = cp.newElem("div");
+                    cp.fixWebkitScaling(e);
+                    cp.addRewrapObjectAsPerRestOfProjectItem(e);
+                    e.id = d + "canvasHolder";
+                    c.answerTextCanvasHolder = e.id;
+                    e.setAttribute("class", "cp-rewrap");
+                    e.style.zIndex = this.zIndex;
+                    this.answerLabelDivElem = document.getElementById(c.dn);
+                    this.selectedText = a.getSelectedText(this.element.id);
+                    this.isComboBox ? (cp.verbose && cp.log("Draw Combo Box"), this.element.oHandler = this.addAndGetLabelCombo(a, c)) : (cp.verbose && cp.log("Draw Text Field"),
+                        this.element.oHandler = this.addAndGetTextInputField(a, c));
+                    c.oHandler = this.element.oHandler;
+                    this.element.oHandler.setText(this.selectedText);
+                    var b = this;
+                    this.questionObj = a;
+                    this.element.clearAnswer = function() {
+                        b.selectedText = "";
+                        b.isDrawn && b.element.oHandler.setText("")
+                    };
+                    this.element.removeOpenReviewAreas = function() {
+                        var a = document.getElementById(b.questionObj.getAssociatedObjName()),
+                            c = document.getElementById(b.element.id + "_correctfibReview");
+                        c != void 0 && a.parentNode.removeChild(c)
+                    };
+                    this.element.addReviewButton =
+                        function() {
+                            var a = document.getElementById(b.questionObj.getAssociatedObjName()),
+                                c = b.element,
+                                d = b.element.id + "_reviewButton",
+                                e = document.getElementById(d);
+                            e || (e = cp.newElem("img"));
+                            e.id = d;
+                            cp.fixWebkitScaling(e);
+                            e.className = "sequenceReviewImage";
+                            e.style.position = "absolute";
+                            d = document.getElementById(b.element.id + "_reviewIncorrect");
+                            e.style.left = parseFloat(d.style.left) + d.clientWidth + 2 + "px";
+                            e.style.top = d.style.top;
+                            cp.registerGestureEvent(e, cp.GESTURE_EVENT_TYPES.TAP, function(a) {
+                                var d = c.id + "_correctfibReview",
+                                    e = document.getElementById(d);
+                                e == void 0 && (e = cp.newElem("div"));
+                                cp.fixWebkitScaling(e);
+                                var f = "cp-reviewUL";
+                                cp.MSIE == cp.browser && (f = "cp-reviewULIE");
+                                for (var f = "<ul class='" + f + "' style='padding-left:20px;padding-right:20px'>", g = 0; g < b.correctAnswersList.length; ++g) f = f + ("<li>" + b.correctAnswersList[g] + "</li>");
+                                f = f + "</ul>" + ("<img id='fibReviewCloseButton' src='" + cp.movie.im.m_projectImages["assets/htmlimages/closeReviewButton.png"].nativeImage.src + "' style='right:6px;top:6px;position:absolute'>");
+                                e.id = d;
+                                e.className = "sequenceReviewArea";
+                                e.style.position = "absolute";
+                                d = document.getElementById(c.id + "_reviewButton");
+                                e.style.left = parseFloat(d.style.left) + parseFloat(d.width) + 10 + "px";
+                                e.style.top = parseFloat(d.style.top) + "px";
+                                e.innerHTML = f;
+                                a.stopPropagation && a.stopPropagation();
+                                b.questionObj.showReviewArea(e)
+                            });
+                            a.parentNode.appendChild(e);
+                            e.style.zIndex = 1E3
+                        };
+                    this.element.disableOption = function() {
+                        f = true;
+                        b.element.tabIndex = -1
+                    };
+                    this.lCorrectAnswersAreAlsoEmpty = !1;
+                    for (c = 0; c < this.correctAnswersList.length; ++c) e =
+                        this.correctAnswersList[c], e = e.replace(/^\s*|\s*$/g, ""), this.lCorrectAnswersAreAlsoEmpty = this.lCorrectAnswersAreAlsoEmpty || "" == e;
+                    this.element.isAttempted = function() {
+                        if (b.isComboBox) return b.element.oHandler.getIndex() != -1;
+                        var a = b.element.oHandler.getText(),
+                            a = a.replace(/^\s*|\s*$/g, "");
+                        return a != "" || b.lCorrectAnswersAreAlsoEmpty
+                    };
+                    this.element.isCorrectlyAnswered = function() {
+                        var a = "",
+                            a = b.element.oHandler.getText(),
+                            a = a.replace(/^\s*|\s*$/g, "");
+                        if (a == "" && !b.lCorrectAnswersAreAlsoEmpty) return false;
+                        for (var c =
+                                0; c < b.correctAnswersList.length; ++c) {
+                            var d = b.correctAnswersList[c],
+                                d = d.replace(/^\s*|\s*$/g, "");
+                            if (b.isCaseSensitive) {
+                                if (d == a) return true
+                            } else if (d.toLowerCase() == a.toLowerCase()) return true
+                        }
+                        return false
+                    };
+                    e = this.bounds.minX + "px";
+                    g = this.bounds.maxY + 5 + "px";
+                    if (f && (this.element.style.cursor = "default", this.element.tabIndex = -1, this.element.oHandler.disable(), a.getWasJudged() && a.canShowReviewIcons()))
+                        if (a.getAnsweredCorrectly()) c = cp.newElem("img"), c.id = d + "_reviewCorrect", c.src = cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src,
+                            c.tabIndex = -1, c.style.position = "absolute", c.style.left = e, c.style.top = g, this.element.parentNode.parentNode.appendChild(c), b.sh && (d = b.sh.a, cp.applyShadow(c, b.sh.d * Math.cos(Math.PI * d / 180) + "px " + b.sh.d * Math.sin(Math.PI * d / 180) + "px " + b.sh.b + "px " + cp.ConvertRGBToRGBA(b.sh.c, b.sh.o) + (b.sh.i ? " inset" : "") + (b.sh.i ? " inset" : "")));
+                        else {
+                            var j;
+                            j = this.element.isAttempted() ? this.element.isCorrectlyAnswered() ? cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src : cp.movie.im.m_projectImages["assets/htmlimages/incorrect_answer_normal.png"].nativeImage.src :
+                                cp.movie.im.m_projectImages["assets/htmlimages/skip_answer_normal.png"].nativeImage.src;
+                            c = cp.newElem("img");
+                            c.id = d + "_reviewIncorrect";
+                            c.src = j;
+                            c.tabIndex = -1;
+                            c.style.position = "absolute";
+                            c.style.left = e;
+                            c.style.top = g;
+                            this.element.parentNode.parentNode.appendChild(c);
+                            c.onload = function() {
+                                b.isCorrect || b.element.addReviewButton()
+                            };
+                            b.sh && (d = b.sh.a, cp.applyShadow(c, b.sh.d * Math.cos(Math.PI * d / 180) + "px " + b.sh.d * Math.sin(Math.PI * d / 180) + "px " + b.sh.b + "px " + cp.ConvertRGBToRGBA(b.sh.c, b.sh.o) + (b.sh.i ? " inset" : "")))
+                        }
+                    this.isDrawn = !0;
+                    a.registerFIBAnswer(this.element);
+                    this.visible || (this.element.style.visibility = "hidden")
+                }
+            }
+        }
+};
+cp.FIBQuestion = function(a, d) {
+    cp.FIBQuestion.baseConstructor.call(this, a, d);
+    this.captionName = void 0;
+    this.answerOptions = this.getAnswerOptions();
+    this.answerOptionToAnswersMap = this.createAnswerOptionToAnswersMap();
+    this.defaultTitleImage = this.questionData.defaultTitleImage
+};
+cp.inherits(cp.FIBQuestion, cp.Question);
+cp.FIBQuestion.prototype.setCaptionName = function(a) {
+    this.captionName = a
+};
+cp.FIBQuestion.prototype.resetQuestionData = function() {
+    cp.FIBQuestion.superClass.resetQuestionData.call(this);
+    if (!this.m_quizController.GetGoToQuizScopeActionExecuted()) {
+        this.m_selectedAnswersArr = [];
+        for (var a in this.answerOptionToAnswersMap) {
+            var d = this.answerOptionToAnswersMap[a];
+            d.selectedAns && (d.selectedAns = "")
+        }
+    }
+};
+cp.FIBQuestion.prototype.createAnswerOptionToAnswersMap = function() {
+    for (var a = {}, d = 0; d < this.answerOptions.length; ++d) {
+        var c = this.answerOptions[d],
+            f = cp.D[c],
+            e = f.correctAnswers,
+            g = {
+                answers: []
+            };
+        if (f.sac) {
+            g.sac = !0;
+            for (var b = f.allAnswers, f = f.allImageClassNames, j = 0; j < b.length; ++j) {
+                var i = {};
+                i.text = b[j];
+                i.ip = f[j];
+                i.ic = !1;
+                for (var h = 0; h < e.length; ++h)
+                    if (b[j] == e[h]) {
+                        i.ic = !0;
+                        break
+                    }
+                g.answers[j] = i
+            }
+        } else {
+            g.sac = !1;
+            for (h = 0; h < e.length; ++h) i = {}, i.text = e[h], i.ic = !0, g.answers[h] = i
+        }
+        a[c] = g
+    }
+    return a
+};
+cp.FIBQuestion.prototype.startQuestion = function() {
+    if (this.m_quizController && (this.m_quizController.GetIsInReviewMode(), this.shuffleAnswers(), this.answerOptionsDrawn = !1, cp.FIBQuestion.superClass.startQuestion.call(this), cp.responsive)) {
+        var a = this;
+        cp.em.addEventListener(function(d) {
+            a.notifyResponsiveItemChange.call(a, d);
+            a.m_answersDisabled && a.disableAllOptions()
+        }, cp.INPUTCONTROLREPLACEDEVENT)
+    }
+};
+cp.FIBQuestion.prototype.showReviewArea = function(a) {
+    for (var d in this.answerOptionToAnswersMap) {
+        var c = this.answerOptionToAnswersMap[d];
+        c && c.elem.removeOpenReviewAreas()
+    }
+    var f = document.getElementById(this.getAssociatedObjName());
+    f.parentNode.appendChild(a);
+    var e = cp.movie.stage.getSlideDiv(),
+        g = e.onclick;
+    e.style.cursor = "pointer";
+    cp.registerGestureEvent(e, cp.GESTURE_EVENT_TYPES.TAP, function(b) {
+        cp.disableInteractions || (f.parentNode.removeChild(a), e.style.cursor = "default", cp.registerGestureEvent(e, cp.GESTURE_EVENT_TYPES.TAP,
+            g), cp.handleClick(b))
+    });
+    d = document.getElementById("fibReviewCloseButton");
+    cp.registerGestureEvent(d, cp.GESTURE_EVENT_TYPES.TAP, function() {
+        cp.disableInteractions || (f.parentNode.removeChild(a), e.style.cursor = "default", cp.registerGestureEvent(e, cp.GESTURE_EVENT_TYPES.TAP, g))
+    })
+};
+cp.FIBQuestion.prototype.shuffleAnswers = function() {
+    var a = !this.m_quizController.GetIsAttemptFinished() && this.getWasJudged() && !this.m_quizController.GetIsSubmitAll(),
+        d = this.getIsPretest() && this.m_quizController.GetIsPretestQuestionsDisabled();
+    if (!((a || this.m_quizController.GetIsInReviewMode() || d) && 0 < this.answerOptions.length)) {
+        a = this.answerOptions.length;
+        for (d = 0; d < a; ++d) {
+            var c = this.answerOptions[d],
+                f = cp.D[c];
+            if (f.sac && f.ish && !0 != f.isShuffled) {
+                var e = this.answerOptionToAnswersMap[c].answers,
+                    g, b = e.length,
+                    j, i = [];
+                for (g = 0; g < b; ++g) i[g] = e[g];
+                for (g = b; 1 < g; g--) e = Math.floor(Math.random() * g), e != g && (j = i[e], i[e] = i[g - 1], i[g - 1] = j);
+                for (g = 0; g < b; ++g) this.answerOptionToAnswersMap[c].answers[g] = i[g];
+                f.isShuffled = !0
+            }
+        }
+    }
+};
+cp.FIBQuestion.prototype.getSelectedText = function(a) {
+    a = this.answerOptionToAnswersMap[a];
+    return void 0 == a.selectedAns ? "" : a.selectedAns
+};
+cp.FIBQuestion.prototype.getAnswerObjects = function(a) {
+    return this.answerOptionToAnswersMap[a].answers
+};
+cp.FIBQuestion.prototype.registerFIBAnswer = function(a) {
+    this.answerOptionToAnswersMap[a.id].elem = a;
+    var a = !0,
+        d;
+    for (d in this.answerOptionToAnswersMap) var c = this.answerOptionToAnswersMap[d],
+        a = a && void 0 != c.elem;
+    this.answerOptionsDrawn = a
+};
+cp.FIBQuestion.prototype.clearAnswers = function() {
+    this.verbose && cp.log("Inside Clear Answers");
+    var a = this.m_quizController && this.m_quizController.GetIsSubmitAll() && !this.getIsPretest(),
+        a = (a = !1 == this.getWasJudged() || a && !1 == this.m_quizController.m_submittedAllQuestions) && !this.m_quizController.GetIsInReviewMode();
+    if (!1 != a) {
+        this.m_selectedAnswersArr = [];
+        this.verbose && cp.log("Not Attempted. Hence Clearing");
+        for (var d in this.answerOptionToAnswersMap)
+            if (a = this.answerOptionToAnswersMap[d])(a = a.elem) && a.clearAnswer()
+    }
+};
+cp.FIBQuestion.prototype.disableAllOptions = function() {
+    if (this.m_quizController) {
+        var a = !0;
+        this.m_quizController.GetIsSubmitAll() && !this.getIsPretest() && (!this.m_quizController.GetIsInReviewMode() && !this.m_quizController.m_submittedAllQuestions) && (a = !1);
+        if (a) {
+            for (var d in this.answerOptionToAnswersMap)
+                if (a = this.answerOptionToAnswersMap[d].elem) a.disableOption(), !0 == this.answerOptionsDrawn && a.oHandler.disable();
+            this.m_answersDisabled = !0
+        }
+    }
+};
+cp.FIBQuestion.prototype.notifyResponsiveItemChange = function(a) {
+    if (cp.responsive && (a && a.cpData) && a.cpData.captionName == this.captionName)
+        if ("updateResponsiveVarText:textadjust" != a.cpData.reason) {
+            var d = [],
+                c = [],
+                f;
+            for (f in this.answerOptionToAnswersMap) {
+                var e = this.answerOptionToAnswersMap[f],
+                    g = e.elem;
+                if (g && g.oHandler) {
+                    var b = g.logicalAnswerObj;
+                    b.isComboBox ? (e = g.oHandler.getIndex, b = b.getResponsiveLabelCombo) : (e = g.oHandler.getText, b = b.getResponsiveTextInputField);
+                    d[f] = e();
+                    c[f] = b
+                }
+            }
+            a.cpData.callbackFn && a.cpData.callbackFn();
+            for (var j in this.answerOptionToAnswersMap)
+                if (e = this.answerOptionToAnswersMap[j], (g = e.elem) && g.oHandler) b = e.elem.logicalAnswerObj, e.elem.oHandler = c[j].call(b, this, cp.D[b.element.id]), (b.isComboBox ? b.element.oHandler.setIndex : b.element.oHandler.setText)(d[j])
+        } else
+            for (j in this.answerOptionToAnswersMap) e = this.answerOptionToAnswersMap[j], (g = e.elem) && g.adjustReviewIcon()
+};
+cp.FIBQuestion.prototype.checkIfAttempted = function() {
+    for (var a in this.answerOptionToAnswersMap) {
+        var d = this.answerOptionToAnswersMap[a].elem;
+        if (d && d.isAttempted()) return !0
+    }
+    return !1
+};
+cp.FIBQuestion.prototype.checkIfCorrect = function() {
+    var a = !0,
+        d;
+    for (d in this.answerOptionToAnswersMap) {
+        var c = this.answerOptionToAnswersMap[d].elem,
+            a = a && c && c.isCorrectlyAnswered();
+        if (!a) return !1
+    }
+    return a
+};
+cp.FIBQuestion.prototype.checkAndSetQuestionStatus = function() {
+    var a = this.QuestionStatusEnum.INCOMPLETE,
+        a = !1;
+    a = this.getIsSurvey() ? this.checkIfAttempted() ? this.QuestionStatusEnum.CORRECT : this.QuestionStatusEnum.INCOMPLETE : this.checkIfAttempted() ? (a = this.checkIfCorrect()) ? this.QuestionStatusEnum.CORRECT : this.QuestionStatusEnum.INCORRECT : this.QuestionStatusEnum.INCOMPLETE;
+    this.setQuestionStatus(a)
+};
+cp.FIBQuestion.prototype.getAnswerScores = function() {
+    var a = [],
+        d;
+    for (d in this.answerOptionToAnswersMap) {
+        var c = this.answerOptionToAnswersMap[d];
+        if (void 0 != c) {
+            var f = cp.D[d],
+                e = new cp.AnswerScore;
+            e.m_answerID = f.aid.toString();
+            e.m_correctAnswer = 0 < f.correctAnswers.length ? cp.cpJoin(f.correctAnswers, ";") : "";
+            e.m_chosenAnswer = c.elem.oHandler.getText();
+            a.push(e)
+        }
+    }
+    return a
+};
+cp.FIBQuestion.prototype.setQuestionSpecificScoreProperties = function(a) {
+    void 0 != a && (a.m_answerOrderArrayAsString = this.m_answerOrderArray)
+};
+cp.FIBQuestion.prototype.restoreFromQuestionSpecificScoreProperties = function(a) {
+    void 0 != a && (a = a.m_answerOrderArrayAsString, void 0 == a || "" == a || this.setAnswerOrder(a))
+};
+cp.FIBQuestion.prototype.setAnswerOrder = function(a) {
+    if (a && !(0 >= a.length)) {
+        for (var d = a.split(";"), c = this.answerOptions.length, f = 0; f < c; ++f) {
+            var e = this.answerOptions[f],
+                g = this.answerOptionToAnswersMap[e];
+            if (g.sac) {
+                for (var b = d[f].split(":"), g = g.answers, j = [], i = 0; i < b.length; ++i)
+                    for (var h = unescape(b[i]), m = 0; m < g.length; ++m) {
+                        var n = g[m];
+                        n.text == h && j.push(n)
+                    }
+                this.answerOptionToAnswersMap[e].answers = j.splice(0)
+            }
+        }
+        this.m_answerOrderArray = a
+    }
+};
+cp.FIBQuestion.prototype.resumeSelectedAnswers = function(a) {
+    if (!(0 >= a.length)) {
+        this.m_selectedAnswersArr = [];
+        for (var d = 0; d < a.length; ++d) {
+            var c = unescape(a[d].m_chosenAnswer),
+                f = this.answerOptionToAnswersMap[this.answerOptions[d]];
+            this.m_selectedAnswersArr[d] = c;
+            f.selectedAns = c
+        }
+    }
+};
+cp.FIBQuestion.prototype.setSelectedAnswers = function() {
+    this.m_selectedAnswersArr = [];
+    for (var a = this.answerOptions.length, d = 0; d < a; ++d) {
+        var c = this.answerOptionToAnswersMap[this.answerOptions[d]],
+            f = c.elem;
+        f && f.oHandler && (f = f.oHandler.getText(), this.m_selectedAnswersArr[d] = f, c.selectedAns = f)
+    }
+};
+cp.FIBQuestion.prototype.getChosenAnswerAsString = function() {
+    return cp.FIBQuestion.superClass.getChosenAnswerAsString.call(this)
+};
+cp.FIBQuestion.prototype.getCorrectAnswerAsString = function() {
+    for (var a = "", d = this.answerOptions.length, c = 0; c < d; ++c) var f = cp.D[this.answerOptions[c]],
+        a = 0 == c ? a + cp.cpJoin(f.correctAnswers, ":") : a + (";" + cp.cpJoin(f.correctAnswers, ":"));
+    return a
+};
+cp.FIBQuestion.prototype.getChosenAnswerAsStringForReview = function() {
+    return this.getChosenAnswerAsString()
+};
+cp.FIBQuestion.prototype.getCorrectAnswerAsStringForReview = function() {
+    return this.getCorrectAnswerAsString()
+};
+cp.FIBQuestion.prototype.getAnswerTexts = function() {
+    return ""
+};
+cp.FIBQuestion.prototype.saveAnswerOrder = function() {
+    var a = "",
+        d;
+    for (d in this.answerOptionToAnswersMap) {
+        var c = this.answerOptionToAnswersMap[d];
+        if (void 0 != c) {
+            if (c.sac)
+                for (var a = a + c.answers[0].text, f = 1; f < c.answers.length; ++f) a += ":" + escape(c.answers[f].text);
+            else a += "";
+            a += ";"
+        }
+    }
+    this.m_answerOrderArray = a = a.substr(0, a.length - 1);
+    this.setSelectedAnswers()
+};
+cp.HotspotInput = function(a) {
+    this.elementName = a.id;
+    cp.HotspotInput.baseConstructor.call(this, a);
+    this.id = this.getAttribute("id");
+    this.type = this.getAttribute("type");
+    this.answerID = this.getAttribute("aid");
+    this.relatedQuestionSlide = this.getAttribute("rqs");
+    cp.responsive && (this.responsiveCSS = this.getAttribute("css"));
+    this.isCorrect = this.getAttribute("ic");
+    this.value = "enabled";
+    this.marked = this.getAttribute("mr");
+    this.showHandCursorOnOver = this.getAttribute("cur");
+    this.isDrawn = !1
+};
+cp.inherits(cp.HotspotInput, cp.HighlightBox);
+cp.HotspotInput.prototype.getAttribute = function(a) {
+    var c = cp.D[this.elementName];
+    return !c ? null : c[a]
+};
+cp.HotspotInput.prototype.start = function(a) {
+    this.drawIfNeeded();
+    if (!this.effectIsStarted || a) this.updateEffects(this.hasEffect), this.effectIsStarted = !0
+};
+cp.HotspotInput.prototype.reset = function(a) {
+    delete cp.ropMap[this.element.id];
+    cp.HotspotInput.superClass.reset.call(this, a);
+    this.isDrawn = !1;
+    this.element.width = "0";
+    this.element.height = "0";
+    this.element.style.width = "0px";
+    this.element.style.height = "0px";
+    this.element.left = "0";
+    this.element.top = "0";
+    this.element.style.left = "0px";
+    this.element.style.top = "0px";
+    cp.responsive && (this.registered = !1)
+};
+cp.HotspotInput.prototype.linkedItemDrawingCompleteHandler = function(a) {
+    if (cp.responsive && this.drawForResponsive) {
+        var c = cp.getResponsiveCSS(this.responsiveCSS);
+        a.cpData && a.cpData.uid && !(a.cpData.uid != c.lhID && a.cpData.uid != c.lvID) && (cp.verbose && cp.log("drawing " + this.element.id + ", for " + a.cpData.uid), this.drawForResponsive(!0, cp.ReasonForDrawing.kLinkedToItemAppeared))
+    }
+};
+cp.HotspotInput.prototype.subscribeToItemDrawingCompleteHandler = function() {
+    if (cp.responsive && this.responsiveCSS) {
+        var a = this,
+            c = cp.getResponsiveCSS(this.responsiveCSS);
+        c && (-1 != c.lhID || -1 != c.lvID) && cp.em.addEventListener(function(b) {
+            a.linkedItemDrawingCompleteHandler(b)
+        }, cp.ITEMDRAWINGCOMPLETEEVENT)
+    }
+};
+cp.HotspotInput.prototype.drawForResponsive = function(a, c) {
+    var b = cp.getQuestionObject(this.relatedQuestionSlide);
+    if (!b || !b.getIsStarted() || !this.responsiveCSS) return !1;
+    if (this.isDrawn && !a) return !0;
+    var e = cp.getResponsiveCSS(this.responsiveCSS);
+    cp.getCSSFromLayouter(e, this);
+    var d = !1,
+        d = this.re || this.sh && !this.sh.i || this.fillOuterArea,
+        f = void 0 != this.tr;
+    if (this.currentCSS == e && !d && !f && !a) return !0;
+    this.actualElement || (this.actualElement = this.element);
+    f = this.actualElement.parentElement;
+    cp.movie.stage.getSlideDiv();
+    d = cp("re-" + this.actualElement.id);
+    d || (this.zIndex = cp.D[this.parentDivName].zIndex, d = cp.newElem("div"), cp.fixWebkitScaling(d), d.id = "re-" + this.actualElement.id, this.element = cp.newElem("canvas"), cp.addRewrapObjectAsPerRestOfProjectItem(d), d.setAttribute("class", "cp-rewrap"), d.appendChild(this.element), d.style.zIndex = this.zIndex, this.parentDivName += "hotspot");
+    f && (f.drawingBoard = d, f.bounds = this.bounds, f.drawingBoard.bounds = this.vbounds);
+    cp.HotspotInput.superClass.drawForResponsive.call(this, a, c);
+    this.currentCSS =
+        e;
+    if (cp.movie.playbackController && (e = cp.movie.playbackController.GetQuizController())) return e.GetIsInReviewMode(), e = b.shouldDisableOptions(), this.group = b.getAnswerGroupName(), f.style.backgroundColor = "#FFFFFF", f.style.opacity = "0", f.style.cursor = this.showHandCursorOnOver ? "pointer" : "default", this.actualElement.name = this.group, e && (this.value = "disabled", f.style.cursor = "default", b.getWasJudged() && b.canShowReviewIcons() && this.isCorrect && (this.reviewIconImage || (this.reviewIconImage = cp.newElem("img"), cp.fixWebkitScaling(this.reviewIconImage),
+            this.reviewIconImage.style.position = "absolute", this.sh && (e = this.sh.a, cp.applyShadow(this.reviewIconImage, this.sh.d * Math.cos(Math.PI * e / 180) + "px " + this.sh.d * Math.sin(Math.PI * e / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, this.sh.o) + (this.sh.i ? " inset" : ""))), d.appendChild(this.reviewIconImage), this.reviewIconImage.style.zIndex = this.zIndex), this.reviewIconImage.src = cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src, e = lOrigImageH = 15, f = this.actualElement.parentElement.getBoundingClientRect(),
+        d = d.getBoundingClientRect(), this.reviewIconImage.style.left = f.left - d.left + (f.width / 2 - e / 2) + "px", this.reviewIconImage.style.top = f.top - d.top + (f.height / 2 - lOrigImageH / 2) + "px")), this.actualElement.style.position = "absolute", this.isDrawn = !0, this.visible || (this.actualElement.style.visibility = "hidden"), b.registerHotspotInput(this, c), this.registered = !0
+};
+cp.HotspotInput.prototype.drawIfNeeded = function(a) {
+    if (!cp.responsive || !this.drawForResponsive(a, cp.ReasonForDrawing.kRegularDraw))
+        if ((a = cp.getQuestionObject(this.relatedQuestionSlide)) && !this.isDrawn && a.getIsStarted()) {
+            var c = this.element,
+                b = c.parentElement,
+                e = cp.newElem("div");
+            cp.fixWebkitScaling(e);
+            e.id = "re-" + this.element.id;
+            this.element = cp.newElem("canvas");
+            cp.movie.stage.getSlideDiv();
+            cp.addRewrapObjectAsPerRestOfProjectItem(e);
+            e.setAttribute("class", "cp-rewrap");
+            e.appendChild(this.element);
+            this.zIndex =
+                cp.D[this.parentDivName].zIndex;
+            e.style.zIndex = this.zIndex;
+            this.parentDivName += "hotspot";
+            b && (b.drawingBoard = e, b.bounds = this.bounds, b.drawingBoard.bounds = this.vbounds);
+            cp.HotspotInput.superClass.drawIfNeeded.call(this);
+            if (cp.movie.playbackController) {
+                var d = cp.movie.playbackController.GetQuizController();
+                d && (d.GetIsInReviewMode(), d = a.shouldDisableOptions(), this.group = a.getAnswerGroupName(), b.style.backgroundColor = "#FFFFFF", b.style.opacity = "0", b.style.cursor = this.showHandCursorOnOver ? "pointer" : "default",
+                    c.name = this.group, d && (this.value = "disabled", b.style.cursor = "default", a.getWasJudged() && a.canShowReviewIcons() && this.isCorrect && (b = cp.newElem("img"), cp.fixWebkitScaling(b), b.src = cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src, d = lOrigImageH = 15, b.style.position = "absolute", b.style.left = parseFloat(c.parentElement.style.left) - parseFloat(e.style.left) + parseFloat(c.parentElement.style.width) / 2 - d / 2 + "px", b.style.top = parseFloat(c.parentElement.style.top) - parseFloat(e.style.top) +
+                        parseFloat(c.parentElement.style.height) / 2 - lOrigImageH / 2 + "px", this.sh && (d = this.sh.a, cp.applyShadow(b, this.sh.d * Math.cos(Math.PI * d / 180) + "px " + this.sh.d * Math.sin(Math.PI * d / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, this.sh.o) + (this.sh.i ? " inset" : ""))), e.appendChild(b), b.style.zIndex = this.zIndex)), c.style.position = "absolute", this.isDrawn = !0, this.visible || (c.style.visibility = "hidden"), a.registerHotspotInput(this))
+            }
+        }
+};
+cp.HotspotQuestion = function(a, c) {
+    cp.HotspotQuestion.baseConstructor.call(this, a, c);
+    this.answerOptions = this.getAnswerOptions();
+    this.questionData = cp.D[this.questionObjName];
+    this.hotspotPositionList = [];
+    this.hotspotGroupName = "hotspotImage_" + c;
+    this.selectedHotspotPositions = "";
+    this.m_selectedAnswersArr = [];
+    this.verbose = !1
+};
+cp.inherits(cp.HotspotQuestion, cp.Question);
+cp.HotspotQuestion.prototype.registerHotspotInput = function(a, c) {
+    this.m_slideElem = cp.movie.stage.mainSlideDiv;
+    this.m_slideContainerDivRect = this.m_slideElem.getBoundingClientRect();
+    this.hotspotInputs || (this.hotspotInputs = {});
+    this.hitTestingRects || (this.hitTestingRects = {});
+    for (var b = 0; b < this.answerOptions.length; ++b) {
+        var e = this.answerOptions[b];
+        if (e == a.parentDivName) {
+            this.hotspotInputs[e] = a;
+            var d = document.getElementById(e),
+                d = cp.getHitTestingRect(d.parentElement),
+                f = 0,
+                g = 0;
+            cp.responsive ? (f -= this.m_slideContainerDivRect.left,
+                g -= this.m_slideContainerDivRect.top) : (0 > this.m_slideContainerDivRect.left && (f -= this.m_slideContainerDivRect.left), 0 > this.m_slideContainerDivRect.top && (g -= this.m_slideContainerDivRect.top));
+            d.minX += f;
+            d.minY += g;
+            d.maxX += f;
+            d.maxY += g;
+            d.minX /= this.m_slideElem.scaleFactor;
+            d.minY /= this.m_slideElem.scaleFactor;
+            d.maxX /= this.m_slideElem.scaleFactor;
+            d.maxY /= this.m_slideElem.scaleFactor;
+            cp.responsive && (d.minX = cp.getRoundedValue(100 * (d.minX / cp.project.clientWidth)), d.maxX = cp.getRoundedValue(100 * (d.maxX / cp.project.clientWidth)),
+                d.minY = cp.getRoundedValue(100 * (d.minY / cp.project.clientHeight)), d.maxY = cp.getRoundedValue(100 * (d.maxY / cp.project.clientHeight)));
+            this.hitTestingRects[e] = d
+        }
+    }
+    for (b = 0; b < this.answerOptions.length; ++b)
+        if (e = this.answerOptions[b], void 0 == this.hotspotInputs[e]) return;
+    (!cp.responsive || c == cp.ReasonForDrawing.kRegularDraw) && this.drawHotspotsAgain()
+};
+cp.HotspotQuestion.prototype.resetQuestionData = function() {
+    cp.HotspotQuestion.superClass.resetQuestionData.call(this);
+    if (!this.m_quizController.GetGoToQuizScopeActionExecuted()) {
+        this.m_selectedAnswersArr = [];
+        this.selectedHotspotPositions = "";
+        this.resetHotspotPositionList();
+        for (var a = this.getAllHotspotInputs(), c = 0; c < a.length; ++c)(currHotspotInput = a[c]) && this.resetHotspotIsMarked(currHotspotInput)
+    }
+};
+cp.HotspotQuestion.prototype.drawHotspotsAgain = function() {
+    this.resetHotspotPositionList(!0);
+    this.drawHotspots(!0)
+};
+cp.HotspotQuestion.prototype.drawHotspots = function(a) {
+    var c = document.getElementById(this.getAssociatedObjName()),
+        b = this.getSelectedPositions();
+    if ("" != b) {
+        var b = b.split(";"),
+            e = b.length;
+        if (0 != e)
+            for (var d = 0; d < e; ++d) {
+                var f = b[d].split("_"),
+                    g = f[0],
+                    h = f[1];
+                cp.responsive && (g = Math.round(g * cp.project.clientWidth / 100), h = Math.round(h * cp.project.clientHeight / 100));
+                this.addHotspotDiv(c, g, h, f[2], a)
+            }
+    }
+};
+cp.HotspotQuestion.prototype.getAllowClickOnHotspotsOnlyFlag = function() {
+    return this.questionData.ach
+};
+cp.HotspotQuestion.prototype.getHotspotImagePath = function() {
+    return "./" + this.questionData.chap
+};
+cp.HotspotQuestion.prototype.getHotspotPositionList = function() {
+    return this.hotspotPositionList
+};
+cp.HotspotQuestion.prototype.resetHotspotPositionList = function(a) {
+    a || (this.hotspotPositionList = []);
+    a = document.getElementById(this.getAssociatedObjName());
+    if (void 0 != a && void 0 != a)
+        for (var c = a.childNodes, b = c.length - 1; 0 <= b; --b) {
+            var e = c[b];
+            "IMG" == e.nodeName && -1 != e.name.indexOf("hotspotImage_") && a.removeChild(e)
+        }
+};
+cp.HotspotQuestion.prototype.setSelectedPositions = function() {
+    if (this.hotspotPositionList) {
+        var a = this.hotspotPositionList.length;
+        if (!(0 >= a)) {
+            for (var c = "", c = this.hotspotPositionList[0].x + "_" + this.hotspotPositionList[0].y + "_" + this.hotspotPositionList[0].isCorrect, b = 1; b < a; ++b) c += ";", c += this.hotspotPositionList[b].x + "_" + this.hotspotPositionList[b].y + "_" + this.hotspotPositionList[b].isCorrect;
+            this.selectedHotspotPositions = c
+        }
+    }
+};
+cp.HotspotQuestion.prototype.getSelectedPositions = function() {
+    return this.selectedHotspotPositions
+};
+cp.HotspotQuestion.prototype.getHotspotIsMarked = function(a) {
+    return cp.D[a.id].mr
+};
+cp.HotspotQuestion.prototype.setHotspotIsMarked = function(a) {
+    cp.D[a.id].mr = !0
+};
+cp.HotspotQuestion.prototype.resetHotspotIsMarked = function(a) {
+    var c = cp.D[a.id];
+    c.cur && (a.parentNode.style.cursor = "pointer");
+    c.mr = !1
+};
+cp.HotspotQuestion.prototype.getHotspotAnswerID = function(a) {
+    return cp.D[a.id].aid
+};
+cp.HotspotQuestion.prototype.setSelectedAnswers = function() {
+    this.setSelectedPositions();
+    var a = this.getAllHotspotInputs();
+    this.m_selectedAnswersArr = [];
+    if (!(0 >= a.length))
+        for (var c = 0; c < a.length; ++c) {
+            var b = a[c];
+            this.getHotspotIsMarked(b) && this.m_selectedAnswersArr.push(this.getHotspotAnswerID(b))
+        }
+};
+cp.HotspotQuestion.prototype.disableAllOptions = function() {
+    if (this.m_quizController) {
+        var a = !0;
+        this.m_quizController.GetIsSubmitAll() && !this.getIsPretest() && (!this.m_quizController.GetIsInReviewMode() && !this.m_quizController.m_submittedAllQuestions) && (a = !1);
+        if (a && (a = this.getAllHotspotInputs(), !(1 > a.length))) {
+            for (var c = 0; c < a.length; ++c) a[c].parentNode.style.cursor = "default";
+            this.m_answersDisabled = !0
+        }
+    }
+};
+cp.HotspotQuestion.prototype.getAllHotspotInputs = function() {
+    this.getAnswerGroupName();
+    for (var a = [], c = this.answerOptions, b = 0; b < c.length; ++b) a[b] = document.getElementById(c[b]);
+    return a
+};
+cp.HotspotQuestion.prototype.getCorrectHotspotInputs = function() {
+    for (var a = this.getAllHotspotInputs(), c = [], b = 0; b < a.length; ++b) {
+        var e = a[b],
+            d = cp.D[e.id];
+        d && d.ic && c.push(e)
+    }
+    return c
+};
+cp.HotspotQuestion.prototype.clearAnswers = function() {
+    this.verbose && cp.log("Inside Clear Answers");
+    var a = this.m_quizController && this.m_quizController.GetIsSubmitAll() && !this.getIsPretest(),
+        a = (a = !1 == this.getWasJudged() || a && !1 == this.m_quizController.m_submittedAllQuestions) && !this.m_quizController.GetIsInReviewMode();
+    if (!1 != a) {
+        this.m_selectedAnswersArr = [];
+        this.selectedHotspotPositions = "";
+        this.verbose && cp.log("Not Attempted. Hence Clearing");
+        for (var c = document.getElementsByName(this.hotspotGroupName),
+                b = c.length, a = 0; a < b; ++a) {
+            var e = c[0];
+            if (e) {
+                var d = e.parentNode;
+                d && d.removeChild(e)
+            }
+        }
+        c = this.getAllHotspotInputs();
+        for (a = 0; a < c.length; ++a)(b = c[a]) && this.resetHotspotIsMarked(b);
+        this.hotspotPositionList = []
+    }
+};
+cp.HotspotQuestion.prototype.isCorrectHotspotInput = function(a) {
+    return cp.D[a].ic
+};
+cp.HotspotQuestion.prototype.getOffsetXPosition = function(a) {
+    return a - window.pageXOffset
+};
+cp.HotspotQuestion.prototype.getOffsetYPosition = function(a) {
+    return a - window.pageYOffset
+};
+cp.HotspotQuestion.prototype.checkIfMarkedCorrectHotspot = function(a) {
+    for (var c in this.hitTestingRects) {
+        var b = this.hitTestingRects[c],
+            e, d;
+        e = !1;
+        if (cp.responsive) {
+            e = Math.floor(a.x * cp.project.clientWidth / 100);
+            d = Math.floor(a.y * cp.project.clientHeight / 100);
+            var f = Math.floor(b.maxX * cp.project.clientWidth / 100),
+                g = Math.floor(b.minY * cp.project.clientHeight / 100),
+                h = Math.floor(b.maxY * cp.project.clientHeight / 100);
+            e = e > Math.floor(b.minX * cp.project.clientWidth / 100) - 2 && e < f + 2 && d > g - 2 && d < h + 2
+        } else e = a.x - window.pageXOffset,
+            d = a.y - window.pageYOffset, e = e > this.getOffsetXPosition(b.minX) && e < this.getOffsetXPosition(b.maxX) && d > this.getOffsetYPosition(b.minY) && d < this.getOffsetYPosition(b.maxY);
+        if (e && this.isCorrectHotspotInput(c)) return a.isCorrect = "true", !0
+    }
+    a.isCorrect = "false";
+    return !1
+};
+cp.HotspotQuestion.prototype.checkIfPositionCorrect = function(a, c) {
+    if (!cp.responsive) {
+        this.getAnswerGroupName();
+        for (var b = this.answerOptions, e = 0; e < b.length; ++e) {
+            var d = cp.D[b[e]],
+                f = d.vb,
+                g = f[1],
+                h = f[2],
+                i = f[3];
+            if (a > f[0] && (a < h && c > g && c < i) && (d.mr = !0, d.ic)) return !0
+        }
+        return !1
+    }
+};
+cp.HotspotQuestion.prototype.checkIfAllCorrectHotspotsMarked = function() {
+    for (var a = this.getCorrectHotspotInputs(), c = 0; c < a.length; ++c)
+        if (!this.getHotspotIsMarked(a[c])) return !1;
+    return !0
+};
+cp.HotspotQuestion.prototype.getQuestionScoredPoints = function() {
+    return this.getIsSurvey() || !this.getWasJudged() ? 0 : this.getQuestionLevelScoredPoints()
+};
+cp.HotspotQuestion.prototype.saveAnswerOrder = function() {
+    this.setSelectedAnswers()
+};
+cp.HotspotQuestion.prototype.checkAndSetQuestionStatus = function() {
+    var a = this.QuestionStatusEnum.INCOMPLETE,
+        c = this.hotspotPositionList.length;
+    if (0 >= c) a = this.QuestionStatusEnum.INCOMPLETE;
+    else {
+        var b = !0,
+            e = !1;
+        if (this.getIsSurvey()) this.getIsSurvey() && (a = this.QuestionStatusEnum.CORRECT);
+        else {
+            for (a = 0; a < c; ++a) this.checkIfMarkedCorrectHotspot(this.hotspotPositionList[a]) || (b = b && !1);
+            b && (e = b && this.checkIfAllCorrectHotspotsMarked());
+            a = e ? this.QuestionStatusEnum.CORRECT : this.QuestionStatusEnum.INCORRECT
+        }
+        this.setSelectedPositions()
+    }
+    this.setQuestionStatus(a)
+};
+cp.HotspotQuestion.prototype.hotspotQuestionHandler = function(a, c, b) {
+    if (this.m_quizController) {
+        var a = this.m_quizController.GetIsInReviewMode(),
+            e = this.m_quizController.GetIsSubmitAll() && !this.getIsPretest();
+        !this.getIsKnowledgeCheck() && a || this.getWasJudged() && !e || (a = this.getAssociatedObjName(), a = document.getElementById(a), this.showHideHotspotImage(a, c, b))
+    }
+};
+cp.HotspotQuestion.prototype.checkIfClickedInsideHotspotAndSetMarked = function(a, c) {
+    for (var b = this.getAllHotspotInputs(), e = 0; e < b.length; ++e) {
+        var d = b[e];
+        currHotspotInputParent = d.parentElement;
+        var f = currHotspotInputParent.getBoundingClientRect(),
+            g = !1,
+            g = a - window.pageXOffset,
+            h = c - window.pageYOffset;
+        if (g = cp.responsive ? g > f.left - 2 && g < f.right + 2 && h > f.top - 2 && h < f.bottom + 2 : g > f.left && g < f.right && h > f.top && h < f.bottom) return this.setHotspotIsMarked(d), !0
+    }
+    return !1
+};
+cp.HotspotQuestion.prototype.showHideHotspotImage = function(a, c, b) {
+    var e = a.childNodes,
+        d = cp.movie.stage.mainSlideDiv,
+        f = d.getBoundingClientRect();
+    cp("project").getBoundingClientRect();
+    for (var g = e.length - 1; 0 <= g; --g) {
+        var h = e[g];
+        if ("IMG" == h.nodeName && -1 != h.name.indexOf("hotspotImage_")) {
+            var i = h.getBoundingClientRect(),
+                j = c - window.pageXOffset,
+                k = b - window.pageYOffset;
+            if (isInside = cp.responsive ? j > i.left - 2 && j < i.right + 2 && k > i.top - 2 && k < i.bottom + 2 : j > i.left && j < i.right && k > i.top && k < i.bottom) {
+                this.removeHotspotPosition(h.id) &&
+                    a.removeChild(h);
+                return
+            }
+        }
+    }
+    e = this.checkIfClickedInsideHotspotAndSetMarked(c, b, !0);
+    if (!this.getAllowClickOnHotspotsOnlyFlag() || e) g = cp.getScaledPosition(c, b), e = g.X, g = g.Y, cp.shouldScale || (e = c - f.left, g = b - f.top, e -= window.pageXOffset, g -= window.pageYOffset), e /= d.scaleFactor, g /= d.scaleFactor, this.addHotspotDiv(a, e, g)
+};
+cp.HotspotQuestion.prototype.addHotspotDiv = function(a, c, b, e, d) {
+    var f = cp.newElem("img");
+    cp.fixWebkitScaling(f);
+    var g = 0,
+        h = 0;
+    this.m_quizController.GetIsInReviewMode() ? this.getIsSurvey() ? (f.src = cp.movie.im.m_projectImages["assets/htmlimages/hotspot_correct_answer_normal.png"].nativeImage.src, g = h = 20) : "undefined" == typeof e ? (f.src = this.getHotspotImagePath(), g = h = 30) : "false" == e ? (f.src = cp.movie.im.m_projectImages["assets/htmlimages/hotspot_incorrect_answer_normal.png"].nativeImage.src, g = h = 20) : "true" == e && (f.src =
+        cp.movie.im.m_projectImages["assets/htmlimages/hotspot_correct_answer_normal.png"].nativeImage.src, g = h = 20) : (f.src = this.getHotspotImagePath(), g = h = 30);
+    f.name = this.hotspotGroupName;
+    f.style.position = "absolute";
+    a.appendChild(f);
+    var i = f.clientWidth,
+        a = f.clientHeight;
+    f.naturalWidth && (i = i > f.naturalWidth ? i : f.naturalWidth);
+    f.naturalHeight && (a = a > f.naturalHeight ? a : f.naturalHeight);
+    i = i > f.width ? i : f.width;
+    a = a > f.height ? a : f.height;
+    0 == i && (i = g);
+    0 == a && (a = h);
+    cp.verbose && (cp.log("x,y : " + c + "," + b), cp.log("lBrowserSpecificW,lBrowserSpecificH : " +
+        i + "," + a));
+    cp.responsive ? (g = Math.round(100 * (c - i / 2) / cp.project.clientWidth), h = Math.round(100 * (b - a / 2) / cp.project.clientHeight), c = Math.round(100 * c / cp.project.clientWidth), b = Math.round(100 * b / cp.project.clientHeight), f.style.left = g + "%", f.style.top = h + "%") : (f.style.left = c - i / 2 + "px", f.style.top = b - a / 2 + "px");
+    f.style.zIndex = 1E3;
+    f.id = "hs_" + c + b;
+    cp.redrawItem(f.id);
+    d || this.addHotspotPosition(c, b, e, f.id)
+};
+cp.HotspotQuestion.prototype.addHotspotPosition = function(a, c, b, e) {
+    var d = {};
+    d.x = a;
+    d.y = c;
+    d.id = e;
+    d.isCorrect = "undefined" != typeof b ? b : "-1";
+    this.hotspotPositionList.push(d)
+};
+cp.HotspotQuestion.prototype.removeHotspotPosition = function(a) {
+    for (var c = 0; c < this.hotspotPositionList.length; ++c)
+        if (this.hotspotPositionList[c].id == a) return this.hotspotPositionList.splice(c, 1), !0;
+    return !1
+};
+cp.HotspotQuestion.prototype.startQuestion = function() {
+    if (this.m_quizController) {
+        var a = this.m_quizController.GetIsInReviewMode();
+        this.hotspotInputs = [];
+        if (!this.getIsKnowledgeCheck() && (a || this.getWasJudged())) this.resetHotspotPositionList(), this.drawHotspots();
+        this.lastViewedBreakPointWidth && parseFloat(this.lastViewedBreakPointWidth) != parseFloat(cp.ResponsiveProjWidth) && (a = cp.D.quizzingData) && cp.alert(a.rpViDv);
+        cp.HotspotQuestion.superClass.startQuestion.call(this)
+    }
+};
+cp.HotspotQuestion.prototype.setQuestionSpecificScoreProperties = function(a) {
+    if (void 0 != a && this.getWasJudged()) {
+        var c = this.hotspotPositionList.length;
+        if (!(0 >= c)) {
+            a.m_hotSpotNamesArrayAsString = "hotSpotAnimation_" + this.hotspotPositionList[0].x + "_" + this.hotspotPositionList[0].y;
+            a.m_hotSpot_xchordsAsString = "" + this.hotspotPositionList[0].x;
+            a.m_hotSpot_ychordsAsString = "" + this.hotspotPositionList[0].y;
+            cp.responsive && (a.m_hotSpotIsCorrect = "" + this.hotspotPositionList[0].isCorrect);
+            for (var b = 1; b < c; ++b) a.m_hotSpotNamesArrayAsString +=
+                ";" + ("hotSpotAnimation_" + this.hotspotPositionList[b].x + "_" + this.hotspotPositionList[b].y), a.m_hotSpot_xchordsAsString += ";" + this.hotspotPositionList[b].x, a.m_hotSpot_ychordsAsString += ";" + this.hotspotPositionList[b].y, cp.responsive && (a.m_hotSpotIsCorrect += ";" + this.hotspotPositionList[b].isCorrect);
+            cp.responsive && (a.m_BreakPointWidth = "" + cp.ResponsiveProjWidth)
+        }
+    }
+};
+cp.HotspotQuestion.prototype.restoreFromQuestionSpecificScoreProperties = function(a) {
+    if (void 0 != a) {
+        var c = [],
+            b = [],
+            e = [];
+        "" != a.m_hotSpot_xchordsAsString && (c = a.m_hotSpot_xchordsAsString.split(";"));
+        "" != a.m_hotSpot_ychordsAsString && (b = a.m_hotSpot_ychordsAsString.split(";"));
+        cp.responsive && (a.m_hotSpotIsCorrect && (e = a.m_hotSpotIsCorrect.split(";")), a.m_BreakPointWidth && (this.lastViewedBreakPointWidth = a.m_BreakPointWidth));
+        if (c.length == b.length && !(0 >= c.length || 0 >= b.length))
+            if (!cp.responsive || !(e.length != c.length &&
+                    0 >= e.length)) {
+                for (var a = "", a = c[0] + "_" + b[0], a = cp.responsive ? a + ("_" + e[0]) : a + ("_" + this.checkIfPositionCorrect(c[0], b[0])), d = 1; d < c.length; ++d) a += ";", a += c[d] + "_" + b[d], a = cp.responsive ? a + ("_" + e[d]) : a + ("_" + this.checkIfPositionCorrect(c[d], b[d]));
+                this.selectedHotspotPositions = a
+            }
+    }
+};
+cp.LikertItem = function(a, b) {
+    cp.LikertItem.baseConstructor.call(this, a);
+    this.visible = this.getAttribute("visible");
+    this.answerID = this.getAttribute("aid");
+    this.relatedQuestionSlide = this.getAttribute("rqs");
+    this.canvasDivName = this.getAttribute("cn");
+    this.value = "enabled";
+    this.checked = !1;
+    this.sh = this.getAttribute("sh");
+    this.args = b;
+    this.isDrawn = !1
+};
+cp.inherits(cp.LikertItem, cp.DisplayObject);
+cp.LikertItem.prototype.start = function(a) {
+    this.addIfNeeded();
+    if (!this.effectIsStarted || a) this.updateEffects(this.hasEffect), this.effectIsStarted = !0
+};
+cp.LikertItem.prototype.reset = function() {
+    delete cp.ropMap[this.element.id];
+    this.isDrawn = !1;
+    this.element.width = "0";
+    this.element.height = "0";
+    this.element.style.width = "0px";
+    this.element.style.height = "0px";
+    this.element.left = "0";
+    this.element.top = "0";
+    this.element.style.left = "0px";
+    this.element.style.top = "0px"
+};
+cp.LikertItem.prototype.loadAndDrawImage = function(a, b) {
+    null == this.loadedBtnImages && (this.loadedBtnImages = {});
+    var e = cp.movie.im.m_projectImages[a].nativeImage;
+    this.loadedBtnImages[a] = e;
+    var c = this.radioCanvasElements[b],
+        d = c.gc;
+    cp.clearCanvasProperly(c);
+    this.applyShadowOnChild(c);
+    d.drawImage(this.loadedBtnImages[a], this.bounds.minX, this.bounds.minY);
+    e && (e.alt = " ")
+};
+cp.LikertItem.prototype.clearAnswers = function() {
+    if (this.lQuestionObj) {
+        for (var a = 0; a < this.radioElements.length; ++a) this.loadAndDrawImage(this.lQuestionObj.getImageForState(this.type, "default"), a), this.radioElements[a] && (this.radioElements[a].checked = !1);
+        this.checked = !1
+    }
+};
+cp.LikertItem.prototype.isAnswered = function() {
+    return this.checked
+};
+cp.LikertItem.prototype.disableOptions = function() {
+    if (this.lQuestionObj && "disabled" != this.value) {
+        this.value = "disabled";
+        for (var a = 0; a < this.radioElements.length; ++a) this.radioElements[a].disabled = "disabled", this.radioElements[a].style.cursor = "default", this.radioElements[a].checked ? this.loadAndDrawImage(this.lQuestionObj.getImageForState(this.type, "selectedDisabled"), a) : this.loadAndDrawImage(this.lQuestionObj.getImageForState(this.type, "disabled"), a)
+    }
+};
+cp.LikertItem.prototype.getItemText = function() {
+    return !this.answerTextCanvasDivData ? "" : this.answerTextCanvasDivData.accstr
+};
+cp.LikertItem.prototype.getAnswerText = function() {
+    if (!this.lQuestionObj) return "";
+    for (var a = 0; a < this.radioElements.length; ++a)
+        if (this.radioElements[a].checked) return this.lQuestionObj.getRatingScaleValue(a);
+    return ""
+};
+cp.LikertItem.prototype.checkRadioButtonAtIndex = function(a, b) {
+    if (!(void 0 == a || 0 > a)) {
+        var e = this.radioElements[a];
+        if (!e.disabled || !b)
+            for (var c = document.getElementsByName(this.group), d = 0; d < c.length; ++d) {
+                var f = c[d];
+                e == f ? (this.checked = !0, f.checked = !0) : f.checked = !1;
+                f.checked ? e.disabled ? this.loadAndDrawImage(this.lQuestionObj.getImageForState(this.type, "selectedDisabled"), d) : this.loadAndDrawImage(this.lQuestionObj.getImageForState(this.type, "selected"), d) : e.disabled ? this.loadAndDrawImage(this.lQuestionObj.getImageForState(this.type,
+                    "disabled"), d) : this.loadAndDrawImage(this.lQuestionObj.getImageForState(this.type, "default"), d)
+            }
+    }
+};
+cp.LikertItem.prototype.createCanvasWithCorrectBounds = function(a, b) {
+    var e = 0 < b[0] ? 0 : b[0],
+        c = 0 < b[1] ? 0 : b[1],
+        d = (cp.D.project.w > b[2] ? cp.D.project.w : b[2]) - e,
+        f = (cp.D.project.h > b[3] ? cp.D.project.h : b[3]) - c;
+    canvas = this.canvas = cp.createCanvas(0, 0, d, f, a);
+    this.canvas.gcStyleW = d;
+    this.canvas.gcStyleH = f;
+    this.canvas.gcStyleL = e;
+    this.canvas.gcStyleT = c
+};
+cp.LikertItem.prototype.applyShadowOnChild = function(a) {
+    var b = a.gc;
+    b.width = a.gcStyleW;
+    b.height = a.gcStyleH;
+    b.left = a.gcStyleL;
+    b.top = a.gcStyleT;
+    this.sh && !this.sh.i && (b.shadowOffsetX = this.sh.d * Math.cos(Math.PI * this.sh.a / 180), b.shadowOffsetY = this.sh.d * Math.sin(Math.PI * this.sh.a / 180), b.shadowBlur = this.sh.b, b.shadowColor = cp.ConvertRGBToRGBA(this.sh.c, this.sh.o))
+};
+cp.LikertItem.prototype.addIfNeeded = function() {
+    if ((this.lQuestionObj = cp.getQuestionObject(this.relatedQuestionSlide)) && !this.isDrawn && this.lQuestionObj.getIsStarted() && cp.movie.playbackController) {
+        var a = cp.movie.playbackController.GetQuizController();
+        if (a) {
+            a.GetIsInReviewMode();
+            a = this.lQuestionObj.shouldDisableOptions();
+            this.group = this.getAttribute("gn");
+            var b = a ? "default" : "pointer",
+                e = cp.D[this.element.id];
+            this.actualId = e.actid;
+            this.answerTextDivData = cp.D[this.actualId];
+            this.answerTextCanvasDivName =
+                this.answerTextDivData.mdi;
+            this.answerTextCanvasDivData = cp.D[this.answerTextCanvasDivName];
+            var c = this.answerTextCanvasDivData.accstr,
+                d = this.answerTextCanvasDivData.b;
+            this.answerTextCanvasImageBounds = {
+                minX: d[0],
+                minY: d[1],
+                maxX: d[2],
+                maxY: d[3]
+            };
+            this.bounds = {
+                minX: d[0],
+                minY: d[1],
+                maxX: d[2],
+                maxY: d[3]
+            };
+            var f = document.getElementById(this.canvasDivName),
+                h = cp.movie.stage.getSlideDiv().firstChild,
+                d = !1,
+                d = this.re || this.sh && !this.sh.i;
+            this.radioButtonNames = e.rbs;
+            this.type = "radio";
+            this.zIndex = cp.D[e.actid].zIndex;
+            var i = e.aax;
+            if ("" == this.element.innerHTML) {
+                this.element.innerHTML += "<div id='" + this.answerTextCanvasDivName + "' tabIndex = '-1' role='text' aria-label='" + c + "' style='cursor:default;left:" + this.answerTextCanvasImageBounds.minX + "px; top:" + this.answerTextCanvasImageBounds.minY + "px;width: " + (this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX) + "px; height: " + (this.answerTextCanvasImageBounds.maxY - this.answerTextCanvasImageBounds.minY) + "px;'></div>";
+                for (var g = 0, k = 0; k < this.radioButtonNames.length; ++k) {
+                    var j =
+                        this.radioButtonNames[k],
+                        g = cp.D[j],
+                        c = g.b;
+                    g.currentXPos = c[0] + i - this.answerTextCanvasImageBounds.minX - 11;
+                    var g = c[2] + 10,
+                        l = this.lQuestionObj.getRatingScaleValue(k);
+                    this.element.innerHTML += "<input tabIndex='-1' aria-label='" + l + "' type='radio' " + this.value + " unchecked name='" + this.group + "' id='" + j + "' style='cursor:" + b + ";left:" + (c[0] + i - this.answerTextCanvasImageBounds.minX - 11) + "px; top: -3px;width: 22px; height:22px;position:absolute;border-radius:0px;border:0px'></input>"
+                }
+                this.bounds.maxX = g
+            }
+            b = cp.newElem("div");
+            cp.fixWebkitScaling(b);
+            h.insertBefore(b, f.parentElement);
+            b.setAttribute("class", "cp-rewrap");
+            b.id = this.actualId + "canvasHolder";
+            e.answerTextCanvasHolder = b.id;
+            c = cp.newElem("canvas");
+            c.setAttribute("class", "cp-shape");
+            c.id = this.answerTextCanvasDivName;
+            b.appendChild(c);
+            b.style.zIndex = this.zIndex;
+            f = document.getElementById(this.actualId);
+            f.drawingBoard = b;
+            cp.updateVarText(f);
+            this.answerTextCanvasDivData.dns = this.element.id;
+            this.answerTextCanvasDivData.re = this.re;
+            this.answerTextCanvasDivData.sh = this.sh;
+            this.answerTextCanvasDivData.tr =
+                this.tr;
+            d && (c.style.marginLeft = -this.bounds.minX + "px", c.style.marginTop = -this.bounds.minY + "px");
+            (new cp.Shape(c, this.answerTextCanvasDivData)).start();
+            c.parentElement.style.left = this.bounds.minX + "px";
+            c.parentElement.style.top = this.bounds.minY + "px";
+            c.parentElement.style.width = this.bounds.maxX - this.bounds.minX + "px";
+            c.parentElement.style.height = this.bounds.maxY - this.bounds.minY + "px";
+            c.parentElement.style.position = "absolute";
+            this.radioElements = [];
+            this.radioCanvasElements = [];
+            for (d = 0; d < this.radioButtonNames.length; ++d) {
+                j =
+                    this.radioButtonNames[d];
+                g = cp.D[j];
+                c = g.b;
+                f = cp(j);
+                this.radioElements[d] = f;
+                h = cp.newElem("canvas");
+                this.createCanvasWithCorrectBounds(h, c);
+                h.style.display = "block";
+                h.style.position = "absolute";
+                h.style.marginLeft = -this.bounds.minX + g.currentXPos + 5 + "px";
+                h.style.marginTop = -this.bounds.minY + "px";
+                b.appendChild(h);
+                this.radioCanvasElements[d] = canvas;
+                var m = this;
+                f.onclick = function(a) {
+                    return function() {
+                        cp.disableInteractions || m.checkRadioButtonAtIndex(a, true)
+                    }
+                }(d);
+                "checked" == g.checked ? this.loadAndDrawImage(this.lQuestionObj.getImageForState(this.type,
+                    "selected"), d) : this.loadAndDrawImage(this.lQuestionObj.getImageForState(this.type, "default"), d)
+            }
+            e = this.lQuestionObj.getSelectedIndex(e.actid);
+            this.checkRadioButtonAtIndex(e);
+            a && this.disableOptions();
+            this.element.style.left = this.bounds.minX + "px";
+            this.element.style.top = this.bounds.minY + "px";
+            this.element.style.width = this.bounds.maxX - this.bounds.minX + "px";
+            this.element.style.height = this.bounds.maxY - this.bounds.minY + "px";
+            this.element.style.position = "absolute";
+            this.element.parentElement.style.zIndex = 1E3;
+            this.isDrawn = !0;
+            this.visible || (this.element.style.visibility = "hidden");
+            this.lQuestionObj.registerLikertItem(this)
+        }
+    }
+};
+cp.LikertQuestion = function(a, b) {
+    cp.LikertQuestion.baseConstructor.call(this, a, b);
+    this.answerItems = [];
+    this.answerOptions = this.getAnswerOptions();
+    this.typeStatesMap = {
+        radio: {
+            "default": "assets/htmlimages/radioButton_normal.png",
+            selected: "assets/htmlimages/radioButton_selected.png",
+            disabled: "assets/htmlimages/radioButton_disabled.png",
+            selectedDisabled: "assets/htmlimages/radioButton_selectedDisabled.png"
+        }
+    };
+    this.ratingScaleVector = this.questionData.rsv;
+    this.verbose = !1;
+    this.m_eachAnswerIsSeparateInteraction = !0
+};
+cp.inherits(cp.LikertQuestion, cp.Question);
+cp.LikertQuestion.prototype.sendInteractionDataForEachAnswer = function(a) {
+    if (this.answerItems && !(0 >= this.answerItems.length)) {
+        var b = 0,
+            e = {},
+            c = this.getQuestionScore(),
+            d = c.m_interactionID,
+            f = cp.movie.playbackController;
+        if (f && c)
+            for (var h = 0; h < this.answerItems.length; ++h) {
+                var i = this.answerItems[h],
+                    g = i.getItemText();
+                "" != g && !f.IsRunningInConnect() ? (g = cp.trimStartingAndTrailingSpaces(g), g.replace(" ", "_"), e[g] && (g += ++b), e[g] = 1) : (g = b, b++);
+                c.m_interactionID = d + "_" + g;
+                c.m_chosenAnswersAsString = i.getAnswerText();
+                c.m_correctAnswersAsString = i.getAnswerText();
+                this.m_quizController.SendInteractionData(c, a)
+            }
+    }
+};
+cp.LikertQuestion.prototype.resumeSelectedAnswers = function(a) {
+    if (void 0 != a) {
+        this.m_selectedAnswersArr = [];
+        for (var b = 0; b < a.length; ++b) this.m_selectedAnswersArr.push(a[b].m_chosenAnswer)
+    }
+};
+cp.LikertQuestion.prototype.registerLikertItem = function(a) {
+    this.answerItems.push(a)
+};
+cp.LikertQuestion.prototype.setQuestionSpecificScoreProperties = function(a) {
+    a.m_answerOrderArrayAsString = ""
+};
+cp.LikertQuestion.prototype.getSelectedIndex = function(a) {
+    if (!this.m_selectedAnswersArr || 0 >= this.m_selectedAnswersArr.length) return -1;
+    for (var b = 0; b < this.answerOptions.length; ++b)
+        if (a == this.answerOptions[b]) return this.ratingScaleVector.indexOf(this.m_selectedAnswersArr[b]);
+    return -1
+};
+cp.LikertQuestion.prototype.getRatingScaleValue = function(a) {
+    return this.ratingScaleVector[a]
+};
+cp.LikertQuestion.prototype.getImageForState = function(a, b) {
+    return this.typeStatesMap[a][b]
+};
+cp.LikertQuestion.prototype.getAnswerScores = function() {
+    var a = [];
+    if (!this.answerItems || 0 >= this.answerItems.length) return a;
+    for (var b = 0; b < this.answerItems.length; ++b) {
+        var e = this.answerItems[b].getAnswerText(),
+            c = new cp.AnswerScore;
+        c.m_answerID = (b + 1).toString();
+        c.m_correctAnswer = e;
+        c.m_chosenAnswer = e;
+        a.push(c)
+    }
+    return a
+};
+cp.LikertQuestion.prototype.getQuestionScoredPoints = function() {
+    return 0
+};
+cp.LikertQuestion.prototype.resetQuestionData = function() {
+    cp.LikertQuestion.superClass.resetQuestionData.call(this);
+    this.m_quizController.GetGoToQuizScopeActionExecuted() || (this.m_selectedAnswersArr = [])
+};
+cp.LikertQuestion.prototype.setSelectedAnswers = function() {
+    if (this.answerItems && !(0 >= this.answerItems.length)) {
+        this.m_selectedAnswersArr = [];
+        for (var a = 0; a < this.answerItems.length; ++a) {
+            var b = this.answerItems[a].getAnswerText();
+            "" != b && this.m_selectedAnswersArr.push(b)
+        }
+    }
+};
+cp.LikertQuestion.prototype.disableAllOptions = function() {
+    if (this.m_quizController) {
+        var a = !0;
+        this.m_quizController.GetIsSubmitAll() && !this.getIsPretest() && (!this.m_quizController.GetIsInReviewMode() && !this.m_quizController.m_submittedAllQuestions) && (a = !1);
+        if (a && this.answerItems && !(0 >= this.answerItems.length)) {
+            for (a = 0; a < this.answerItems.length; ++a) {
+                var b = this.answerItems[a];
+                b.disableOptions && b.disableOptions()
+            }
+            this.m_answersDisabled = !0
+        }
+    }
+};
+cp.LikertQuestion.prototype.clearAnswers = function() {
+    this.verbose && cp.log("Inside Clear Answers");
+    var a = this.m_quizController && this.m_quizController.GetIsSubmitAll() && !this.getIsPretest(),
+        a = (a = !1 == this.getWasJudged() || a && !1 == this.m_quizController.m_submittedAllQuestions) && !this.m_quizController.GetIsInReviewMode();
+    if (!1 != a && (this.m_selectedAnswersArr = [], this.verbose && cp.log("Not Attempted. Hence Clearing"), this.answerItems && !(0 >= this.answerItems.length)))
+        for (a = 0; a < this.answerItems.length; ++a) {
+            var b =
+                this.answerItems[a];
+            b && (b.checked = !1, b.clearAnswers())
+        }
+};
+cp.LikertQuestion.prototype.getSelectedAnswerTextList = function(a) {
+    if (this.answerItems && !(0 >= this.answerItems.length)) {
+        for (var b = this.answerItems[0].getAnswerText(), e = 1; e < this.answerItems.length; ++e) this.answerItems[e].getAnswerText(), b += a + this.answerItems[0].getAnswerText();
+        cp.verbose && cp.log("Expected Answer Text List : " + b);
+        return b
+    }
+};
+cp.LikertQuestion.prototype.getAnswerTexts = function() {
+    var a = cp.LikertQuestion.superClass.getAnswerTexts.call(this);
+    if (a && !(0 >= a.length)) {
+        var b = {},
+            e = this.questionData.ao;
+        if (e.length == this.answerItems.length) {
+            for (var c = 0; c < e.length; ++c) {
+                var d = e[c].split(":"),
+                    d = cp.D[d[0]],
+                    f = this.answerItems[c].getAnswerText();
+                b[d.aid] = void 0 != f && "" != f ? cp.trimStartingAndTrailingSpaces(f) : ""
+            }
+            a.answerTextMap = b;
+            return a
+        }
+    }
+};
+cp.LikertQuestion.prototype.saveAnswerOrder = function() {
+    this.m_answerOrderArray = this.answerOptions.slice(0);
+    this.setSelectedAnswers()
+};
+cp.LikertQuestion.prototype.checkIfAttempted = function() {
+    for (var a = 0; a < this.answerItems.length; ++a)
+        if (!this.answerItems[a].isAnswered()) return !1;
+    return !0
+};
+cp.LikertQuestion.prototype.checkAndSetQuestionStatus = function() {
+    var a = this.QuestionStatusEnum.INCOMPLETE,
+        a = this.checkIfAttempted() ? this.QuestionStatusEnum.CORRECT : this.QuestionStatusEnum.INCOMPLETE;
+    this.setQuestionStatus(a)
+};
+cp.LikertQuestion.prototype.startQuestion = function() {
+    cp.LikertQuestion.superClass.startQuestion.call(this);
+    this.answerItems = []
+};
 cp.MatchingItem = function(a, c) {
     cp.MatchingItem.baseConstructor.call(this, a, c);
     this.canvasDivName = this.getAttribute("cn");
@@ -49432,56 +51201,2043 @@ cp.MatchingQuestion.prototype.saveAnswerOrder = function() {
     this.m_answerOrderArray = a;
     this.setSelectedAnswers()
 };
-cp.InteractiveItemQuestion = function(a, b) {
-    cp.InteractiveItemQuestion.baseConstructor.call(this, a, b);
-    this.m_item = void 0
+cp.MCQInput = function(a, c) {
+    cp.MCQInput.baseConstructor.call(this, a);
+    this.isSingleChoice = "radio" == this.type;
+    if (cp.responsive) {
+        var b = cp.D[cp.D[this.element.id].ahn];
+        this.responsiveCSS = b ? b.css : this.getAttribute("css")
+    }
+    this.isCorrect = this.getAttribute("ic");
+    this.tabIndex = -1;
+    this.accessibilityText = this.getAttribute("ad");
+    this.canvasDivName = this.getAttribute("cn");
+    this.value = "enabled";
+    this.checked = "unchecked";
+    b = this.getAttribute("b");
+    this.bounds = {
+        minX: b[0],
+        minY: b[1],
+        maxX: b[2],
+        maxY: b[3]
+    };
+    b = this.getAttribute("vb");
+    this.vbounds = {
+        minX: b[0],
+        minY: b[1],
+        maxX: b[2],
+        maxY: b[3]
+    };
+    this.answerHolderLeft = this.getAttribute("ahl");
+    this.answerHolderTop = this.getAttribute("aht");
+    this.sh = this.getAttribute("sh");
+    this.args = c
 };
-cp.inherits(cp.InteractiveItemQuestion, cp.Question);
-cp.InteractiveItemQuestion.prototype.getIsInteractiveWidget = function() {
+cp.inherits(cp.MCQInput, cp.Answer);
+cp.MCQInput.prototype.start = function(a) {
+    this.addIfNeeded();
+    if (!this.effectIsStarted || a) this.updateEffects(this.hasEffect), this.effectIsStarted = !0
+};
+cp.MCQInput.prototype.reset = function() {
+    delete cp.ropMap[this.element.id];
+    this.isDrawn = !1;
+    this.element.width = "0";
+    this.element.height = "0";
+    this.element.style.width = "0px";
+    this.element.style.height = "0px";
+    this.element.left = "0";
+    this.element.top = "0";
+    this.element.style.left = "0px";
+    this.element.style.top = "0px"
+};
+cp.MCQInput.prototype.disableOption = function() {
+    if ("disabled" != this.value && (this.element.style.cursor = "default", this.value = "disabled", this.inputControl.disabled = "disabled", this.inputControl.style.cursor = "default", this.inputControl.parentNode.style.cursor = "default", this.inputControl.parentNode.parentNode.style.cursor = "default", "checked" == this.checked || this.inputControl.checked ? this.loadAndDrawImage(this.m_questionObj.getImageForState(this.type, "selectedDisabled")) : this.loadAndDrawImage(this.m_questionObj.getImageForState(this.type,
+            "disabled")), this.m_questionObj.getWasJudged() && this.m_questionObj.canShowReviewIcons())) {
+        if (!this.reviewIconImage) {
+            this.reviewIconImage = cp.newElem("img");
+            this.reviewIconImage.tabIndex = -1;
+            this.reviewIconImage.style.position = "absolute";
+            this.reviewIconImage.style.zIndex = this.zIndex;
+            if (this.sh) {
+                var a = this.sh.a;
+                cp.applyShadow(this.reviewIconImage, this.sh.d * Math.cos(Math.PI * a / 180) + "px " + this.sh.d * Math.sin(Math.PI * a / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, this.sh.o) + (this.sh.i ? " inset" :
+                    ""))
+            }
+            this.isCorrect ? (this.reviewIconImage.src = this.isSingleChoice ? cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src : "checked" == this.checked ? cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src : cp.movie.im.m_projectImages["assets/htmlimages/skip_answer_normal.png"].nativeImage.src, this.element.parentNode.appendChild(this.reviewIconImage)) : this.m_questionObj.getWasJudged() && "checked" == this.checked ? (this.reviewIconImage.src =
+                cp.movie.im.m_projectImages["assets/htmlimages/incorrect_answer_normal.png"].nativeImage.src, this.element.parentNode.appendChild(this.reviewIconImage)) : this.reviewIconImage = void 0
+        }
+        if (this.reviewIconImage) {
+            var a = this.inputControlCanvasElement.parentElement.getBoundingClientRect(),
+                c = cp("div_Slide").getBoundingClientRect();
+            cp.responsive ? (this.element.parentElement.getBoundingClientRect(), this.element.getBoundingClientRect(), this.reviewIconImage.style.left = parseFloat(this.inputControl.style.left) - 20 +
+                "px", this.reviewIconImage.style.top = this.inputControl.style.top) : (this.reviewIconImage.style.left = parseFloat(this.element.style.left) - 20 + "px", this.reviewIconImage.style.top = (a.top - c.top) / cp.movie.m_scaleFactor + "px")
+        }
+    }
+};
+cp.MCQInput.prototype.loadAndDrawImage = function(a) {
+    var c = this.sh && !this.sh.i,
+        b = cp.movie.im.m_projectImages[a].nativeImage;
+    null == this.loadedBtnImages && (this.loadedBtnImages = {});
+    this.loadedBtnImages[a] = b;
+    this.inputControlCanvasElement.img = a;
+    cp.clearCanvasProperly(this.canvas);
+    b = this.canvas.gc;
+    if (!cp.responsive) {
+        var d = 0 < this.vbounds.minX && c ? 0 : this.vbounds.minX,
+            e = 0 < this.vbounds.minY && c ? 0 : this.vbounds.minY,
+            f = (cp.model.data.project.h > this.vbounds.maxY && c ? cp.model.data.project.h : this.vbounds.maxY + 4) - e;
+        b.width =
+            (cp.model.data.project.w > this.vbounds.maxX && c ? cp.model.data.project.w : this.vbounds.maxX + 4) - d;
+        b.height = f;
+        b.left = d;
+        b.top = e
+    }
+    this.sh && !this.sh.i && (b.shadowOffsetX = this.sh.d * Math.cos(Math.PI * this.sh.a / 180), b.shadowOffsetY = this.sh.d * Math.sin(Math.PI * this.sh.a / 180), b.shadowBlur = this.sh.b, b.shadowColor = cp.ConvertRGBToRGBA(this.sh.c, this.sh.o));
+    c ? cp.responsive ? (c = this.answerLabelCanvasParentElement.getBoundingClientRect(), d = cp("div_Slide").getBoundingClientRect(), b.drawImage(this.loadedBtnImages[a], c.left -
+        d.left - 30, c.top - d.top)) : b.drawImage(this.loadedBtnImages[a], this.bounds.minX - 2, this.bounds.minY - 2) : cp.responsiveType == cp.kCPPMEAutoResponsive ? (d = cp.getProject().clientWidth / cp.D.project.w, c = 14 < this.loadedBtnImages[a].width * d ? this.loadedBtnImages[a].width * d : 14, d = 14 < this.loadedBtnImages[a].height * d ? this.loadedBtnImages[a].height * d : 14, e = 0, this.loadedBtnImages[a].width > c && (e = (this.loadedBtnImages[a].width - c) / 2), f = 0, this.loadedBtnImages[a].height > d && (f = (this.loadedBtnImages[a].height - d) / 2), b.drawImage(this.loadedBtnImages[a],
+        e, f, c, d)) : b.drawImage(this.loadedBtnImages[a], 0, 0)
+};
+cp.MCQInput.prototype.addHighlightBoxMouseHandlers = function() {
+    if (cp.DESKTOP == cp.device) {
+        var a = this,
+            c = document.getElementById(this.element.id + "_dummyhighlight");
+        this.highlightElement.onmouseover = function() {
+            if (!cp.disableInteractions && "disabled" != a.value && (c.style.backgroundColor = "#000000", c.style.opacity = "0.3", a.sh)) {
+                var b = a.sh.a;
+                cp.applyShadow(c, a.sh.d * Math.cos(Math.PI * b / 180) + "px " + a.sh.d * Math.sin(Math.PI * b / 180) + "px " + a.sh.b + "px " + cp.ConvertRGBToRGBA(a.sh.c, a.sh.o) + (a.sh.i ? " inset" : ""))
+            }
+        };
+        this.highlightElement.onmouseout =
+            function() {
+                !cp.disableInteractions && "disabled" != a.value && (c.style.backgroundColor = "transparent", cp.applyShadow(c, ""))
+            }
+    }
+};
+cp.MCQInput.prototype.addDummyHighlightDiv = function(a, c) {
+    var b = cp(this.element.id + "_dummyhighlight");
+    b || (b = cp.newElem("div"), cp.fixWebkitScaling(b), a.insertBefore(b, this.answerLabelCanvasElement.parentElement), b.id = this.element.id + "_dummyhighlight", b.style.cursor = c, b.style.position = "absolute", b.style.zIndex = this.zIndex, b.style.borderRadius = "5px");
+    var d = cp.movie.stage.mainSlideDiv.getBoundingClientRect(),
+        e = this.element.getBoundingClientRect(),
+        f = this.inputControlCanvasElement.parentElement.getBoundingClientRect();
+    b.style.left = (f.left - d.left - 5) / cp.movie.m_scaleFactor + "px";
+    b.style.top = (e.top - d.top - 2) / cp.movie.m_scaleFactor + "px";
+    b.style.width = this.element.clientWidth + "px";
+    b.style.height = this.element.clientHeight + "px"
+};
+cp.MCQInput.prototype.adjustVerticalAlignment = function(a, c, b, d) {
+    if (c && b) {
+        d = d ? 0 : parseFloat(c.parentElement.style.top);
+        switch (a) {
+            case cp.TextLayoutEnum.kTLCenter:
+                d += (c.parentElement.clientHeight - b.clientHeight) / 2;
+                break;
+            case cp.TextLayoutEnum.kTLBottom:
+                d += c.parentElement.clientHeight - b.clientHeight
+        }
+        b.style.top = d + "px"
+    }
+};
+cp.MCQInput.prototype.drawForResponsive = function(a) {
+    if (!this.m_questionObj || !this.m_questionObj.getIsStarted() || !this.responsiveCSS) return !1;
+    if (this.isDrawn && !a) return !0;
+    var c = cp.getResponsiveCSS(this.responsiveCSS);
+    cp.getCSSFromLayouter(c, this);
+    var b = !1,
+        b = this.re || this.sh && !this.sh.i || this.fillOuterArea,
+        d = void 0 != this.tr;
+    if (this.currentCSS == c && !b && !d && !a) return !0;
+    this.currentCSS = c;
+    a = this.element.id;
+    if (cp.movie.playbackController) {
+        var e = cp.movie.playbackController.GetQuizController();
+        if (e) {
+            var f =
+                cp.D[this.element.id],
+                g = cp.D[f.actid + "c"];
+            this.answerTextCanvasDivName || (this.answerTextCanvasDivName = this.m_questionObj.getAnswerOption(f));
+            if (this.answerLabelCanvasElement = document.getElementById(this.canvasDivName)) {
+                var d = cp.movie.stage.getSlideDiv().firstChild,
+                    j = cp.D[this.answerTextCanvasDivName],
+                    i = cp.D[f.cn];
+                e.GetIsInReviewMode();
+                var l = (e = this.m_questionObj.shouldDisableOptions()) ? "default" : "pointer";
+                this.group = this.m_questionObj.getAnswerGroupName();
+                this.accessibilityText = cp.getAccessibilityString(j);
+                cp.modifyAlternativeAccessibleText(this.element.parentElement, this.accessibilityText);
+                this.isCorrect = j.ic;
+                f.ic = this.isCorrect;
+                this.value = "enabled";
+                this.m_questionObj.getIfSelected(this.answerID) && (this.checked = "checked");
+                this.zIndex = cp.D[f.actid].zIndex;
+                this.inputIdSuffix = this.isSingleChoice ? "_radioInputField" : "_checkBoxInputField";
+                "" == this.element.innerHTML && (this.element.innerHTML += "<div id='" + this.element.id + "_highlight' style='" + cp.accOutlineStyleStr + ";cursor:" + l + ";border-radius:5px; left:0px;top: 0px;width:100%;height:100%;position:absolute;background-color:#FF0000;opacity:.5'><label><input type='" +
+                    this.type + "' " + this.value + " " + this.checked + " name='" + this.group + "' id='" + a + this.inputIdSuffix + "' role='" + (this.isSingleChoice ? "radio" : "checkbox") + "' aria-label='" + this.accessibilityText + "' style='cursor:" + l + ";opacity:0;left: 0px; top:0px;width: 22px; height: 22px;position:absolute;border-radius:0px;'></input></label></div>");
+                this.inputControl = document.getElementById(this.element.id + this.inputIdSuffix);
+                this.inputControl.answerObject = this;
+                this.inputControl.tabIndex = 1;
+                var k = f.actid,
+                    h = cp(k + "canvasHolder");
+                h || (h = cp.newElem("div"), cp.fixWebkitScaling(h), d.insertBefore(h, this.answerLabelCanvasElement.parentElement), h.setAttribute("class", "cp-rewrap"), h.id = k + "canvasHolder", f.answerTextCanvasHolder = h.id, h.style.zIndex = this.zIndex, this.answertextCanvas = cp(this.answerTextCanvasDivName), this.answertextCanvas || (this.answertextCanvas = cp.newElem("canvas"), this.answertextCanvas.setAttribute("class", "cp-shape"), this.answertextCanvas.id = this.answerTextCanvasDivName, h.appendChild(this.answertextCanvas)), f = document.getElementById(j.dn),
+                    f.drawingBoard = h, cp.D[this.answerTextCanvasDivName].dns = this.element.id, this.answertextCanvasShape || (this.answertextCanvasShape = new cp.Shape(this.answertextCanvas, cp.D[this.answerTextCanvasDivName]), this.answertextCanvasShape.start()), cp.updateVarText(f));
+                f = cp.movie.stage.mainSlideDiv.getBoundingClientRect();
+                this.parentElementClientBoundingRect = this.element.parentElement.getBoundingClientRect();
+                this.isDrawn || (this.answerLabelCanvasParentElement = this.answerLabelCanvasElement.parentElement, this.answerLabelCanvasParentSiblingElement =
+                    this.answerLabelCanvasParentElement.nextSibling, d.removeChild(this.answerLabelCanvasParentElement), d.insertBefore(this.answerLabelCanvasParentElement, this.answerLabelCanvasParentSiblingElement));
+                this.inputControlCanvasElement || (this.inputControlCanvasElement = cp.newElem("canvas"), h = b ? cp.project.clientWidth : 26, k = b ? cp.project.clientHeight : 26, canvas = this.canvas = cp.createCanvas(0, 0, h, k, this.inputControlCanvasElement), this.inputControlCanvasElement.style.display = "block", this.inputControlCanvasElement.style.position =
+                    "absolute", h = cp.newElem("div"), cp.fixWebkitScaling(h), d.insertBefore(h, this.answerLabelCanvasParentSiblingElement), h.appendChild(this.inputControlCanvasElement), h.style.display = "block", h.style.position = "absolute", h.style.width = "22px", h.style.height = "22px", h.style.zIndex = this.zIndex);
+                this.adjustPositionWithAnswerArea(i.css[cp.ResponsiveProjWidth], this.answerLabelCanvasParentElement);
+                this.adjustPositionWithAnswerArea(i.css[cp.ResponsiveProjWidth], cp(i.dn));
+                this.adjustPositionWithAnswerArea(g.css[cp.ResponsiveProjWidth],
+                    this.answertextCanvas.parentElement);
+                this.inputControlCanvasElement && this.inputControlCanvasElement.img && (h = b ? cp.project.clientWidth : 26, k = b ? cp.project.clientHeight : 26, this.inputControlCanvasElement.width = h, this.inputControlCanvasElement.height = k, this.inputControlCanvasElement.style.width = h + "px", this.inputControlCanvasElement.style.height = k + "px", this.loadAndDrawImage(this.inputControlCanvasElement.img));
+                g = this.answerLabelCanvasParentElement.getBoundingClientRect();
+                h = this.answertextCanvas.parentElement.getBoundingClientRect();
+                this.inputControlCanvasElement.parentElement.style.left = g.left - f.left - 30 + "px";
+                this.inputControlCanvasElement.parentElement.style.top = g.top - f.top + "px";
+                b && (this.inputControlCanvasElement.style.left = -(g.left - f.left - 30) + "px", this.inputControlCanvasElement.style.top = -(g.top - f.top) + "px");
+                b = this.inputControlCanvasElement.parentElement.getBoundingClientRect();
+                this.element.style.left = "0px";
+                this.element.style.top = "0px";
+                this.element.style.right = "auto";
+                this.element.style.bottom = "auto";
+                this.element.style.width =
+                    "100%";
+                this.element.style.height = "100%";
+                this.element.style.position = "absolute";
+                this.element.style.backgroundColor = "#ff0000";
+                this.element.style.opacity = 0;
+                this.adjustPositionWithAnswerArea(c, this.element.parentElement);
+                c = this.element.getBoundingClientRect();
+                this.answertextCanvas.parentElement.style.top = c.top - f.top + "px";
+                this.element.parentElement.style.width = b.width + g.width + h.width + 20 + "px";
+                this.element.parentElement.style.height = h.height + 6 + "px";
+                c = cp.D[j.dn];
+                j = c.rptl[cp.ResponsiveProjWidth];
+                this.adjustVerticalAlignment(j,
+                    this.answertextCanvas, this.answerLabelCanvasParentElement);
+                this.adjustVerticalAlignment(j, this.answertextCanvas, this.inputControlCanvasElement.parentElement);
+                this.adjustVerticalAlignment(j, this.answertextCanvas, this.inputControl, !0);
+                this.addDummyHighlightDiv(d, l);
+                this.element.parentElement.style.left = b.left - f.left - 5 + "px";
+                cp.D[i.dn].rptl = c.rptl;
+                if (!this.isDrawn) {
+                    var m = this;
+                    this.highlightElement = document.getElementById(a + "_highlight");
+                    this.addHighlightBoxMouseHandlers();
+                    a = function() {
+                        cp.disableInteractions ||
+                            m.value != "disabled" && m.m_questionObj.selectAnswerOption(m)
+                    };
+                    cp.registerGestureEvent(this.element, cp.GESTURE_EVENT_TYPES.TAP, a);
+                    cp.DESKTOP == cp.device ? cp.registerGestureEvent(this.inputControl, cp.GESTURE_EVENT_TYPES.TAP, a) : cp.useg || (this.inputControl.onclick = a);
+                    "checked" == this.checked ? this.loadAndDrawImage(this.m_questionObj.getImageForState(this.type, "selected")) : this.loadAndDrawImage(this.m_questionObj.getImageForState(this.type, "default"))
+                }
+                e && this.disableOption();
+                this.isDrawn = !0;
+                this.visible || (this.element.style.visibility =
+                    "hidden");
+                return !0
+            }
+        }
+    }
+};
+cp.MCQInput.prototype.addIfNeeded = function(a) {
+    if ((!cp.responsive || !this.drawForResponsive(a)) && this.m_questionObj && !this.isDrawn && this.m_questionObj.getIsStarted()) {
+        var a = this.element.id,
+            c = this.type;
+        if (cp.movie.playbackController) {
+            var b = cp.movie.playbackController.GetQuizController();
+            if (b) {
+                b.GetIsInReviewMode();
+                b = this.m_questionObj.shouldDisableOptions();
+                this.group = this.m_questionObj.getAnswerGroupName();
+                var d = b ? "default" : "pointer",
+                    e = cp.D[this.element.id];
+                this.answerTextCanvasDivName = this.m_questionObj.getAnswerOption(e);
+                if (this.answerLabelCanvasElement = document.getElementById(this.canvasDivName)) {
+                    var f = cp.movie.stage.getSlideDiv().firstChild,
+                        g = cp.D[this.answerTextCanvasDivName];
+                    this.m_questionObj.getIfSelected(this.answerID) && (this.checked = "checked");
+                    this.accessibilityText = cp.getAccessibilityString(g);
+                    this.isCorrect = g.ic;
+                    e.ic = this.isCorrect;
+                    var j = !1,
+                        j = this.re || this.sh && !this.sh.i,
+                        i = g.b;
+                    this.answerTextCanvasImageBounds = {
+                        minX: i[0],
+                        minY: i[1],
+                        maxX: i[2],
+                        maxY: i[3]
+                    };
+                    i = cp.D[e.cn].b;
+                    this.lAnswerLabelBounds = {
+                        minX: i[0],
+                        minY: i[1],
+                        maxX: i[2],
+                        maxY: i[3]
+                    };
+                    this.zIndex = cp.D[e.actid].zIndex;
+                    this.inputIdSuffix = this.isSingleChoice ? "_radioInputField" : "_checkBoxInputField";
+                    "" == this.element.innerHTML && (this.element.innerHTML += "<div id='" + a + "_highlight' style='" + cp.accOutlineStyleStr + ";cursor:" + d + ";border-radius:5px; left: -5px; top: -1px;width: " + (this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX + 50) + "px;height: " + (this.answerTextCanvasImageBounds.maxY - this.answerTextCanvasImageBounds.minY + 6) + "px;position:absolute;background-color:#FF0000;opacity:.5'><label><input type='" +
+                        c + "' " + this.value + " " + this.checked + " role='" + (this.isSingleChoice ? "radio" : "checkbox") + "' aria-label='" + this.accessibilityText + "'  name='" + this.group + "' id='" + a + this.inputIdSuffix + "' style='cursor:" + d + ";opacity:0;left: 0px; top: " + (this.lAnswerLabelBounds.maxY - this.lAnswerLabelBounds.minY - 22) / 2 + "px;width: 22px; height: 22px;position:absolute;border-radius:0px;'></input></label></div>");
+                    this.inputControl = document.getElementById(a + this.inputIdSuffix);
+                    this.inputControl.answerObject = this;
+                    this.inputControl.tabIndex =
+                        1;
+                    c = e.actid;
+                    i = cp.newElem("div");
+                    cp.fixWebkitScaling(i);
+                    f.insertBefore(i, this.answerLabelCanvasElement.parentElement);
+                    i.setAttribute("class", "cp-rewrap");
+                    i.id = c + "canvasHolder";
+                    e.answerTextCanvasHolder = i.id;
+                    e = cp.newElem("canvas");
+                    e.setAttribute("class", "cp-shape");
+                    e.id = this.answerTextCanvasDivName;
+                    i.appendChild(e);
+                    i.style.zIndex = this.zIndex;
+                    var l = document.getElementById(g.dn);
+                    l.drawingBoard = i;
+                    cp.updateVarText(l);
+                    cp.D[this.answerTextCanvasDivName].dns = this.element.id;
+                    (new cp.Shape(e, cp.D[this.answerTextCanvasDivName])).start();
+                    i = cp.D[c].mdi;
+                    e.parentElement.style.left = parseFloat(e.parentElement.style.left) + (cp.D[i].b[0] - this.answerTextCanvasImageBounds.minX) + "px";
+                    e.parentElement.style.top = parseFloat(e.parentElement.style.top) + (cp.D[i].b[1] - this.answerTextCanvasImageBounds.minY) + "px";
+                    c = this.answerLabelCanvasElement.parentElement;
+                    l = c.nextSibling;
+                    f.removeChild(c);
+                    f.insertBefore(c, l);
+                    this.inputControlCanvasElement = cp.newElem("canvas");
+                    canvas = this.canvas = cp.createCanvas(0, 0, (cp.model.data.project.w > this.vbounds.maxX && j ? cp.model.data.project.w :
+                        this.vbounds.maxX + 4) - (0 < this.vbounds.minX && j ? 0 : this.vbounds.minX), (cp.model.data.project.h > this.vbounds.maxY && j ? cp.model.data.project.h : this.vbounds.maxY + 4) - (0 < this.vbounds.minY && j ? 0 : this.vbounds.minY), this.inputControlCanvasElement);
+                    this.inputControlCanvasElement.style.display = "block";
+                    this.inputControlCanvasElement.style.position = "absolute";
+                    var k = cp.newElem("div");
+                    cp.fixWebkitScaling(k);
+                    f.insertBefore(k, l);
+                    k.appendChild(this.inputControlCanvasElement);
+                    k.style.display = "block";
+                    k.style.position = "absolute";
+                    k.style.left = this.vbounds.minX + "px";
+                    k.style.top = this.lAnswerLabelBounds.minY + (this.lAnswerLabelBounds.maxY - this.lAnswerLabelBounds.minY - 22) / 2 + "px";
+                    k.style.width = "22px";
+                    k.style.height = "22px";
+                    k.style.zIndex = this.zIndex;
+                    j ? (this.inputControlCanvasElement.style.marginLeft = -this.vbounds.minX + "px", this.inputControlCanvasElement.style.marginTop = -this.lAnswerLabelBounds.minY + "px") : (this.inputControlCanvasElement.style.marginLeft = "-2px", this.inputControlCanvasElement.style.marginTop = "-2px");
+                    var h = this;
+                    this.element.style.left =
+                        parseFloat(e.parentElement.style.left) + (cp.D[i].b[0] - this.answerTextCanvasImageBounds.minX) + "px";
+                    this.element.style.top = cp.D[i].b[1] + "px";
+                    this.element.style.width = this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX + 50 + "px";
+                    this.element.style.height = this.answerTextCanvasImageBounds.maxY - this.answerTextCanvasImageBounds.minY + 6 + "px";
+                    this.element.style.position = "absolute";
+                    this.element.style.backgroundColor = "#ff0000";
+                    this.element.style.opacity = 0;
+                    g = cp.D[g.dn].txtl;
+                    this.adjustVerticalAlignment(g,
+                        e, c);
+                    this.adjustVerticalAlignment(g, e, this.inputControlCanvasElement.parentElement);
+                    this.adjustVerticalAlignment(g, e, this.inputControl, !0);
+                    g = this.inputControlCanvasElement.parentElement.getBoundingClientRect();
+                    j = cp.movie.stage.mainSlideDiv.getBoundingClientRect();
+                    this.addDummyHighlightDiv(f, d);
+                    this.highlightElement = document.getElementById(a + "_highlight");
+                    this.addHighlightBoxMouseHandlers();
+                    this.element.style.left = (g.left - j.left - 5) / cp.movie.m_scaleFactor + "px";
+                    a = function() {
+                        cp.disableInteractions || h.value !=
+                            "disabled" && h.m_questionObj.selectAnswerOption(h)
+                    };
+                    cp.registerGestureEvent(this.element, cp.GESTURE_EVENT_TYPES.TAP, a);
+                    cp.DESKTOP == cp.device ? cp.registerGestureEvent(this.inputControl, cp.GESTURE_EVENT_TYPES.TAP, a) : cp.useg || (this.inputControl.onclick = a);
+                    "checked" == this.checked ? this.loadAndDrawImage(this.m_questionObj.getImageForState(this.type, "selected")) : this.loadAndDrawImage(this.m_questionObj.getImageForState(this.type, "default"));
+                    b && this.disableOption();
+                    this.isDrawn = !0;
+                    this.visible || (this.element.style.visibility =
+                        "hidden")
+                }
+            }
+        }
+    }
+};
+cp.MultipleChoiceQuestion = function(a, c) {
+    cp.MultipleChoiceQuestion.baseConstructor.call(this, a, c);
+    this.answerOptions = this.getAnswerOptions();
+    this.shuffleCounter = -1;
+    this.isShuffleEnabled = this.questionData.ish;
+    this.correctAnswersList = "";
+    this.chosenAnswerHasAdvancedFeedback = !1;
+    this.typeStatesMap = {
+        radio: {
+            "default": "assets/htmlimages/radioButton_normal.png",
+            selected: "assets/htmlimages/radioButton_selected.png",
+            disabled: "assets/htmlimages/radioButton_disabled.png",
+            selectedDisabled: "assets/htmlimages/radioButton_selectedDisabled.png"
+        },
+        checkbox: {
+            "default": "assets/htmlimages/checkBox_normal.png",
+            selected: "assets/htmlimages/checkBox_selected.png",
+            disabled: "assets/htmlimages/checkBox_disabled.png",
+            selectedDisabled: "assets/htmlimages/checkBox_selectedDisabled.png"
+        }
+    };
+    this.verbose = !1
+};
+cp.inherits(cp.MultipleChoiceQuestion, cp.Question);
+cp.MultipleChoiceQuestion.prototype.getImageForState = function(a, c) {
+    return this.typeStatesMap[a][c]
+};
+cp.MultipleChoiceQuestion.prototype.getAnswerScore = function(a) {
+    for (var c = 0, b = 0; b < this.answerOptions.length; ++b) {
+        var d = cp.D[this.answerOptions[b]];
+        if (a == d.aid) {
+            c = d.ap;
+            break
+        }
+    }
+    return c
+};
+cp.MultipleChoiceQuestion.prototype.getSelectedAnswerChoices = function() {
+    var a = "",
+        c = this.m_selectedAnswersArr.slice(0);
+    if (c && 0 >= c.length) return "";
+    for (var b = [], d = this.questionData.ao, e = 0; e < d.length; ++e)
+        for (var f = d[e].split(":"), f = cp.D[f[0]], g = 0; g < c.length; ++g) f.aid == c[g] && b.push(cp.D[this.answerOptions[e]].aid);
+    a += b[0];
+    for (c = 1; c < b.length; ++c) a += ";", a += b[c];
+    return a
+};
+cp.MultipleChoiceQuestion.prototype.getAnswerScores = function() {
+    var a = [];
+    if (!this.answerOptions) return a;
+    for (var c = document.getElementsByName(this.getAnswerGroupName()), b = this.m_selectedAnswersArr.slice(0), d = {}, e = 0; e < b.length; ++e) d[b[e]] = b[e];
+    for (b = 0; b < c.length; ++b) {
+        var e = cp.D[c[b].parentElement.parentElement.parentElement.id],
+            f = cp(e.answerTextCanvasHolder).firstChild,
+            f = cp.D[f.id],
+            g = new cp.AnswerScore;
+        g.m_answerID = e.aid;
+        g.m_correctAnswer = f.ic ? "1" : "0";
+        g.m_chosenAnswer = d[e.aid] ? "1" : "0";
+        a.push(g)
+    }
+    return a
+};
+cp.MultipleChoiceQuestion.prototype.getQuestionScoredPoints = function() {
+    if (this.getIsSurvey() || !this.getWasJudged()) return 0;
+    if (!this.isPartialScore) return this.getQuestionLevelScoredPoints();
+    var a = this.getSelectedOptions(this.getAnswerGroupName());
+    if (!a) return 0;
+    for (var c = 0, b = 0; b < a.length; ++b) {
+        var d = this.getAnswerID(a[b].parentNode);
+        d && (c += this.getAnswerScore(d))
+    }
+    return c
+};
+cp.MultipleChoiceQuestion.prototype.shuffleAnswers = function() {
+    var a = !this.m_quizController.GetIsAttemptFinished() && this.getWasJudged() && !this.m_quizController.GetIsSubmitAll(),
+        c = this.getIsPretest() && this.m_quizController.GetIsPretestQuestionsDisabled();
+    if (this.isShuffleEnabled && (!a && !this.m_quizController.GetIsInReviewMode() && !c) && !this.m_isShuffled) {
+        for (var b = this.answerOptions.length, d, c = [], a = 0; a < b; ++a) c[a] = this.answerOptions[a];
+        for (a = b; 1 < a; a--) b = Math.floor(Math.random() * a), b != a && (d = c[b], c[b] = c[a -
+            1], c[a - 1] = d);
+        this.answerOptions = c;
+        this.m_isShuffled = !0
+    }
+};
+cp.MultipleChoiceQuestion.prototype.getAnswerOption = function() {
+    this.shuffleAnswers();
+    return this.answerOptions[++this.shuffleCounter]
+};
+cp.MultipleChoiceQuestion.prototype.getIfSelected = function(a) {
+    if (!this.m_selectedAnswersArr || 0 >= this.m_selectedAnswersArr.length) return !1;
+    for (var c = 0; c < this.m_selectedAnswersArr.length; ++c)
+        if (a == this.m_selectedAnswersArr[c]) return !0;
     return !1
 };
-cp.InteractiveItemQuestion.prototype.startQuestion = function() {
-    cp.InteractiveItemQuestion.superClass.startQuestion.call(this);
-    this.setInteractionQuestionState();
-    0 == this.currentAttempt && this.enable();
-    this.m_quizController.GetIsInReviewMode() && this.disable()
+cp.MultipleChoiceQuestion.prototype.resetQuestionData = function() {
+    cp.MultipleChoiceQuestion.superClass.resetQuestionData.call(this);
+    this.m_quizController.GetGoToQuizScopeActionExecuted() || (this.m_selectedAnswersArr = []);
+    this.correctAnswersList = "";
+    this.shuffleCounter = -1;
+    this.chosenAnswerHasAdvancedFeedback = !1
 };
-cp.InteractiveItemQuestion.prototype.endQuestion = function(a) {
-    if (this.state == this.StateEnum.PLAYING || this.state == this.StateEnum.PAUSED)(!this.m_quizController || !this.m_quizController.GetIsInReviewMode()) && this.saveAnswerOrder(), this.m_questionScore && this.setQuestionSpecificScoreProperties(this.m_questionScore.m_questionSpecificScore);
-    a ? cp.InteractiveItemQuestion.superClass.endQuestion.call(this, a) : this.flushToLMS()
-};
-cp.InteractiveItemQuestion.prototype.flushToLMS = function() {
-    if (this.m_questionScore) {
-        this.m_questionScore.m_answerScores = this.getAnswerScores();
-        var a = this.getIsIncomplete();
-        this.m_questionScore.m_answersIncomplete = a;
-        this.m_questionScore.m_answeredCorrectly = this.getAnsweredCorrectly();
-        this.m_questionScore.m_isShuffled = this.m_isShuffled;
-        this.m_questionScore.m_partiallyCorrect = this.getIsPartiallyCorrect();
-        this.m_questionScore.m_wasJudged = this.wasJudged;
-        this.m_questionScore.m_scoredPoints = this.getScore()
+cp.MultipleChoiceQuestion.prototype.selectAnswerOption = function(a) {
+    if (a && (a.inputControl && !a.inputControl.disabled) && !this.m_answersDisabled) {
+        this.getSelectedOptions();
+        for (var c = document.getElementsByName(this.getAnswerGroupName()), b = 0; b < c.length; ++b) {
+            var d = c[b],
+                e = d.answerObject;
+            a.isSingleChoice ? (a.inputControl == d ? (d.checked = !0, a.checked = !0) : (d.checked = !1, a.checked = !1), d.checked ? e.loadAndDrawImage(this.getImageForState(a.type, "selected")) : e.loadAndDrawImage(this.getImageForState(a.type, "default"))) :
+                a.inputControl == d && (d.checked = !d.checked, d.checked ? (e.loadAndDrawImage(this.getImageForState(a.type, "selected")), a.checked = !0) : (e.loadAndDrawImage(this.getImageForState(a.type, "default")), a.checked = !1))
+        }
     }
-    var a =
-        this.m_quizController.GetPlaybackController(),
-        b = a.GetSendCourseDataWithInteractionData(),
-        c = this.m_quizController && this.m_quizController.GetIsSubmitAll() && !this.getIsPretest();
-    b && !c && ((b = a.GetLMSType()) && (b = b.toUpperCase()), a.GetIsTracked() && "EMAIL" != b && "ACROBAT" != b && "INTERNALSERVER" != b ? a.SendCourseData(!0) : a.SendCourseData(!1))
 };
-cp.InteractiveItemQuestion.prototype.enable = function() {};
-cp.InteractiveItemQuestion.prototype.disable = function() {};
-cp.InteractiveItemQuestion.prototype.setInteractionQuestionState = function() {};
-cp.InteractiveItemQuestion.prototype.saveAnswerOrder = function() {
-    this.m_questionScore && (this.m_answerOrderArray = [])
+cp.MultipleChoiceQuestion.prototype.setSelectedAnswers = function() {
+    var a = this.getSelectedOptions(this.getAnswerGroupName());
+    if (a && !(0 >= a.length)) {
+        this.m_selectedAnswersArr = [];
+        for (var c = 0; c < a.length; ++c) this.m_selectedAnswersArr.push(cp.D[a[c].parentElement.parentElement.parentElement.id].aid)
+    }
 };
-cp.InteractiveItemQuestion.prototype.disableAnswers = function() {};
-cp.InteractiveItemQuestion.prototype.disableAllOptions = function() {
+cp.MultipleChoiceQuestion.prototype.disableAllOptions = function() {
     if (this.m_quizController) {
         var a = !0;
         this.m_quizController.GetIsSubmitAll() && !this.getIsPretest() && (!this.m_quizController.GetIsInReviewMode() && !this.m_quizController.m_submittedAllQuestions) && (a = !1);
-        a && (this.disableAnswers(), this.m_answersDisabled = !0)
+        if (a && (a = document.getElementsByName(this.getAnswerGroupName()), !(1 > a.length))) {
+            for (var c = 0; c < a.length; ++c) {
+                var b = a[c].answerObject;
+                b && b.disableOption && b.disableOption()
+            }
+            this.m_answersDisabled = !0
+        }
     }
 };
-cp.InteractiveItemQuestion.prototype.setQuestionSpecificScoreProperties = function(a) {
+cp.MultipleChoiceQuestion.prototype.getChosenAnswerFeedback = function() {
+    for (var a = document.getElementsByName(this.getAnswerGroupName()), c = 0, b, d = 0; d < a.length; ++d)
+        if (!0 == a[d].checked) {
+            c++;
+            var e = cp(cp.D[a[d].parentElement.parentElement.parentElement.id].answerTextCanvasHolder).firstChild,
+                f = cp.D[e.id],
+                e = f.fb,
+                f = f.ac;
+            if (e || f)
+                if (b = {}, void 0 != e && cp.D[e] && (b.name = e, b.captionToBeShown = !0), void 0 != f) b.action = f
+        }
+    return b
+};
+cp.MultipleChoiceQuestion.prototype.getSelectedOptions = function(a) {
+    for (var a = document.getElementsByName(a), c = [], b = 0, d = 0; d < a.length; ++d) !0 == a[d].checked && (c[b++] = a[d]);
+    return c
+};
+cp.MultipleChoiceQuestion.prototype.clearAnswers = function() {
+    this.verbose && cp.log("Inside Clear Answers");
+    var a = this.m_quizController && this.m_quizController.GetIsSubmitAll() && !this.getIsPretest(),
+        a = (a = !1 == this.getWasJudged() || a && !1 == this.m_quizController.m_submittedAllQuestions) && !this.m_quizController.GetIsInReviewMode();
+    if (!1 != a && (this.m_selectedAnswersArr = [], this.verbose && cp.log("Not Attempted. Hence Clearing"), a = document.getElementsByName(this.getAnswerGroupName()), !(1 > a.length)))
+        for (var c = 0; c <
+            a.length; ++c) {
+            var b = a[c];
+            b && (b.checked = !1, b.answerObject && b.answerObject.loadAndDrawImage(this.getImageForState(b.type, "default")))
+        }
+};
+cp.MultipleChoiceQuestion.prototype.checkIfPartiallyCorrect = function(a) {
+    if (!this.isPartialScore) return !1;
+    for (var c = this.getExpectedCorrectAnswerIDList(), b = {}, d = c.length, e = 0; e < c.length; ++e) b[c[e]] = c[e];
+    for (var f = e = c = 0; f < a.length; ++f) {
+        var g = this.getAnswerID(a[f].parentNode);
+        b[g] ? ++c : ++e
+    }
+    a = !1;
+    0 < c && (a = !0, c == d && 0 == e && (a = !1));
+    return a
+};
+cp.MultipleChoiceQuestion.prototype.checkIfCorrect = function(a) {
+    for (var c = this.getExpectedCorrectAnswerIDList(), b = {}, d = 0; d < c.length; ++d) b[c[d]] = c[d];
+    for (var e = [], d = {}, f = 0, g = 0; g < a.length; ++g) {
+        var j = a[g];
+        if (!cp.D[j.parentNode.parentNode.parentNode.id].ic) return !1;
+        j = this.getAnswerID(j.parentNode);
+        if (!b[j]) return !1;
+        e[f++] = j;
+        d[j] = j
+    }
+    if (e.length != c.length) return !1;
+    for (a = 0; a < c.length; ++a)
+        if (!d[c[a]]) return !1;
+    return !0
+};
+cp.MultipleChoiceQuestion.prototype.getChosenAnswerAsString = function() {
+    if ("choice" == this.getInteractionType()) return this.getSelectedAnswerChoices();
+    for (var a = this.getAnsweredCorrectly(), c = 0; c < this.answerOptions.length; ++c) {
+        var b = cp.D[this.answerOptions[c]];
+        if (b.ic) {
+            if (a) return b.isTrue
+        } else if (!a) return b.isTrue
+    }
+};
+cp.MultipleChoiceQuestion.prototype.getCorrectAnswerAsString = function() {
+    if ("choice" == this.getInteractionType()) {
+        var a = this.getExpectedCorrectAnswerIDList();
+        if (0 >= a.length) return "0";
+        for (var c = a[0], b = 1; b < a.length; ++b) c += ";" + a[b];
+        return c
+    }
+    for (b = 0; b < this.answerOptions.length; ++b)
+        if (a = cp.D[this.answerOptions[b]], a.ic) return a.isTrue
+};
+cp.MultipleChoiceQuestion.prototype.getChosenAnswerAsStringForReview = function() {
+    return this.getSelectedAnswerChoices()
+};
+cp.MultipleChoiceQuestion.prototype.getCorrectAnswerAsStringForReview = function() {
+    var a = this.getExpectedCorrectAnswerIDList();
+    if (0 >= a.length) return "0";
+    for (var c = a[0], b = 1; b < a.length; ++b) c += ";" + a[b];
+    return c
+};
+cp.MultipleChoiceQuestion.prototype.getExpectedCorrectAnswerTextList = function(a) {
+    for (var c = [], b = -1, d = 0; d < this.answerOptions.length; ++d) {
+        var e = cp.D[this.answerOptions[d]];
+        e.ic && (c[++b] = cp.trimStartingAndTrailingSpaces(e.atxtlms))
+    }
+    if (0 >= c.length) return "";
+    b = c[0];
+    for (d = 1; d < c.length; ++d) b += a + c[d];
+    cp.verbose && cp.log("Expected Answer Text List : " + b);
+    return b
+};
+cp.MultipleChoiceQuestion.prototype.getSelectedAnswerTextList = function(a) {
+    var c = [];
+    this.m_quizController.GetIsSubmitAll() && this.getIsPretest();
+    var b = this.m_selectedAnswersArr.slice(0);
+    if (b && 0 >= b.length) return "";
+    for (var d = this.questionData.ao, e = 0; e < d.length; ++e)
+        for (var f = d[e].split(":"), f = cp.D[f[0]], g = 0; g < b.length; ++g) f.aid == b[g] && c.push(cp.D[this.answerOptions[e]].accstr);
+    if (0 >= c.length) return "";
+    b = c[0];
+    for (e = 1; e < c.length; ++e) b += a + c[e];
+    cp.verbose && cp.log("Expected Answer Text List : " + b);
+    return b
+};
+cp.MultipleChoiceQuestion.prototype.getAnswerTexts = function() {
+    for (var a = cp.MultipleChoiceQuestion.superClass.getAnswerTexts.call(this), c = {}, b = this.questionData.ao, d = 0; d < b.length; ++d) {
+        var e = b[d].split(":"),
+            e = cp.D[e[0]];
+        c[e.aid] = cp.trimStartingAndTrailingSpaces(e.atxtlms)
+    }
+    a.answerTextMap = c;
+    return a
+};
+cp.MultipleChoiceQuestion.prototype.saveAnswerOrder = function() {
+    this.m_answerOrderArray = this.answerOptions.slice(0);
+    this.setSelectedAnswers()
+};
+cp.MultipleChoiceQuestion.prototype.checkAndSetQuestionStatus = function() {
+    var a = this.QuestionStatusEnum.INCOMPLETE,
+        a = this.getSelectedOptions(this.getAnswerGroupName()),
+        a = !a || 0 == a.length ? this.QuestionStatusEnum.INCOMPLETE : this.getIsSurvey() ? this.QuestionStatusEnum.CORRECT : this.checkIfPartiallyCorrect(a) ? this.QuestionStatusEnum.PARTIAL_CORRECT : this.checkIfCorrect(a) ? this.QuestionStatusEnum.CORRECT : this.QuestionStatusEnum.INCORRECT;
+    this.setQuestionStatus(a)
+};
+cp.MultipleChoiceQuestion.prototype.startQuestion = function() {
+    this.chosenAnswerFeedback = this.correctAnswersList = "";
+    this.shuffleCounter = -1;
+    this.chosenAnswerHasAdvancedFeedback = !1;
+    cp.MultipleChoiceQuestion.superClass.startQuestion.call(this)
+};
+cp.SequenceInput = function(b, c) {
+    cp.SequenceInput.baseConstructor.call(this, b);
+    this.type = this.getAttribute("type");
+    this.visible = parseFloat(this.getAttribute("visible"));
+    this.answerID = this.getAttribute("aid");
+    this.relatedQuestionSlide = this.getAttribute("rqs");
+    this.canvasDivName = this.getAttribute("cn");
+    var a = this.getAttribute("b");
+    this.bounds = {
+        minX: a[0],
+        minY: a[1],
+        maxX: a[2],
+        maxY: a[3]
+    };
+    a = this.getAttribute("vb");
+    this.vbounds = {
+        minX: a[0],
+        minY: a[1],
+        maxX: a[2],
+        maxY: a[3]
+    };
+    this.answerHolderLeft = this.getAttribute("ahl");
+    this.answerHolderTop = this.getAttribute("aht");
+    this.sh = this.getAttribute("sh");
+    this.args = c;
+    this.isDrawn = !1;
+    cp.responsive && (this.responsiveCSS = this.getAttribute("css"))
+};
+cp.inherits(cp.SequenceInput, cp.Answer);
+cp.SequenceInput.prototype.start = function(b) {
+    this.addIfNeeded();
+    if (!this.effectIsStarted || b) this.updateEffects(this.hasEffect), this.effectIsStarted = !0
+};
+cp.SequenceInput.prototype.reset = function() {
+    delete cp.ropMap[this.element.id];
+    this.isDrawn = !1;
+    this.element.width = "0";
+    this.element.height = "0";
+    this.element.style.width = "0px";
+    this.element.style.height = "0px";
+    this.element.left = "0";
+    this.element.top = "0";
+    this.element.style.left = "0px";
+    this.element.style.top = "0px"
+};
+cp.SequenceInput.prototype.drawForResponsive = function(b) {
+    if (this.m_questionObj && this.m_questionObj.getIsStarted()) {
+        if (!this.responsiveCSS) return !1;
+        if (this.isDrawn && !b) return !0;
+        var c = cp.getResponsiveCSS(this.responsiveCSS);
+        cp.getCSSFromLayouter(c, this);
+        var a = !1,
+            a = this.re || this.sh && !this.sh.i,
+            d = void 0 != this.tr;
+        if (this.currentCSS == c && !a && !d && !b) return !0;
+        this.currentCSS = c;
+        var g = this.element.id;
+        if (cp.movie.playbackController && (b = cp.movie.playbackController.GetQuizController())) {
+            b.GetIsInReviewMode();
+            var f =
+                this.m_questionObj.shouldDisableOptions();
+            this.answerLabelCanvasElement = document.getElementById(this.canvasDivName);
+            var d = cp.D[this.canvasDivName].dn,
+                h = cp.movie.stage.getSlideDiv().firstChild;
+            this.shouldShowComboBox = this.m_questionObj.showAsCombo();
+            this.group = this.m_questionObj.getAnswerGroupName();
+            a = cp.D[g];
+            this.isSkipped = this.isCorrect = !1;
+            var j = f ? "default" : "pointer",
+                p = cp.D[a.cn];
+            this.lAnswerLabelCanvasElem = document.getElementById(p.dn);
+            this.zIndex = cp.D[a.actid].zIndex;
+            if (this.shouldShowComboBox) {
+                this.isDrawn ||
+                    (this.answerLabelCanvasParentElement = this.answerLabelCanvasElement.parentElement, this.answerLabelCanvasParentSiblingElement = this.answerLabelCanvasParentElement.nextSibling, h.removeChild(this.answerLabelCanvasParentElement), h.insertBefore(this.answerLabelCanvasParentElement, this.answerLabelCanvasParentSiblingElement));
+                cp.applyResponsiveStyles(this.element.parentElement, c);
+                this.adjustPositionWithAnswerArea(p.css[cp.ResponsiveProjWidth], this.answerLabelCanvasParentElement);
+                this.adjustPositionWithAnswerArea(p.css[cp.ResponsiveProjWidth],
+                    cp(d));
+                this.adjustPositionWithAnswerArea(c, this.element.parentElement);
+                this.element.style.position = "absolute";
+                this.element.style.left = "0px";
+                this.element.style.top = "0px";
+                this.element.style.width = "100%";
+                this.element.style.height = "100%";
+                d = this.m_questionObj.getSelectedIndex(this.answerID);
+                this.answerTextCanvasDivNames = this.m_questionObj.answerOptions.slice(0); - 1 == d && (this.isSkipped = !0);
+                this.answertextParentDiv = cp(g + "canvasHolder");
+                this.answertextParentDiv || (this.answertextParentDiv = cp.newElem("div"),
+                    cp.fixWebkitScaling(this.answertextParentDiv), cp.addRewrapObjectAsPerRestOfProjectItem(this.answertextParentDiv), this.answertextParentDiv.id = g + "canvasHolder", a.answerTextCanvasHolder = this.answertextParentDiv.id, this.answertextParentDiv.setAttribute("class", "cp-rewrap"), this.answertextParentDiv.style.zIndex = this.zIndex);
+                if ("" == this.element.innerHTML) {
+                    a = "" + ("<select id='" + g + "_sequenceInput' class='dropdown' name='" + this.group + "' style='opacity:0;width:100%;height:100%;left:0px;top:0px;'>");
+                    for (h = 0; h <
+                        this.answerTextCanvasDivNames.length; ++h) b = cp.D[this.answerTextCanvasDivNames[h]], b = cp.D[b.dn], a += "<option value='" + this.answerTextCanvasDivNames[h] + "'>", a += b.rpvt[cp.ResponsiveProjWidth].vt, a += "</option>";
+                    document.getElementById(this.element.id).innerHTML = a + "</select> ";
+                    this.selectElement = document.getElementById(g + "_sequenceInput");
+                    e = this;
+                    this.selectElement.onchange = function() {
+                        e.selectElement.setNewIndex(e.selectElement.selectedIndex)
+                    };
+                    b = function() {
+                        if (!e.selectElement.disabled && e.selectElement.selectedIndex ==
+                            -1) {
+                            e.answerTextCanvasDivName = e.answerTextCanvasDivNames[0];
+                            var a = cp.D[e.answerTextCanvasDivName];
+                            e.selectElement.selectedIndex = 0;
+                            e.selectElement.value = a[0];
+                            e.selectElement.setNewIndex(0)
+                        }
+                    };
+                    cp.DESKTOP == cp.device ? this.selectElement.onfocus = b : this.selectElement.ontouchstart = b;
+                    this.selectElement.style.zIndex = 1E3;
+                    cp.verbose && cp.log("Index : " + d);
+                    b = "<img id='" + g + "_spanImageArrow' class='spanArrow' style='position:absolute;right:5px;margin:auto;top:0px;bottom:0px;'>" + ("<div id='" + g + "_spanImage' style='position:absolute;left:5px; top:5px;height:100%;width:100%;'/>");
+                    a = cp(g + "spanComboBoxTitleImage");
+                    a || (a = cp.newElem("span"), a.id = g + "spanComboBoxTitleImage", a.className = "spanComboBox", a.innerHTML = b, a.style.width = "100%", a.style.height = "100%", this.answertextParentDiv.appendChild(a));
+                    this.selectElement.setNewIndex = function(a) {
+                        if (a != -1) {
+                            e.answerTextCanvasDivName = e.answerTextCanvasDivNames[a];
+                            var b = cp.D[e.answerTextCanvasDivName],
+                                c = b.atxt;
+                            if (b.dn)
+                                if (b = cp.D[b.dn].rpvt) c = b[cp.ResponsiveProjWidth].vt;
+                            e.selectElement.selectedIndex = a;
+                            e.selectElement.cpSelectedIndex = a;
+                            cp(g +
+                                "_spanImage").innerHTML = c
+                        } else {
+                            cp.verbose && cp.log("Inside setNewIndex : " + a);
+                            e.answerTextCanvasDivName = "";
+                            e.selectElement.selectedIndex = -1;
+                            e.selectElement.cpSelectedIndex = -1;
+                            e.selectElement.value = "";
+                            e.selectElement.text = "";
+                            cp(g + "_spanImage").innerHTML = "--Select--"
+                        }
+                    };
+                    this.selectElement.setNewIndex(d);
+                    this.sh && (b = this.sh.a, cp.applyShadow(this.element, this.sh.d * Math.cos(Math.PI * b / 180) + "px " + this.sh.d * Math.sin(Math.PI * b / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, this.sh.o) + (this.sh.i ? " inset" :
+                        "")));
+                    f && (this.element.style.cursor = "default", this.selectElement.disabled = "disabled")
+                } else if (this.selectElement && this.answerTextCanvasDivNames)
+                    if (a = this.selectElement.options, this.answerTextCanvasDivNames.length == a.length) {
+                        for (d = 0; d < a.length; ++d) h = a[d], b = cp.D[this.answerTextCanvasDivNames[d]], b = cp.D[b.dn], h.value = this.answerTextCanvasDivNames[d], h.innerHTML = b.rpvt[cp.ResponsiveProjWidth].vt;
+                        this.selectElement.setNewIndex(this.selectElement.cpSelectedIndex)
+                    } else {
+                        cp.log("Responsive Sequence Drop down inputs : Something is seriously wrong.");
+                        return
+                    }
+                this.answertextParentDiv.getBoundingClientRect();
+                this.selectElement.parentElement.style.left = "0px";
+                this.selectElement.parentElement.style.top = "0px";
+                this.selectElement.parentElement.style.width = "100%";
+                this.selectElement.parentElement.style.height = "100%";
+                cp.applyResponsiveStyles(this.answertextParentDiv, c);
+                this.adjustPositionWithAnswerArea(c, this.answertextParentDiv);
+                this.answertextParentDiv.style.position = "absolute";
+                this.answerTextCanvasDivName = this.selectElement.value
+            } else {
+                this.answerTextCanvasDivName ||
+                    (this.answerTextCanvasDivName = this.m_questionObj.getAnswerOption(this.answerID, g));
+                void 0 == a.answerTextDivName ? a.answerTextDivName = this.answerTextCanvasDivName : (this.answerTextCanvasDivName = a.answerTextDivName, this.sequenceCanvasElement = cp(this.answerTextCanvasDivName));
+                c = cp(g + "_dummyhighlight");
+                c || (c = cp.newElem("div"), cp.fixWebkitScaling(c), h.insertBefore(c, this.answerLabelCanvasElement.parentElement), c.id = g + "_dummyhighlight", c.style.cursor = j, c.style.borderRadius = "5px", c.style.position = "absolute",
+                    c.style.zIndex = this.zIndex);
+                var n = cp(g + "canvasHolder"),
+                    b = cp.D[this.answerTextCanvasDivName];
+                if (!n && (n = cp.newElem("div"), cp.fixWebkitScaling(n), h.insertBefore(n, this.answerLabelCanvasElement.parentElement), n.id = g + "canvasHolder", a.answerTextCanvasHolder = n.id, n.setAttribute("class", "cp-rewrap"), n.style.zIndex = this.zIndex, this.sequenceCanvasElement || (this.sequenceCanvasElement = cp.newElem("canvas"), canvas = this.canvas = cp.createCanvas(0, 0, cp.D.project.w, cp.D.project.h, this.sequenceCanvasElement), this.sequenceCanvasElement.setAttribute("class",
+                        "cp-shape"), this.sequenceCanvasElement.setAttribute("name", this.group), this.sequenceCanvasElement.id = this.answerTextCanvasDivName, n.appendChild(this.sequenceCanvasElement)), !this.answertextCanvasShape)) this.answertextCanvasShape = new cp.Shape(this.sequenceCanvasElement, b), this.answertextCanvasShape.start();
+                this.isDrawn || (this.answerLabelCanvasParentElement = this.answerLabelCanvasElement.parentElement, this.answerLabelCanvasParentSiblingElement = this.answerLabelCanvasParentElement.nextSibling, h.removeChild(this.answerLabelCanvasParentElement),
+                    h.insertBefore(this.answerLabelCanvasParentElement, this.answerLabelCanvasParentSiblingElement));
+                this.adjustPositionWithAnswerArea(p.css[cp.ResponsiveProjWidth], this.answerLabelCanvasParentElement);
+                this.adjustPositionWithAnswerArea(p.css[cp.ResponsiveProjWidth], cp(d));
+                this.adjustPositionWithAnswerArea(a.css[cp.ResponsiveProjWidth], this.sequenceCanvasElement.parentElement);
+                this.adjustPositionWithAnswerArea(a.css[cp.ResponsiveProjWidth], this.element.parentElement);
+                b && cp.updateVarText(cp(b.dn), !0, !0);
+                this.answerLabelCanvasParentElement.getBoundingClientRect();
+                this.sequenceCanvasElement.parentElement.getBoundingClientRect();
+                this.element.style.left = "0px";
+                this.element.style.top = "0px";
+                this.element.style.width = "100%";
+                this.element.style.height = "100%";
+                this.element.style.cursor = j;
+                this.element.style.borderRadius = "5px";
+                this.element.style.position = "absolute";
+                this.element.style.background = "#000000";
+                this.element.style.opacity = 0;
+                b = cp.movie.stage.mainSlideDiv.getBoundingClientRect();
+                a = this.element.getBoundingClientRect();
+                c.style.left = a.left - b.left + "px";
+                c.style.top = a.top - b.top - 2 + "px";
+                c.style.width = this.element.clientWidth + "px";
+                c.style.height = this.element.clientHeight + "px";
+                if (!this.isDrawn) {
+                    var e = this;
+                    if (cp.DESKTOP == cp.device) {
+                        var q = document.getElementById(g + "_dummyhighlight");
+                        this.element.onmouseover = function() {
+                            if (!cp.disableInteractions && !f) {
+                                q.style.backgroundColor = "#000000";
+                                q.style.opacity = "0.3";
+                                if (e.sh) {
+                                    var a = e.sh.a;
+                                    cp.applyShadow(q, e.sh.d * Math.cos(Math.PI * a / 180) + "px " + e.sh.d * Math.sin(Math.PI * a / 180) + "px " + e.sh.b +
+                                        "px " + cp.ConvertRGBToRGBA(e.sh.c, e.sh.o) + (e.sh.i ? " inset" : ""))
+                                }
+                            }
+                        };
+                        this.element.onmouseout = function() {
+                            if (!cp.disableInteractions && !f) {
+                                q.style.backgroundColor = "transparent";
+                                cp.applyShadow(q, "")
+                            }
+                        }
+                    }
+                    this.element.disableOption = function() {
+                        f = true;
+                        e.element.tabIndex = -1
+                    }
+                }
+                f || this.m_questionObj.addDragEvents(g)
+            }
+            this.isCorrect = this.m_questionObj.getIsOptionCorrect(this.answerTextCanvasDivName);
+            f && (this.element.style.cursor = "default", this.element.tabIndex = -1, this.m_questionObj.getWasJudged() && this.m_questionObj.canShowReviewIcons() &&
+                (this.m_questionObj.getAnsweredCorrectly() ? this.reviewIconImage || (this.reviewIconImage = cp.newElem("img"), this.reviewIconImage.id = g + "_reviewCorrect", this.reviewIconImage.src = cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src, this.reviewIconImage.tabIndex = -1, this.reviewIconImage.style.position = "absolute", this.lAnswerLabelCanvasElem.appendChild(this.reviewIconImage), this.reviewIconImage.style.zIndex = this.zIndex, this.sh && (b = this.sh.a, cp.applyShadow(this.reviewIconImage,
+                    this.sh.d * Math.cos(Math.PI * b / 180) + "px " + this.sh.d * Math.sin(Math.PI * b / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, this.sh.o) + (this.sh.i ? " inset" : "") + (this.sh.i ? " inset" : "")))) : (c = this.isCorrect ? cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src : this.isSkipped ? cp.movie.im.m_projectImages["assets/htmlimages/skip_answer_normal.png"].nativeImage.src : cp.movie.im.m_projectImages["assets/htmlimages/incorrect_answer_normal.png"].nativeImage.src, this.reviewIconImage ||
+                    (this.reviewIconImage = cp.newElem("img"), this.reviewIconImage.id = g + "_reviewIncorrect", this.reviewIconImage.src = c, this.reviewIconImage.tabIndex = -1, this.reviewIconImage.style.position = "absolute", this.lAnswerLabelCanvasElem.appendChild(this.reviewIconImage), this.reviewIconImage.style.zIndex = this.zIndex, this.sh && (b = this.sh.a, cp.applyShadow(this.reviewIconImage, this.sh.d * Math.cos(Math.PI * b / 180) + "px " + this.sh.d * Math.sin(Math.PI * b / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, this.sh.o) + (this.sh.i ?
+                        " inset" : ""))))), b = cp.movie.stage.mainSlideDiv.getBoundingClientRect(), a = this.lAnswerLabelCanvasElem.getBoundingClientRect(), this.reviewIconImage.style.left = "-20px", this.reviewIconImage.style.top = "3px"));
+            this.isDrawn = !0;
+            this.visible || (this.element.style.visibility = "hidden");
+            return !0
+        }
+    }
+};
+cp.SequenceInput.prototype.addIfNeeded = function(b) {
+    if (!cp.responsive || !this.drawForResponsive(b)) {
+        var c = cp.getQuestionObject(this.relatedQuestionSlide);
+        if (c && !this.isDrawn && c.getIsStarted()) {
+            var b = this.element.id,
+                a = this.bounds;
+            if (cp.movie.playbackController) {
+                var d = cp.movie.playbackController.GetQuizController();
+                if (d) {
+                    d.GetIsInReviewMode();
+                    var g = c.shouldDisableOptions(),
+                        f = document.getElementById(this.canvasDivName),
+                        d = cp.movie.stage.getSlideDiv().firstChild;
+                    this.shouldShowComboBox = c.showAsCombo();
+                    this.group =
+                        c.getAnswerGroupName();
+                    var h = cp.D[b];
+                    this.isSkipped = this.isCorrect = !1;
+                    var j = g ? "default" : "pointer";
+                    this.lAnswerLabelCanvasElem = document.getElementById(cp.D[h.cn].dn);
+                    this.zIndex = cp.D[h.actid].zIndex;
+                    if (this.shouldShowComboBox) {
+                        this.element.style.position = "absolute";
+                        this.element.style.left = a.minX + "px";
+                        this.element.style.top = a.minY + "px";
+                        this.element.style.width = a.maxX - a.minX + "px";
+                        this.element.style.height = a.maxY - a.minY + "px";
+                        d = c.getSelectedIndex(this.answerID);
+                        this.answerTextCanvasDivNames = c.answerOptions.slice(0);
+                        o = cp.D[this.answerTextCanvasDivNames[0]].b;
+                        if (4 == o.length)
+                            for (t = 0; 4 > t; ++t) o[t] = parseFloat(o[t]);
+                        else o = [0, 0, 0, 0];
+                        this.answerTextCanvasImageBounds = {
+                            minX: o[0],
+                            minY: o[1],
+                            maxX: o[2],
+                            maxY: o[3]
+                        };
+                        var p = c.defaultTitleImage,
+                            n = cp.movie.im;
+                        n && n.getImageDataURI(p, function(a) {
+                            p = a
+                        }); - 1 == d && (this.isSkipped = !0);
+                        if ("" == this.element.innerHTML) {
+                            f = "" + ("<select class='mydds' id='" + b + "_sequenceInput' name='" + this.group + "'>");
+                            for (j = 0; j < this.answerTextCanvasDivNames.length; ++j) o = cp.D[this.answerTextCanvasDivNames[j]], s = o.ip,
+                                n && n.getImageDataURI(s, function(a) {
+                                    s = a
+                                }), f += "<option value='" + this.answerTextCanvasDivNames[j] + "' style='position:absolute;width:" + (this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX) + "px' title='" + s + "'>", f += o.atxt, f += "</option>";
+                            document.getElementById(this.element.id).innerHTML = f + "</select> ";
+                            var e = document.getElementById(b + "_sequenceInput");
+                            e.style.width = this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX + "px";
+                            e.style.height = this.answerTextCanvasImageBounds.maxY -
+                                this.answerTextCanvasImageBounds.minY + "px";
+                            e.style.position = "absolute";
+                            o = h.actid;
+                            j = cp.newElem("div");
+                            cp.fixWebkitScaling(j);
+                            cp.addRewrapObjectAsPerRestOfProjectItem(j);
+                            j.id = b + "canvasHolder";
+                            h.answerTextCanvasHolder = j.id;
+                            j.setAttribute("class", "cp-rewrap");
+                            var q;
+                            if (cp.DESKTOP != cp.device) {
+                                e.style.opacity = 0;
+                                l = this;
+                                e.onchange = function() {
+                                    e.setNewIndex(e.selectedIndex)
+                                };
+                                e.ontouchstart = function() {
+                                    if (!e.disabled && e.selectedIndex == -1) {
+                                        l.answerTextCanvasDivName = l.answerTextCanvasDivNames[0];
+                                        var a = cp.D[l.answerTextCanvasDivName];
+                                        e.selectedIndex = 0;
+                                        e.value = a[0];
+                                        e.setNewIndex(0)
+                                    }
+                                };
+                                e.style.zIndex = 1E3;
+                                cp.verbose && cp.log("Index : " + d);
+                                h = "<img id='" + b + "_spanImage' src='" + p + "' style='position:absolute;left:5px; height:" + (this.answerTextCanvasImageBounds.maxY - this.answerTextCanvasImageBounds.minY) + "px; title='" + p + "'/>";
+                                h += "<img id='" + b + "_spanImageArrow' class='spanArrow' style='position:absolute;left:" + (this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX - 20) + "px;top:3px'/>";
+                                f = cp.newElem("span");
+                                f.id = "spanComboBoxTitleImage";
+                                f.className = "spanComboBox";
+                                f.innerHTML = h;
+                                f.style.width = this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX + "px";
+                                f.style.height = this.answerTextCanvasImageBounds.maxY - this.answerTextCanvasImageBounds.minY + 3 + "px";
+                                j.appendChild(f);
+                                j.style.zIndex = this.zIndex;
+                                var r, k = document.getElementById(b + "_spanImage");
+                                e.setNewIndex = function(a) {
+                                    if (a != -1) {
+                                        l.answerTextCanvasDivName = l.answerTextCanvasDivNames[a];
+                                        r = cp.D[l.answerTextCanvasDivName].ip;
+                                        n && n.getImageDataURI(r, function(a) {
+                                            r = a
+                                        });
+                                        e.selectedIndex =
+                                            a
+                                    } else {
+                                        if (cp.verbose) {
+                                            cp.log("Inside setNewIndex : " + a);
+                                            cp.log("Setting image path as : " + p)
+                                        }
+                                        l.answerTextCanvasDivName = "";
+                                        r = p;
+                                        e.selectedIndex = -1;
+                                        e.value = "";
+                                        e.text = ""
+                                    }
+                                    k.style.display = "none";
+                                    k.src = r;
+                                    k.onload = setTimeout(function() {
+                                        k.style.display = "block"
+                                    }, 100)
+                                };
+                                e.setNewIndex(d);
+                                j.style.position = "absolute";
+                                j.style.left = a.minX + "px";
+                                j.style.top = a.minY + "px";
+                                j.style.width = a.maxX - a.minX + "px";
+                                j.style.height = a.maxY - a.minY + "px";
+                                this.sh && (a = this.sh.a, cp.applyShadow(this.element, this.sh.d * Math.cos(Math.PI * a / 180) +
+                                    "px " + this.sh.d * Math.sin(Math.PI * a / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, this.sh.o) + (this.sh.i ? " inset" : "")))
+                            } else {
+                                j = parseFloat(e.parentElement.style.left) + this.answerTextCanvasImageBounds.minX;
+                                o = parseFloat(e.parentElement.style.top) + this.answerTextCanvasImageBounds.minY;
+                                e.style.left = "10px";
+                                e.parentElement.style.position = "absolute";
+                                e.parentElement.style.left = a.minX + "px";
+                                e.parentElement.style.top = a.minY + "px";
+                                e.parentElement.style.width = a.maxX - a.minX + "px";
+                                e.parentElement.style.height =
+                                    a.maxY - a.minY + "px";
+                                f = jQuery("#" + b + "_sequenceInput");
+                                f.css("width", this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX);
+                                l = this;
+                                q = jQuery("#" + b + "_sequenceInput").msDropDown({
+                                    style: "position:fixed, left:" + (a.minX + 20) + "px, top:" + this.bounds.minY + "px, height:" + (this.answerTextCanvasImageBounds.maxY - this.answerTextCanvasImageBounds.minY) + "px, width:" + (this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX) + "px,",
+                                    on: {
+                                        close: function() {
+                                            l.element.parentElement.style.zIndex =
+                                                l.zIndex
+                                        }
+                                    }
+                                }, p).data("dd");
+                                h.oHandler = q;
+                                q.set("selectedIndex", d);
+                                this.sh && (a = this.sh.a, cp.applyShadow(this.element, this.sh.d * Math.cos(Math.PI * a / 180) + "px " + this.sh.d * Math.sin(Math.PI * a / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, this.sh.o) + (this.sh.i ? " inset" : "")));
+                                var m = q.open;
+                                q.open = function(a) {
+                                    l.element.parentElement.style.zIndex = 1E3;
+                                    a.preventDefault();
+                                    a.stopPropagation();
+                                    m()
+                                };
+                                cp.addDCHDiv(this.element, function(a) {
+                                    q.open(a)
+                                });
+                                e.onchange = function(a) {
+                                    q.set("selectedIndex", e.selectedIndex);
+                                    a.preventDefault();
+                                    return false
+                                }
+                            }
+                            g && (this.element.style.cursor = "default", cp.DESKTOP != cp.device ? e.disabled = "disabled" : q.set("disabled", !0))
+                        }
+                        f = document.getElementById(b + "_sequenceInput");
+                        this.answerTextCanvasDivName = f.value
+                    } else {
+                        this.answerTextCanvasDivName = c.getAnswerOption(this.answerID, b);
+                        o = cp.D[this.answerTextCanvasDivName];
+                        h.answerTextDivName = this.answerTextCanvasDivName;
+                        var s = o.ip,
+                            o = o.b;
+                        if (4 == o.length)
+                            for (var t = 0; 4 > t; ++t) o[t] = parseFloat(o[t]);
+                        else o = [0, 0, 0, 0];
+                        this.answerTextCanvasImageBounds = {
+                            minX: o[0],
+                            minY: o[1],
+                            maxX: o[2],
+                            maxY: o[3]
+                        };
+                        this.element.style.cursor = j;
+                        this.element.style.borderRadius = "5px";
+                        this.element.style.left = "-20px";
+                        this.element.style.top = "-2px";
+                        this.element.style.width = this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX + 40 + "px";
+                        this.element.style.height = this.answerTextCanvasImageBounds.maxY - this.answerTextCanvasImageBounds.minY + 6 + "px";
+                        this.element.style.position = "absolute";
+                        this.element.style.background = "#000000";
+                        this.element.style.opacity = 0;
+                        a = cp.newElem("div");
+                        cp.fixWebkitScaling(a);
+                        d.insertBefore(a, f.parentElement);
+                        a.id = b + "_dummyhighlight";
+                        a.style.cursor = j;
+                        a.style.borderRadius = "5px";
+                        a.style.left = this.bounds.minX - 30 + "px";
+                        a.style.top = this.bounds.minY - 3 + "px";
+                        a.style.width = this.answerTextCanvasImageBounds.maxX - this.answerTextCanvasImageBounds.minX + 40 + "px";
+                        a.style.height = this.answerTextCanvasImageBounds.maxY - this.answerTextCanvasImageBounds.minY + 6 + "px";
+                        a.style.position = "absolute";
+                        a.style.zIndex = this.zIndex;
+                        o = h.actid;
+                        j = cp.newElem("div");
+                        cp.fixWebkitScaling(j);
+                        d.insertBefore(j, f.parentElement);
+                        j.id = b + "canvasHolder";
+                        h.answerTextCanvasHolder = j.id;
+                        j.setAttribute("class", "cp-rewrap");
+                        a = cp.newElem("canvas");
+                        canvas = this.canvas = cp.createCanvas(0, 0, cp.D.project.w, cp.D.project.h, a);
+                        a.setAttribute("class", "cp-shape");
+                        a.setAttribute("name", this.group);
+                        a.id = this.answerTextCanvasDivName;
+                        j.appendChild(a);
+                        j.style.zIndex = this.zIndex;
+                        (new cp.Shape(a, cp.D[this.answerTextCanvasDivName])).start();
+                        h = cp.D[o].mdi;
+                        j = parseFloat(a.parentElement.style.left) + (cp.D[h].b[0] - this.answerTextCanvasImageBounds.minX);
+                        o = parseFloat(a.parentElement.style.top) + (cp.D[h].b[1] - this.answerTextCanvasImageBounds.minY);
+                        a.parentElement.style.left = j + "px";
+                        a.parentElement.style.top = o + "px";
+                        a = f.parentElement;
+                        h = a.nextSibling;
+                        d.removeChild(a);
+                        d.insertBefore(a, h);
+                        var l = this;
+                        if (cp.DESKTOP == cp.device) {
+                            var u = document.getElementById(b + "_dummyhighlight");
+                            this.element.onmouseover = function() {
+                                if (!cp.disableInteractions && !g && (u.style.backgroundColor = "#000000", u.style.opacity = "0.3", l.sh)) {
+                                    var a = l.sh.a;
+                                    cp.applyShadow(u, l.sh.d * Math.cos(Math.PI *
+                                        a / 180) + "px " + l.sh.d * Math.sin(Math.PI * a / 180) + "px " + l.sh.b + "px " + cp.ConvertRGBToRGBA(l.sh.c, l.sh.o) + (l.sh.i ? " inset" : ""))
+                                }
+                            };
+                            this.element.onmouseout = function() {
+                                !cp.disableInteractions && !g && (u.style.backgroundColor = "transparent", cp.applyShadow(u, ""))
+                            }
+                        }
+                        this.element.disableOption = function() {
+                            g = !0;
+                            l.element.tabIndex = -1
+                        };
+                        g || c.addDragEvents(b)
+                    }
+                    this.isCorrect = c.getIsOptionCorrect(this.answerTextCanvasDivName);
+                    g && (this.element.style.cursor = "default", this.element.tabIndex = -1, c.getWasJudged() && c.canShowReviewIcons() &&
+                        (l = this, c.getAnsweredCorrectly() ? (c = cp.newElem("img"), c.id = b + "_reviewCorrect", c.src = cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src, c.tabIndex = -1, c.style.position = "absolute", c.style.left = "-20px", c.style.top = "0px", this.lAnswerLabelCanvasElem.appendChild(c), c.style.zIndex = this.zIndex, l.sh && (a = l.sh.a, cp.applyShadow(c, l.sh.d * Math.cos(Math.PI * a / 180) + "px " + l.sh.d * Math.sin(Math.PI * a / 180) + "px " + l.sh.b + "px " + cp.ConvertRGBToRGBA(l.sh.c, l.sh.o) + (l.sh.i ? " inset" : "") +
+                            (l.sh.i ? " inset" : "")))) : (a = this.isCorrect ? cp.movie.im.m_projectImages["assets/htmlimages/correct_answer_normal.png"].nativeImage.src : this.isSkipped ? cp.movie.im.m_projectImages["assets/htmlimages/skip_answer_normal.png"].nativeImage.src : cp.movie.im.m_projectImages["assets/htmlimages/incorrect_answer_normal.png"].nativeImage.src, c = cp.newElem("img"), c.id = b + "_reviewIncorrect", c.src = a, c.tabIndex = -1, c.style.position = "absolute", c.style.left = "-20px", c.style.top = "0px", this.lAnswerLabelCanvasElem.appendChild(c),
+                            c.style.zIndex = this.zIndex, l.sh && (a = l.sh.a, cp.applyShadow(c, l.sh.d * Math.cos(Math.PI * a / 180) + "px " + l.sh.d * Math.sin(Math.PI * a / 180) + "px " + l.sh.b + "px " + cp.ConvertRGBToRGBA(l.sh.c, l.sh.o) + (l.sh.i ? " inset" : ""))))));
+                    this.isDrawn = !0;
+                    this.visible || (this.element.style.visibility = "hidden")
+                }
+            }
+        }
+    }
+};
+cp.SequenceQuestion = function(b, c) {
+    cp.SequenceQuestion.baseConstructor.call(this, b, c);
+    this.answerOptions = this.getAnswerOptions();
+    this.isShuffleEnabled = this.questionData.ish;
+    this.answerOptionsDrawnCtr = this.isCorrectCounter = this.shuffleCounter = -1;
+    this.answerOptionsDrawn = !1;
+    this.correctSequenceArr = this.questionData.cal;
+    this.defaultTitleImage = this.questionData.defaultTitleImage;
+    this.currentSequenceArr = [];
+    this.selectedSequenceArr = [];
+    this.selectedIndexes = [];
+    this.sequenceElementList = []
+};
+cp.inherits(cp.SequenceQuestion, cp.Question);
+cp.SequenceQuestion.prototype.setQuestionSpecificScoreProperties = function(b) {
+    this.showAsCombo() && 0 >= this.selectedSequenceArr.length ? b.m_answerOrderArrayAsString = "" : cp.SequenceQuestion.superClass.setQuestionSpecificScoreProperties.call(this, b)
+};
+cp.SequenceQuestion.prototype.resumeSelectedAnswers = function(b) {
+    if (!(0 >= b.length)) {
+        var c = this.questionData.ao;
+        if (c && !(0 >= c.length)) {
+            for (var a = {}, d = 0; d < c.length; ++d) {
+                var g = c[d].split(":");
+                a[g[1]] = g[0]
+            }
+            for (c = 0; c < b.length; ++c) d = unescape(b[c].m_chosenAnswer), g = "", void 0 != a[d] ? g = a[d] : (d = d.split("answerText_"), g = a[d[1]]), this.m_selectedAnswersArr.push(g);
+            this.resumeSequenceArrays()
+        }
+    }
+};
+cp.SequenceQuestion.prototype.startQuestion = function() {
+    this.answerOptionsDrawnCtr = this.isCorrectCounter = this.shuffleCounter = -1;
+    this.answerOptionsDrawn = !1;
+    if (this.m_quizController) {
+        var b = this.m_quizController.GetIsInReviewMode();
+        this.m_isShuffled || this.shuffleAnswers();
+        b && this.addCorrectAnswerDiv();
+        cp.SequenceQuestion.superClass.startQuestion.call(this)
+    }
+};
+cp.SequenceQuestion.prototype.getExpectedCorrectAnswerTextList = function(b) {
+    var c = this.correctSequenceArr;
+    if (0 >= c.length) return "";
+    for (var a = cp.D[c[0]], d = cp.trimStartingAndTrailingSpaces(a.atxtlms), g = 1; g < c.length; ++g) a = cp.D[c[g]], d += b + cp.trimStartingAndTrailingSpaces(a.atxtlms);
+    return d
+};
+cp.SequenceQuestion.prototype.getSelectedAnswerTextList = function(b) {
+    if (this.showAsCombo()) {
+        d = this.getAllOptions();
+        if (0 >= d.length) return "";
+        var c = d[0],
+            c = -1 != c.selectedIndex ? c.value : "",
+            a = " ";
+        "" != c && (c = cp.D[c], a = cp.trimStartingAndTrailingSpaces(c.atxtlms));
+        for (g = 1; g < d.length; ++g) c = d[g], c = c.value, "" != c && (c = cp.D[c], a += b + cp.trimStartingAndTrailingSpaces(c.atxtlms));
+        "" == a && (a = "0")
+    } else {
+        var d = this.sequenceElementList;
+        if (0 >= d.length) return "";
+        for (var c = d[0], c = cp.D[c], c = c.answerTextDivName, c = cp.D[c], a = cp.trimStartingAndTrailingSpaces(c.atxtlms),
+                g = 1; g < d.length; ++g) c = d[g], c = cp.D[c], c = c.answerTextDivName, c = cp.D[c], a += b + cp.trimStartingAndTrailingSpaces(c.atxtlms)
+    }
+    return a
+};
+cp.SequenceQuestion.prototype.getChosenAnswerAsStringForReview = function() {
+    var b = this.getSelectedAnswerTextList(";");
+    if (!b || "0" == b) b = "";
+    return b
+};
+cp.SequenceQuestion.prototype.getCorrectAnswerAsStringForReview = function() {
+    var b = this.getExpectedCorrectAnswerTextList(";");
+    b || (b = "");
+    return b
+};
+cp.SequenceQuestion.prototype.saveAnswerOrder = function() {
+    if (this.showAsCombo()) {
+        for (var b = this.getAllOptions(), c = 0; c < b.length; ++c) this.currentSequenceArr[c] = b[c].value;
+        this.m_answerOrderArray = this.answerOptions.slice(0)
+    } else this.m_answerOrderArray = this.currentSequenceArr.slice(0);
+    cp.verbose && cp.log("Current Sequence : " + this.currentSequenceArr);
+    this.m_selectedAnswersArr = [];
+    for (b = 0; b < this.currentSequenceArr.length; ++b) this.m_selectedAnswersArr.push(this.currentSequenceArr[b]);
+    this.setSelectedAnswers()
+};
+cp.SequenceQuestion.prototype.setAnswerOrder = function(b) {
+    if (b && !(0 >= b.length)) {
+        for (var b = b.split(";"), c = 0; c < b.length; ++c);
+        this.answerOptions = b.slice(0);
+        this.m_answerOrderArray = b.slice(0)
+    }
+};
+cp.SequenceQuestion.prototype.resumeSequenceArrays = function() {
+    var b = this.m_selectedAnswersArr.slice(0);
+    if (!(0 >= b.length))
+        if (this.showAsCombo())
+            for (var c = 0; c < b.length; ++c) - 1 == b[c] || "undefined" == b[c] ? (this.currentSequenceArr[c] = "", this.selectedSequenceArr[c] = "") : (this.currentSequenceArr[c] = b[c], this.selectedSequenceArr[c] = b[c]);
+        else this.selectedSequenceArr = this.currentSequenceArr = b
+};
+cp.SequenceQuestion.prototype.clearAnswers = function() {
+    this.verbose && cp.log("Inside Clear Answers");
+    var b = this.m_quizController && this.m_quizController.GetIsSubmitAll() && !this.getIsPretest(),
+        b = (b = !1 == this.getWasJudged() || b && !1 == this.m_quizController.m_submittedAllQuestions) && (!this.m_quizController.GetIsInReviewMode() || this.getIsKnowledgeCheck());
+    !1 != b && (this.verbose && cp.log("Not Attempted. Hence Clearing"), this.selectedSequenceArr = [], this.drawSequenceOptions(this.answerOptions))
+};
+cp.SequenceQuestion.prototype.showAsCombo = function() {
+    return this.questionData.sac
+};
+cp.SequenceQuestion.prototype.getIsOptionCorrect = function(b) {
+    var c = this.correctSequenceArr[++this.isCorrectCounter];
+    this.isCorrectCounter == this.answerOptions.length && (this.isCorrectCounter = -1);
+    return c == b
+};
+cp.SequenceQuestion.prototype.addDragEvents = function(b) {
+    var c = document.getElementById(b);
+    if (c) {
+        var a = this,
+            d = document.getElementById(this.getAssociatedObjName());
+        this.dropIndicatorImage = this.draggedImageCopy = void 0;
+        this.draggedOptionIndex = -1;
+        var g = cp.movie.stage.getSlideDiv();
+        if (cp.device != cp.DESKTOP) this.lTouchStarted = !1, c.ontouchstart = function(b) {
+            if (1 == b.touches.length) {
+                cp.m_gestureHandler.enabled = !1;
+                for (var c = b.touches[0], n = c.target, e = cp.D[b.target.id].answerTextDivName, b = cp.getScaledPosition(c.pageX,
+                        c.pageY), q, f = a.currentSequenceArr.slice(0), h = 0; h < f.length; ++h)
+                    if (f[h] == e) {
+                        q = h;
+                        break
+                    }
+                a.dropIndicatorImage = cp.newElem("img");
+                a.dropIndicatorImage.id = "dropIndicatorImg";
+                a.dropIndicatorImage.className = "dropIndicator";
+                a.dropIndicatorImage.style.left = parseFloat(n.parentNode.style.left) - 50 + "px";
+                a.dropIndicatorImage.style.top = parseFloat(n.parentNode.style.top) + "px";
+                a.dropIndicatorImage.style.position = "absolute";
+                a.draggedOptionIndex = q;
+                n = cp.D[e];
+                g.getBoundingClientRect();
+                if (cp.responsive) a.draggedImageCopy =
+                    cp.newElem("div"), a.draggedImageCopy.innerHTML = cp.D[n.dn].rpvt[cp.ResponsiveProjWidth].vt, a.draggedImageCopy.style.left = c.pageX + "px", a.draggedImageCopy.style.top = c.pageY + "px", a.draggedImageCopy.style.zIndex = 1E3, cp.scaleItem(a.draggedImageCopy, cp("div_Slide").scaleFactor, cp("div_Slide").scaleFactor), document.body.appendChild(a.draggedImageCopy);
+                else {
+                    a.draggedImageCopy = cp.newElem("img");
+                    var m = n.ip;
+                    (n = cp.movie.im) && n.getImageDataURI(m, function(a) {
+                        m = a
+                    });
+                    a.draggedImageCopy.src = m;
+                    cp.shouldScale ? (a.draggedImageCopy.style.left =
+                        b.X + 10 + "px", a.draggedImageCopy.style.top = b.Y + "px", d.parentNode.appendChild(a.draggedImageCopy)) : (a.draggedImageCopy.style.left = c.pageX + "px", a.draggedImageCopy.style.top = c.pageY + "px", a.draggedImageCopy.style.zIndex = 1E3, cp.scaleItem(a.draggedImageCopy, cp("div_Slide").scaleFactor, cp("div_Slide").scaleFactor), document.body.appendChild(a.draggedImageCopy))
+                }
+                a.draggedImageCopy.id = "draggedImageCopy";
+                a.draggedImageCopy.style.display = "block";
+                a.draggedImageCopy.style.position = "absolute";
+                d.parentNode.appendChild(a.dropIndicatorImage);
+                a.lTouchStarted = !0
+            }
+        }, c.ontouchmove = function(b) {
+            if ((!b.target || !b.target.isTocItem) && 1 == b.touches.length)
+                if (cp.m_gestureHandler.enabled = !1, a.lTouchStarted) {
+                    b.preventDefault && b.preventDefault();
+                    var c = b.touches[0],
+                        b = cp.getScaledPosition(c.pageX, c.pageY),
+                        d = g.getBoundingClientRect();
+                    cp.responsive ? (a.draggedImageCopy.style.left = c.pageX + "px", a.draggedImageCopy.style.top = c.pageY + "px") : cp.shouldScale ? (a.draggedImageCopy.style.left = b.X + 10 + "px", a.draggedImageCopy.style.top = b.Y + "px") : (a.draggedImageCopy.style.left =
+                        c.pageX + "px", a.draggedImageCopy.style.top = c.pageY + "px");
+                    for (var c = a.sequenceElementList, e = "", f = 0; f < c.length; ++f) {
+                        var h = c[f],
+                            k = document.getElementById(h),
+                            m = 0;
+                        cp.shouldScale ? (parseFloat(k.parentNode.style.left), e = parseFloat(k.parentNode.style.top), parseFloat(k.parentNode.style.left), parseFloat(k.parentNode.style.width), k = parseFloat(k.parentNode.style.top) + parseFloat(k.parentNode.style.height), m = b.Y) : (m = k.parentNode.getBoundingClientRect(), e = m.top - d.top, k = m.bottom - d.top, m = b.Y - d.top);
+                        m -= window.pageYOffset;
+                        h = document.getElementById(h + "_dummyhighlight");
+                        h.style.backgroundColor = "transparent";
+                        m >= e && m <= k && (e = parseFloat(e), a.dropIndicatorImage.style.top = e + 3 + "px", h.style.backgroundColor = "#efefef")
+                    }
+                }
+        }, c.ontouchend = function(b) {
+            cp.m_gestureHandler.enableGestures && cp.m_gestureHandler.enableGestures();
+            b.stopPropagation && b.stopPropagation();
+            a.lTouchStarted = !1;
+            if (a.draggedImageCopy) {
+                b = a.draggedImageCopy.getBoundingClientRect();
+                a.draggedImageCopy.parentNode && a.draggedImageCopy.parentNode.removeChild(a.draggedImageCopy);
+                a.dropIndicatorImage && a.dropIndicatorImage.parentNode && a.dropIndicatorImage.parentNode.removeChild(a.dropIndicatorImage);
+                a.draggedImageCopy = void 0;
+                a.dropIndicatorImage = void 0;
+                for (var c = g.getBoundingClientRect(), d = b.top - c.top, e = parseFloat(a.draggedOptionIndex), f = -1, b = a.currentSequenceArr.slice(0), h = a.sequenceElementList, k = 0; k < h.length; ++k) {
+                    var m = h[k],
+                        s = document.getElementById(m).getBoundingClientRect(),
+                        o = s.top - c.top,
+                        s = s.bottom - c.top;
+                    document.getElementById(m + "_dummyhighlight").style.backgroundColor =
+                        "transparent";
+                    if (d >= o && d <= s) {
+                        f = k;
+                        break
+                    }
+                }
+                if (-1 != f) {
+                    c = [];
+                    if (e < f)
+                        for (d = b[e]; e < f; ++e) b[e] = b[e + 1];
+                    else
+                        for (d = b[e]; e > f; --e) b[e] = b[e - 1];
+                    b[f] = d;
+                    for (f = 0; f < b.length; ++f) c.push(b[f]);
+                    a.drawSequenceOptions(c)
+                }
+            }
+        };
+        else {
+            this.isMouseDown = !1;
+            c.ondragstart = function() {
+                return !1
+            };
+            c.onselectstart = function() {
+                return !1
+            };
+            var f = function(b) {
+                    if (a.isMouseDown) {
+                        var c = 0,
+                            d = g.getBoundingClientRect();
+                        if (a.draggedImageCopy) {
+                            var e = cp.getScaledPosition(b.clientX, b.clientY);
+                            cp.responsive ? (c = e.Y - d.top, a.draggedImageCopy.style.left = e.X -
+                                d.left + "px") : cp.shouldScale ? (c = e.Y, a.draggedImageCopy.style.left = e.X + "px") : (c = b.clientY - d.top, a.draggedImageCopy.style.left = b.clientX - d.left + "px");
+                            a.draggedImageCopy.style.top = c + "px"
+                        }
+                        if (a.dropIndicatorImage) {
+                            b = a.sequenceElementList;
+                            for (e = e = 0; e < b.length; ++e) {
+                                var f = document.getElementById(b[e]).getBoundingClientRect(),
+                                    h = f.top,
+                                    k = f.bottom,
+                                    m = d.top;
+                                cp.shouldScale && (h = cp.getScaledPosition(f.left, f.top).Y, k = cp.getScaledPosition(f.right, f.bottom).Y, m = 0);
+                                f = h - m;
+                                k -= m;
+                                m = 0;
+                                0 < e && (m = document.getElementById(b[e - 1]).getBoundingClientRect(),
+                                    h = m.bottom, cp.shouldScale && (h = cp.getScaledPosition(m.right, m.bottom).Y), m = h - d.top);
+                                if (c > m && c < k) {
+                                    e = parseFloat(f);
+                                    a.dropIndicatorImage.style.top = e + 3 + "px";
+                                    break
+                                }
+                            }
+                        }
+                    }
+                },
+                h = function() {
+                    if (!cp.disableInteractions && (document.onmousemove = a.prevMouseMove, document.onmouseup = a.prevMouseUp, this.addedCustomDocMouseUpEvnt = !1, c.onmousemove = void 0, a.isMouseDown)) {
+                        a.isMouseDown = !1;
+                        cp.verbose && cp.log("Drag Ended");
+                        var b = document.getElementById(a.dropIndicatorImage.id);
+                        b && b.parentNode.removeChild(b);
+                        var b = a.draggedImageCopy.getBoundingClientRect(),
+                            d = document.getElementById(a.draggedImageCopy.id);
+                        d && d.parentNode.removeChild(d);
+                        var f = g.getBoundingClientRect(),
+                            e = b.top - f.top;
+                        a.dropIndicatorImage = void 0;
+                        a.draggedImageCopy = void 0;
+                        for (var h = parseFloat(a.draggedOptionIndex), d = -1, b = a.currentSequenceArr.slice(0), r = a.sequenceElementList, k = 0; k < r.length; ++k) {
+                            var m = document.getElementById(r[k]);
+                            cp.verbose && cp.log(m.parentNode.id);
+                            var m = m.getBoundingClientRect().bottom - f.top,
+                                s = 0;
+                            0 < k && (s = document.getElementById(r[k - 1]), cp.verbose && cp.log(s.parentNode.id),
+                                s = s.getBoundingClientRect().bottom - f.top);
+                            cp.verbose && cp.log(e + "," + s + "," + m);
+                            if (e > s && e <= m) {
+                                d = k;
+                                break
+                            }
+                        }
+                        if (-1 != d) {
+                            f = [];
+                            cp.verbose && cp.log("From,To : " + h + "," + d);
+                            if (h < d)
+                                for (e = b[h]; h < d; ++h) b[h] = b[h + 1];
+                            else
+                                for (e = b[h]; h > d; --h) b[h] = b[h - 1];
+                            b[d] = e;
+                            for (d = 0; d < b.length; ++d) f.push(b[d]);
+                            cp.verbose && cp.log("Sequence to be drawn : " + f.toString());
+                            a.drawSequenceOptions(f)
+                        }
+                    }
+                };
+            c.onmousedown = function(b) {
+                if (!cp.disableInteractions) {
+                    cp.verbose && cp.log("Dragging element : " + b.target.id);
+                    if (a.dropIndicatorImage) {
+                        var p = document.getElementById(a.dropIndicatorImage.id);
+                        p && p.parentNode.removeChild(p)
+                    }
+                    a.draggedImageCopy && (p = document.getElementById(a.draggedImageCopy.id)) && p.parentNode.removeChild(p);
+                    var p = cp.getScaledPosition(b.clientX, b.clientY),
+                        n = b.target.parentNode.firstChild;
+                    n.firstChild && "p" == n.firstChild.nodeName.toLowerCase() && (n = n.nextSibling);
+                    var e = cp.D[n.id],
+                        n = e.answerTextDivName;
+                    a.sh = e.sh;
+                    for (var q, e = a.currentSequenceArr.slice(0), r = 0; r < e.length; ++r)
+                        if (e[r] == n) {
+                            q = r;
+                            break
+                        }
+                    a.draggedOptionIndex = q;
+                    q = cp.D[n];
+                    var k = q.ip;
+                    (n = cp.movie.im) && n.getImageDataURI(k, function(a) {
+                        k =
+                            a
+                    });
+                    a.dropIndicatorImage = cp.newElem("img");
+                    cp.fixWebkitScaling(a.dropIndicatorImage);
+                    a.dropIndicatorImage.id = "dropIndicatorImg";
+                    a.dropIndicatorImage.className = "dropIndicator";
+                    a.dropIndicatorImage.style.left = parseFloat(b.target.parentNode.style.left) - 50 + "px";
+                    a.dropIndicatorImage.style.top = parseFloat(b.target.parentNode.style.top) + "px";
+                    a.dropIndicatorImage.style.position = "absolute";
+                    cp.responsive ? (a.draggedImageCopy = cp.newElem("div"), a.draggedImageCopy.innerHTML = cp.D[q.dn].rpvt[cp.ResponsiveProjWidth].vt,
+                        b = g.getBoundingClientRect(), a.draggedImageCopy.style.left = window.pageXOffset + p.X - b.left + "px", a.draggedImageCopy.style.top = window.pageYOffset + p.Y - b.top + "px") : (a.draggedImageCopy = cp.newElem("img"), a.draggedImageCopy.src = k, a.draggedImageCopy.style.left = parseFloat(b.target.parentNode.style.left) + "px", a.draggedImageCopy.style.top = parseFloat(b.target.parentNode.style.top) + "px");
+                    cp.fixWebkitScaling(a.draggedImageCopy);
+                    a.draggedImageCopy.id = "draggedImageCopy";
+                    a.draggedImageCopy.style.display = "block";
+                    a.draggedImageCopy.style.position =
+                        "absolute";
+                    a.sh && (b = a.sh.a, cp.applyShadow(a.draggedImageCopy, a.sh.d * Math.cos(Math.PI * b / 180) + "px " + a.sh.d * Math.sin(Math.PI * b / 180) + "px " + a.sh.b + "px " + cp.ConvertRGBToRGBA(a.sh.c, a.sh.o) + (a.sh.i ? " inset" : "")));
+                    a.draggedImageCopy.style.zIndex = 1E3;
+                    a.dropIndicatorImage.style.zIndex = 1E3;
+                    d.appendChild(a.dropIndicatorImage);
+                    d.appendChild(a.draggedImageCopy);
+                    a.isMouseDown = !0;
+                    cp.verbose && cp.log(a.isMouseDown);
+                    a.prevMouseMove = document.onmousemove;
+                    a.prevMouseUp = document.onmouseup;
+                    c.onmousemove = f;
+                    document.onmousemove =
+                        f;
+                    document.onmouseup = h;
+                    this.addedCustomDocMouseUpEvnt = !0;
+                    return !1
+                }
+            }
+        }
+    }
+};
+cp.SequenceQuestion.prototype.removeDragEvents = function(b) {
+    cp.verbose && cp.log("Removing drag events for : " + b);
+    if (b = document.getElementById(b)) this.addedCustomDocMouseUpEvnt && (document.onmouseup = void 0), b.onmousedown = void 0, b.ondragstart = void 0, b.onselectstart = void 0, b.ontouchstart = void 0, b.ontouchmove = void 0, b.ontouchend = void 0, b.style.cursor = "default"
+};
+cp.SequenceQuestion.prototype.shuffleAnswers = function() {
+    var b = !this.m_quizController.GetIsAttemptFinished() && this.getWasJudged() && !this.m_quizController.GetIsSubmitAll(),
+        c = this.getIsPretest() && this.m_quizController.GetIsPretestQuestionsDisabled();
+    if (!((!(this.getIsKnowledgeCheck() || !b && !this.m_quizController.GetIsInReviewMode() && !c) || this.m_isShuffled) && 0 < this.answerOptions.length)) {
+        for (var a = this.answerOptions.length, d, c = [], b = 0; b < a; ++b) c[b] = this.answerOptions[b];
+        for (b = a; 1 < b; b--) a = Math.floor(Math.random() *
+            b), a != b && (d = c[a], c[a] = c[b - 1], c[b - 1] = d);
+        this.updateOriginalSequence(c);
+        this.m_isShuffled = !0
+    }
+};
+cp.SequenceQuestion.prototype.getAnswerOption = function(b, c) {
+    var a;
+    if (!this.sequenceElementList || 0 >= this.sequenceElementList.length || this.sequenceElementList.length >= this.answerOptions.length) this.sequenceElementList = [];
+    this.sequenceElementList.push(c);
+    this.shuffleCounter >= this.answerOptions.length && (this.shuffleCounter = -1);
+    var d = this.answerOptions[++this.shuffleCounter];
+    a = cp.D[d];
+    var g = cp.D[c];
+    void 0 != a && (a.aid = g.aid);
+    this.shuffleCounter == this.answerOptions.length - 1 && (this.answerOptionsDrawn = !0);
+    return d
+};
+cp.SequenceQuestion.prototype.getAnswerScores = function() {
+    var b = [];
+    if (0 >= this.correctSequenceArr.length) return b;
+    var c = this.correctSequenceArr.slice(0),
+        a = this.selectedSequenceArr.slice(0);
+    if (!a || 0 >= a.length) return b;
+    var d = this.questionData.ao,
+        g = this.m_answerOrderArray;
+    if (g && d && 0 < g.length && g.length == d.length)
+        for (var f = {}, g = 0; g < d.length; ++g) {
+            var h = d[g].split(":");
+            f[h[0]] = h[1]
+        }
+    for (d = 0; d < a.length; ++d) {
+        var g = cp.D[c[d]],
+            h = cp.D[a[d]],
+            j = new cp.AnswerScore;
+        j.m_chosenAnswer = h ? this.showAsCombo() ? cp.trimStartingAndTrailingSpaces(h.atxtlms) : "Q_" +
+            (this.getQuestionNumberInQuiz() + 1) + "answerText_" + f[a[d]] : "";
+        g ? (j.m_answerID = this.showAsCombo() ? g.aid : h.aid, j.m_correctAnswer = cp.trimStartingAndTrailingSpaces(g.atxtlms)) : (j.m_answerID = "", j.m_correctAnswer = "");
+        b.push(j)
+    }
+    return b
+};
+cp.SequenceQuestion.prototype.getSelectedIndex = function() {
+    if (0 < this.selectedSequenceArr.length) {
+        this.shuffleCounter >= this.selectedSequenceArr.length && (this.shuffleCounter = -1);
+        var b = this.selectedSequenceArr[++this.shuffleCounter];
+        if (void 0 == b || "" == b || "undefined" == b) return -1;
+        ++this.answerOptionsDrawnCtr;
+        this.answerOptionsDrawnCtr == this.answerOptions.length - 1 && (this.answerOptionsDrawnCtr = -1, this.answerOptionsDrawn = !0);
+        for (var c = 0; c < this.answerOptions.length; ++c)
+            if (b == this.answerOptions[c]) return c
+    } else ++this.answerOptionsDrawnCtr,
+        this.answerOptionsDrawnCtr == this.answerOptions.length - 1 && (this.answerOptionsDrawnCtr = -1, this.answerOptionsDrawn = !0);
+    return -1
+};
+cp.SequenceQuestion.prototype.updateOriginalSequence = function(b) {
+    cp.verbose && cp.log("populating original sequence and current sequence");
+    for (var c = 0; c < b.length; ++c) {
+        var a = b[c];
+        this.answerOptions[c] = a;
+        this.currentSequenceArr[c] = a
+    }
+    cp.verbose && cp.log("Current Sequence : " + this.currentSequenceArr)
+};
+cp.SequenceQuestion.prototype.resetQuestionData = function() {
+    cp.SequenceQuestion.superClass.resetQuestionData.call(this);
+    this.m_quizController.GetGoToQuizScopeActionExecuted() || (this.selectedSequenceArr = []);
+    this.shuffleCounter = -1
+};
+cp.SequenceQuestion.prototype.disableAllOptions = function() {
+    if (this.m_quizController) {
+        var b = !0;
+        this.m_quizController.GetIsSubmitAll() && !this.getIsPretest() && (!this.m_quizController.GetIsInReviewMode() && !this.m_quizController.m_submittedAllQuestions) && (b = !1);
+        if (b) {
+            if (this.showAsCombo()) {
+                b = this.getAllOptions();
+                for (i = 0; i < b.length; ++i)
+                    if (cp.DESKTOP != cp.device || cp.responsive) document.getElementById(b[i].id).disabled = "disabled";
+                    else {
+                        var c = b[i].id.replace("_sequenceInput", "");
+                        cp.D[c].oHandler.set("disabled", !0)
+                    }
+            } else
+                for (i = 0; i < this.sequenceElementList.length; ++i) this.removeDragEvents(this.sequenceElementList[i]), (b = cp(this.sequenceElementList[i])) && b.disableOption && b.disableOption();
+            this.m_answersDisabled = !0
+        }
+    }
+};
+cp.SequenceQuestion.prototype.getAllOptions = function() {
+    return this.showAsCombo() ? document.getElementsByName(this.getAnswerGroupName()) : this.answerOptions
+};
+cp.SequenceQuestion.prototype.drawSequenceOptions = function(b) {
+    cp.verbose && cp.log("Inside drawSequenceOptions");
+    cp.verbose && cp.log("Current Sequence : " + this.currentSequenceArr);
+    this.currentSequenceArr = b.slice(0);
+    cp.verbose && cp.log("Current Sequence : " + this.currentSequenceArr);
+    if (this.answerOptionsDrawn) {
+        var c = this.getAllOptions();
+        if (this.showAsCombo())
+            for (g = 0; g < c.length; ++g) {
+                var a = c[g],
+                    d = a.id.replace("_sequenceInput", "");
+                cp.DESKTOP != cp.device || cp.responsive ? document.getElementById(a.id).setNewIndex(-1) :
+                    (a = a.id.replace("_sequenceInput", ""), cp.D[a].oHandler.set("selectedIndex", -1));
+                parentElementDivData = cp.D[d];
+                seqOptionDivData = cp.D[b[g]];
+                seqOptionDivData.aid = parentElementDivData.aid
+            } else
+                for (var g = 0; g < this.sequenceElementList.length; ++g) {
+                    var c = cp.D[this.sequenceElementList[g]],
+                        f = c.answerTextDivName,
+                        d = b[g],
+                        a = document.getElementById(d);
+                    document.getElementById(f);
+                    f = document.getElementById(c.answerTextCanvasHolder);
+                    if (a) {
+                        if (cp.responsive) {
+                            var h = a.parentNode;
+                            h && (a = f.innerHTML, f.innerHTML = h.innerHTML, h.innerHTML =
+                                a)
+                        } else(h = a.parentNode) && h.removeChild(a), f.appendChild(a);
+                        c.answerTextDivName = d;
+                        cp.D[d].aid = c.aid
+                    }
+                }
+    }
+};
+cp.SequenceQuestion.prototype.checkIfAttempted = function() {
+    if (this.showAsCombo())
+        for (var b = this.getAllOptions(), c = 0; c < b.length; ++c) {
+            if ("" != b[c].value) return !0
+        } else return !0;
+    return !1
+};
+cp.SequenceQuestion.prototype.checkIfCorrect = function() {
+    return this.currentSequenceArr.toString() == this.correctSequenceArr.toString()
+};
+cp.SequenceQuestion.prototype.setSelectedAnswers = function() {
+    this.showAsCombo() || (this.answerOptions = this.currentSequenceArr.slice(0), this.m_answerOrderArray = this.currentSequenceArr.slice(0));
+    this.selectedSequenceArr = this.currentSequenceArr.slice(0)
+};
+cp.SequenceQuestion.prototype.checkAndSetQuestionStatus = function() {
+    var b = this.QuestionStatusEnum.INCOMPLETE,
+        b = !1;
+    b = this.getIsSurvey() ? this.checkIfAttempted() ? this.QuestionStatusEnum.CORRECT : this.QuestionStatusEnum.INCOMPLETE : this.checkIfAttempted() ? (b = this.checkIfCorrect()) ? this.QuestionStatusEnum.CORRECT : this.QuestionStatusEnum.INCORRECT : this.QuestionStatusEnum.INCOMPLETE;
+    this.setQuestionStatus(b)
+};
+cp.SequenceQuestion.prototype.updateCustomReviewAreaTransforms = function() {
+    if (cp.responsive && !this.getAnsweredCorrectly() && this.questionTextCanvasName) {
+        var b = document.getElementById(this.questionTextCanvasName + "_reviewButton");
+        if (b) {
+            var c = cp.D[this.questionTextCanvasName],
+                c = cp.createTempElemAndGetBoundingRect(c.css[cp.ResponsiveProjWidth], cp(c.dn).parentElement),
+                a = cp.movie.stage.mainSlideDiv.getBoundingClientRect();
+            b.style.left = c.left - a.left + "px";
+            b.style.top = c.bottom - a.top + "px"
+        }
+    }
+};
+cp.SequenceQuestion.prototype.addCorrectAnswerDiv = function() {
+    if (this.getWasJudged() && !this.getAnsweredCorrectly() && this.questionTextCanvasName) {
+        var b = cp.D[this.questionTextCanvasName],
+            c = b.dn,
+            a = b.b;
+        if (4 == a.length)
+            for (var d = 0; 4 > d; ++d) a[d] = parseFloat(a[d]);
+        else a = [0, 0, 0, 0];
+        var d = document.getElementById(this.getAssociatedObjName()),
+            g = this.questionTextCanvasName + "_reviewButton",
+            f = document.getElementById(g);
+        f || (f = cp.newElem("img"));
+        f.id = g;
+        cp.fixWebkitScaling(f);
+        f.className = "sequenceReviewImage";
+        f.style.position =
+            "absolute";
+        cp.responsive ? (b = cp.createTempElemAndGetBoundingRect(b.css[cp.ResponsiveProjWidth], cp(c).parentElement), c = cp.movie.stage.mainSlideDiv.getBoundingClientRect(), f.style.left = b.left - c.left + "px", f.style.top = b.bottom + "px") : (f.style.left = a[0] + "px", f.style.top = a[3] + "px");
+        var h = this;
+        cp.registerGestureEvent(f, cp.GESTURE_EVENT_TYPES.TAP, function(a) {
+            if (!cp.disableInteractions) {
+                var b = h.questionTextCanvasName + "_correctSequenceReview",
+                    c = document.getElementById(b);
+                c == void 0 && (c = cp.newElem("div"));
+                cp.fixWebkitScaling(c);
+                var d = "cp-reviewUL";
+                cp.MSIE == cp.browser && (d = "cp-reviewULIE");
+                for (var d = "<ul class='" + d + "' style='padding-left:20px;padding-right:20px'>", g = h.correctSequenceArr, r = 0; r < g.length; ++r) var k = cp.D[g[r]],
+                    d = cp.responsive ? d + ("<li>" + cp.D[k.dn].rpvt[cp.ResponsiveProjWidth].vt + "</li>") : d + ("<li>" + k.atxt + "</li>");
+                d = d + "</ul>" + ("<img id='sequenceReviewCloseButton' src='" + cp.movie.im.m_projectImages["assets/htmlimages/closeReviewButton.png"].nativeImage.src + "' style='right:6px;top:6px;position:absolute'>");
+                c.id = b;
+                c.className = "sequenceReviewArea";
+                c.style.position = "absolute";
+                c.style.left = parseFloat(f.style.left) + parseFloat(f.width) + 10 + "px";
+                c.style.top = parseFloat(f.style.top) + "px";
+                c.innerHTML = d;
+                c.style.zIndex = 1E3;
+                a.stopPropagation && a.stopPropagation();
+                h.showReviewArea(c)
+            }
+        });
+        d.parentNode.appendChild(f);
+        f.style.zIndex = 1E3
+    }
+};
+cp.SequenceQuestion.prototype.showReviewArea = function(b) {
+    var c = document.getElementById(this.getAssociatedObjName());
+    c.parentNode.appendChild(b);
+    var a = cp.movie.stage.getSlideDiv(),
+        d = a.onclick;
+    a.style.cursor = "pointer";
+    cp.registerGestureEvent(a, cp.GESTURE_EVENT_TYPES.TAP, function(f) {
+        cp.disableInteractions || (c.parentNode.removeChild(b), a.style.cursor = "default", cp.registerGestureEvent(a, cp.GESTURE_EVENT_TYPES.TAP, d), cp.handleClick(f))
+    });
+    var g = document.getElementById("sequenceReviewCloseButton");
+    cp.registerGestureEvent(g,
+        cp.GESTURE_EVENT_TYPES.TAP,
+        function() {
+            cp.disableInteractions || (c.parentNode.removeChild(b), a.style.cursor = "default", cp.registerGestureEvent(a, cp.GESTURE_EVENT_TYPES.TAP, d))
+        })
+};
+cp.ShortAnswer = function(a, b) {
+    cp.ShortAnswer.baseConstructor.call(this, a, b);
+    cp.responsive && (this.responsiveCSS = this.getAttribute("css"));
+    var c = this.getAttribute("b");
+    this.bounds = {
+        minX: c[0],
+        minY: c[1],
+        maxX: c[2],
+        maxY: c[3]
+    };
+    c = this.getAttribute("vb");
+    this.vbounds = {
+        minX: c[0],
+        minY: c[1],
+        maxX: c[2],
+        maxY: c[3]
+    };
+    this.args = b
+};
+cp.inherits(cp.ShortAnswer, cp.Answer);
+cp.ShortAnswer.prototype.addAndGetTextAreaField = function(a, b) {
+    var c;
+    c = "";
+    this.font = this.getAttribute("font");
+    if ("" == this.element.innerHTML) {
+        this.font && (c = c + " -webkit-appearance:none;" + (" font-family:" + this.font.n + ";"), c += "font-size:" + this.font.s + "px;", c += "color: " + this.font.c + ";", this.font.B && (c += "font-weight:bold;"), this.font.u && (c += "text-decoration: underline;"), this.font.i && (c += "font-style: italic;"), c += "resize: none;overflow:auto;border:1px solid;border-top-color:#696969;border-left-color:#696969;border-right-color:#E6E6E6;border-bottom-color:#E6E6E6;border-radius:0px;padding:2px;box-sizing: border-box;");
+        var d = this.bounds.maxY - this.bounds.minY;
+        cp.MSIE == cp.browser && (d += 1);
+        void 0 == this.accstring && (this.accstring = "Short Answer");
+        this.element.innerHTML += "<textarea " + (this.enabled ? "" : " readonly='readonly'") + " aria-label='" + this.accstring + "' id='" + this.element.id + "_inputField' style='left:0px; top:0px; width:" + (this.bounds.maxX - this.bounds.minX) + "px; height:" + d + "px;position:absolute;" + c + "'></textarea>"
+    }
+    this.inputField = document.getElementById(this.element.id + "_inputField");
+    this.sh && (c = this.sh.a, cp.applyShadow(this.inputField,
+        this.sh.d * Math.cos(Math.PI * c / 180) + "px " + this.sh.d * Math.sin(Math.PI * c / 180) + "px " + this.sh.b + "px " + cp.ConvertRGBToRGBA(this.sh.c, 1) + (this.sh.i ? " inset" : "")));
+    this.inputField.focus();
+    var e = this;
+    this.inputField.resetText = function() {
+        e.element.oHandler.value = ""
+    };
+    this.inputField.setText = function(a) {
+        e.element.oHandler.value = a
+    };
+    this.inputField.getText = function() {
+        return e.element.oHandler.value
+    };
+    this.inputField.disable = function() {
+        e.enabled = false;
+        e.element.oHandler.blur();
+        e.element.oHandler.setAttribute("readonly",
+            "readonly")
+    };
+    this.inputField.getWidth = function() {
+        return parseFloat(e.element.oHandler.style.width)
+    };
+    c = this.inputField;
+    if (!cp.responsive) {
+        var d = b.b[0],
+            g = b.b[1],
+            h = b.b[2] - b.b[0],
+            j = b.b[3] - b.b[1];
+        this.answerLabelDivElem.style.position = "absolute";
+        this.answerLabelDivElem.style.left = d + "px";
+        this.answerLabelDivElem.style.top = g + "px";
+        this.answerLabelDivElem.style.width = h + "px";
+        this.answerLabelDivElem.style.height = j + "px"
+    }
+    return c
+};
+cp.ShortAnswer.prototype.addQuestionSpecificMethods = function() {
+    var a = this;
+    this.element.clearAnswer = function() {
+        a.selectedText = "";
+        a.isDrawn && a.element.oHandler.setText("")
+    };
+    this.element.disableOption = function() {
+        lShouldDisable = !0;
+        a.element.tabIndex = -1
+    };
+    this.element.isAttempted = function() {
+        var b = a.element.oHandler.getText(),
+            b = b.replace(/^\s*|\s*$/g, "");
+        return "" != b
+    };
+    this.element.isCorrectlyAnswered = function() {
+        var b = "",
+            b = a.element.oHandler.getText(),
+            b = b.replace(/^\s*|\s*$/g, "");
+        if ("" == b) return !1;
+        for (var c =
+                0; c < a.correctAnswersList.length; ++c) {
+            var d = a.correctAnswersList[c],
+                d = d.replace(/^\s*|\s*$/g, "");
+            if (a.isCaseSensitive) {
+                if (d == b) return !0
+            } else if (d.toLowerCase() == b.toLowerCase()) return !0
+        }
+        return !1
+    }
+};
+cp.ShortAnswer.prototype.updateInputFontStyle = function(a) {
+    this.ResponsiveFontProp = this.getAttribute("rpfont");
+    if (this.font = this.ResponsiveFontProp[cp.ResponsiveProjWidth].font) a.style.fontFamily = this.font.n, a.style.fontSize = this.font.s + "px", a.style.color = this.font.c, a.style.fontWeight = this.font.B ? "bold" : "normal", a.style.textDecoration = this.font.u ? "underline" : "none", a.style.fontStyle = this.font.i ? "italic" : "normal"
+};
+cp.ShortAnswer.prototype.drawForResponsive = function(a) {
+    if (!this.m_questionObj || !this.m_questionObj.getIsStarted() || !this.responsiveCSS) return !1;
+    if (this.isDrawn && !a) return !0;
+    var b = cp.getResponsiveCSS(this.responsiveCSS);
+    cp.getCSSFromLayouter(b, this);
+    var c = !1,
+        c = this.re || this.sh && !this.sh.i || this.fillOuterArea,
+        d = void 0 != this.tr;
+    if (this.currentCSS == b && !c && !d && !a) return !0;
+    if (!this.isDrawn) {
+        a = this.element.id;
+        this.enabled = !0;
+        if (!cp.movie.playbackController) return;
+        c = cp.movie.playbackController.GetQuizController();
+        if (!c) return;
+        c.GetIsInReviewMode();
+        c = this.m_questionObj.shouldDisableOptions();
+        cp.movie.stage.getSlideDiv();
+        this.group = this.m_questionObj.getAnswerGroupName();
+        d = cp.D[a];
+        this.isCaseSensitive = d.cs;
+        this.answertextParentDiv = cp(a + "canvasHolder");
+        this.answertextParentDiv || (this.answertextParentDiv = cp.newElem("div"), cp.fixWebkitScaling(this.answertextParentDiv), cp.addRewrapObjectAsPerRestOfProjectItem(this.answertextParentDiv), this.answertextParentDiv.id = a + "canvasHolder", d.answerTextCanvasHolder = this.answertextParentDiv.id,
+            this.answertextParentDiv.setAttribute("class", "cp-rewrap"));
+        this.answerLabelDivElem || (this.answerLabelDivElem = document.getElementById(d.actid));
+        this.selectedText = this.m_questionObj.getSelectedText(this.element.id);
+        cp.verbose && cp.log("Draw Text Field");
+        this.element.oHandler || (this.element.oHandler = this.addAndGetTextAreaField(this.m_questionObj, d), d.oHandler = this.element.oHandler, this.element.oHandler.setText(this.selectedText));
+        this.correctAnswersList = this.m_questionObj.getExpectedCorrectAnswerIDList();
+        this.addQuestionSpecificMethods();
+        c && (this.element.style.cursor = "default", this.element.tabIndex = -1, this.element.oHandler.disable());
+        this.isDrawn = !0;
+        this.m_questionObj.registerShortAnswer(this.element);
+        this.visible || (this.element.style.visibility = "hidden")
+    }
+    this.inputField.style.left = "0px";
+    this.inputField.style.top = "0px";
+    this.inputField.style.width = "100%";
+    this.inputField.style.height = "100%";
+    this.updateInputFontStyle(this.inputField);
+    cp.applyResponsiveStyles(this.answerLabelDivElem, b);
+    this.adjustPositionWithAnswerArea(b,
+        this.answerLabelDivElem);
+    return !0
+};
+cp.ShortAnswer.prototype.addIfNeeded = function(a) {
+    if ((!cp.responsive || !this.drawForResponsive(a)) && this.m_questionObj && !this.isDrawn && this.m_questionObj.getIsStarted())
+        if (a = this.element.id, this.enabled = !0, cp.movie.playbackController) {
+            var b = cp.movie.playbackController.GetQuizController();
+            if (b) {
+                b.GetIsInReviewMode();
+                b = this.m_questionObj.shouldDisableOptions();
+                cp.movie.stage.getSlideDiv();
+                this.group = this.m_questionObj.getAnswerGroupName();
+                var c = cp.D[a];
+                this.isCaseSensitive = c.cs;
+                var d = cp.newElem("div");
+                cp.fixWebkitScaling(d);
+                cp.addRewrapObjectAsPerRestOfProjectItem(d);
+                d.id = a + "canvasHolder";
+                c.answerTextCanvasHolder = d.id;
+                d.setAttribute("class", "cp-rewrap");
+                this.answerLabelDivElem = document.getElementById(c.actid);
+                this.selectedText = this.m_questionObj.getSelectedText(this.element.id);
+                cp.verbose && cp.log("Draw Text Field");
+                this.element.oHandler = this.addAndGetTextAreaField(this.m_questionObj, c);
+                c.oHandler = this.element.oHandler;
+                this.element.oHandler.setText(this.selectedText);
+                this.correctAnswersList = this.m_questionObj.getExpectedCorrectAnswerIDList();
+                this.addQuestionSpecificMethods();
+                b && (this.element.style.cursor = "default", this.element.tabIndex = -1, this.element.oHandler.disable());
+                this.isDrawn = !0;
+                this.m_questionObj.registerShortAnswer(this.element);
+                this.visible || (this.element.style.visibility = "hidden")
+            }
+        }
+};
+cp.ShortAnswerQuestion = function(a, b) {
+    cp.ShortAnswerQuestion.baseConstructor.call(this, a, b);
+    this.answerOptions = this.getAnswerOptions();
+    this.m_reviewAreaId = void 0
+};
+cp.inherits(cp.ShortAnswerQuestion, cp.Question);
+cp.ShortAnswerQuestion.prototype.resetQuestionData = function() {
+    cp.ShortAnswerQuestion.superClass.resetQuestionData.call(this);
+    this.m_quizController.GetGoToQuizScopeActionExecuted() || (this.m_selectedAnswersArr = [])
+};
+cp.ShortAnswerQuestion.prototype.startQuestion = function() {
+    this.m_quizController && (this.m_quizController.GetIsInReviewMode(), this.answerOptionsDrawn = !1, this.answerOptionElem = void 0, cp.ShortAnswerQuestion.superClass.startQuestion.call(this))
+};
+cp.ShortAnswerQuestion.prototype.addOrUpdateCustomReviewAreaFontStyles = function() {
+    if (cp.responsive && this.m_reviewAreaId) {
+        var a = cp.D[this.m_reviewAreaId];
+        if (document.getElementById(this.m_reviewAreaId)) {
+            var b = cp(this.m_reviewAreaId + "_inputField"),
+                c = cp(this.m_reviewAreaId + "_label"),
+                a = a.rpfont[cp.ResponsiveProjWidth].font;
+            b.style.fontWeight = a.B ? "bold" : "normal";
+            b.style.fontStyle = a.i ? "italic" : "normal";
+            b.style.textDecoration = a.u ? "underline" : "none";
+            b.style.color = a.c;
+            b.style.fontFamily = a.n;
+            b.style.fontSize =
+                a.s + "px";
+            b.style.textAlign = "left";
+            c.style.left = "0px";
+            c.style.top = -(a.s + 5) + "px";
+            c.style.width = "100%"
+        }
+    }
+};
+cp.ShortAnswerQuestion.prototype.updateCustomReviewAreaTransforms = function() {
+    if (cp.responsive && (this.addOrUpdateCustomReviewAreaFontStyles(), this.m_reviewAreaId)) {
+        var a = cp.D[this.m_reviewAreaId];
+        if (a && document.getElementById(this.m_reviewAreaId)) {
+            cp(this.m_reviewAreaId + "_label");
+            var b = cp(this.m_reviewAreaId + "_inputField");
+            if (a = a.css ? a.css[cp.ResponsiveProjWidth] : void 0) b.style.left = "0px", b.style.top = "0px", b.style.width = "100%", b.style.height = "100%", cp.applyResponsiveStyles(b.parentElement.parentElement,
+                a)
+        }
+    }
+};
+cp.ShortAnswerQuestion.prototype.showCustomReviewArea = function(a) {
+    if (this.getIsCorrect()) return !0;
+    if (this.getIsIncomplete()) return !1;
+    this.getAssociatedObjName();
+    this.m_reviewAreaId = a;
+    var b = cp.D[this.m_reviewAreaId],
+        c = document.getElementById(this.m_reviewAreaId);
+    if (c) {
+        var d = b.B,
+            e = b.c,
+            g = b.f,
+            h = b.i,
+            j = b.sz,
+            i = b.u,
+            f;
+        f = " -webkit-appearance:none;resize: none;overflow:auto;border:1px solid;border-top-color:#696969;border-left-color:#696969;border-right-color:#E6E6E6;border-bottom-color:#E6E6E6;border-radius:0px;padding:10px;box-sizing: border-box;-webkit-transform:translate3d(0px, 0px, 0px) scale(1);";
+        cp.responsive ||
+            (f = f + (" font-family:" + g + ";") + ("font-size:" + j + "px;") + ("color: " + e + ";"), d && (f += "font-weight:bold;"), i && (f += "text-decoration: underline;"), h && (f += "font-style: italic;"));
+        d = b.b[3] - b.b[1];
+        cp.MSIE == cp.browser && (d += 1);
+        e = this.getExpectedCorrectAnswerIDList();
+        cp.cpJoin(e, "\n");
+        g = "";
+        for (h = 0; h < e.length; ++h) i = e[h], "" != i && (g += "-" + i + "\n");
+        void 0 == this.accstring && (this.accstring = "Short Answer");
+        c.innerHTML = "<div id='" + this.m_reviewAreaId + "_label' style='left:" + b.b[0] + "px;top:" + (b.b[1] - j - 5) + "px;position:absolute;width:" +
+            (b.b[2] - b.b[0]) + "px;font-family:Myriad-Pro;font-size:12px;font-weight:bold;'>" + this.questionData.rtt + "</div><textarea readonly='readonly' aria-label='" + this.accstring + "' id='" + a + "_inputField' style='left:" + b.b[0] + "px;top:" + b.b[1] + "px;width:" + (b.b[2] - b.b[0]) + "px;height:" + d + "px;position:absolute;" + f + "'>" + g + "</textarea>";
+        cp.responsive && this.updateCustomReviewAreaTransforms();
+        return !0
+    }
+};
+cp.ShortAnswerQuestion.prototype.getSelectedText = function() {
+    return void 0 == this.m_selectedAnswersArr[0] ? "" : this.m_selectedAnswersArr[0]
+};
+cp.ShortAnswerQuestion.prototype.registerShortAnswer = function(a) {
+    this.answerOptionElem = a;
+    this.answerOptionsDrawn = void 0 != this.answerOptionElem
+};
+cp.ShortAnswerQuestion.prototype.clearAnswers = function() {
+    this.verbose && cp.log("Inside Clear Answers");
+    var a = this.m_quizController && this.m_quizController.GetIsSubmitAll() && !this.getIsPretest(),
+        a = (a = !1 == this.getWasJudged() || a && !1 == this.m_quizController.m_submittedAllQuestions) && !this.m_quizController.GetIsInReviewMode();
+    !1 != a && (this.m_selectedAnswersArr = [], this.verbose && cp.log("Not Attempted. Hence Clearing"), this.answerOptionElem && this.answerOptionElem.clearAnswer())
+};
+cp.ShortAnswerQuestion.prototype.disableAllOptions = function() {
+    if (this.m_quizController) {
+        var a = !0;
+        this.m_quizController.GetIsSubmitAll() && !this.getIsPretest() && (!this.m_quizController.GetIsInReviewMode() && !this.m_quizController.m_submittedAllQuestions) && (a = !1);
+        a && (this.answerOptionElem && (this.answerOptionElem.disableOption(), !0 == this.answerOptionsDrawn && this.answerOptionElem.oHandler.disable()), this.m_answersDisabled = !0)
+    }
+};
+cp.ShortAnswerQuestion.prototype.checkIfAttempted = function() {
+    return this.answerOptionElem && this.answerOptionElem.isAttempted()
+};
+cp.ShortAnswerQuestion.prototype.checkIfCorrect = function() {
+    return this.answerOptionElem && this.answerOptionElem.isCorrectlyAnswered()
+};
+cp.ShortAnswerQuestion.prototype.checkAndSetQuestionStatus = function() {
+    var a = this.QuestionStatusEnum.INCOMPLETE,
+        a = !1;
+    a = this.getIsSurvey() ? this.checkIfAttempted() ? this.QuestionStatusEnum.CORRECT : this.QuestionStatusEnum.INCOMPLETE : this.checkIfAttempted() ? (a = this.checkIfCorrect()) ? this.QuestionStatusEnum.CORRECT : this.QuestionStatusEnum.INCORRECT : this.QuestionStatusEnum.INCOMPLETE;
+    this.setQuestionStatus(a)
+};
+cp.ShortAnswerQuestion.prototype.getAnswerScores = function() {
+    var a = [],
+        b = cp.D[this.answerOptionElem.id],
+        c = new cp.AnswerScore;
+    c.m_answerID = b.aid.toString();
+    c.m_correctAnswer = cp.cpJoin(this.getExpectedCorrectAnswerIDList(), ";");
+    c.m_chosenAnswer = this.answerOptionElem.oHandler.getText();
+    a.push(c);
+    return a
+};
+cp.ShortAnswerQuestion.prototype.setQuestionSpecificScoreProperties = function(a) {
     void 0 != a && (a.m_answerOrderArrayAsString = "")
 };
-cp.InteractiveItemQuestion.prototype.restoreFromQuestionSpecificScoreProperties = function() {};
+cp.ShortAnswerQuestion.prototype.restoreFromQuestionSpecificScoreProperties = function(a) {
+    void 0 != a && (a = a.m_answerOrderArrayAsString, void 0 == a || "" == a || this.setAnswerOrder(a))
+};
+cp.ShortAnswerQuestion.prototype.resumeSelectedAnswers = function(a) {
+    if (!(0 >= a.length)) {
+        this.m_selectedAnswersArr = [];
+        for (var b = 0; b < a.length; ++b) {
+            var c = unescape(a[b].m_chosenAnswer);
+            this.m_selectedAnswersArr.push(c)
+        }
+    }
+};
+cp.ShortAnswerQuestion.prototype.setSelectedAnswers = function() {
+    this.m_selectedAnswersArr = [];
+    if (this.answerOptionElem && this.answerOptionElem.oHandler) {
+        var a = this.answerOptionElem.oHandler.getText();
+        this.m_selectedAnswersArr.push(a)
+    }
+};
+cp.ShortAnswerQuestion.prototype.getChosenAnswerAsString = function() {
+    return cp.ShortAnswerQuestion.superClass.getChosenAnswerAsString.call(this)
+};
+cp.ShortAnswerQuestion.prototype.getCorrectAnswerAsString = function() {
+    var a;
+    return a = "" + cp.cpJoin(this.getExpectedCorrectAnswerIDList(), ":")
+};
+cp.ShortAnswerQuestion.prototype.getChosenAnswerAsStringForReview = function() {
+    return this.getChosenAnswerAsString()
+};
+cp.ShortAnswerQuestion.prototype.getCorrectAnswerAsStringForReview = function() {
+    return this.getCorrectAnswerAsString()
+};
+cp.ShortAnswerQuestion.prototype.getAnswerTexts = function() {
+    return ""
+};
+cp.ShortAnswerQuestion.prototype.saveAnswerOrder = function() {
+    this.setSelectedAnswers()
+};
