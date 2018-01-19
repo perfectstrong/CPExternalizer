@@ -1,8 +1,8 @@
 {
   "name": "cpexternalizer",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Simplify Adobe Captivate HTML5 exported module",
-  "main": "cli.js",
+  "main": "api.js",
   "scripts": {},
   "keywords": [
     "Adobe Captivate",
@@ -15,7 +15,6 @@
     "command-line-args": "^4.0.7",
     "command-line-commands": "^2.0.1",
     "command-line-usage": "^4.0.1",
-    "commander": "^2.13.0",
     "js-beautify": "^1.7.4",
     "sander": "^0.6.0",
     "text-diff": "^1.0.1"
