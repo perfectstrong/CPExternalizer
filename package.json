@@ -3,7 +3,9 @@
   "version": "0.5.0",
   "description": "Simplify Adobe Captivate HTML5 exported module",
   "main": "api.js",
-  "scripts": {},
+  "scripts": {
+    "start:e": "./node_modules/.bin/electron ./index.js"
+  },
   "keywords": [
     "Adobe Captivate",
     "HTML5"
@@ -22,5 +24,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/perfectstrong/CPExternalizer.git"
+  },
+  "devDependencies": {
+    "electron": "^1.7.10"
   }
 }
