@@ -1,0 +1,15 @@
+.block {
+    clear: both;
+    border: 0.05em solid black;
+    margin: 0 0 1em 0;
+    padding: 1em 0.5em;
+}
+
+.window-content {
+    display: flex;
+    flex-direction: column;
+}
+
+section {
+    margin: 1% 5%;
+}

@@ -1,5 +1,3 @@
 /node_modules
 /test
-*.sublime-project
-*.sublime-workspace
-t.js
+/.vscode

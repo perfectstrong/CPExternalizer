@@ -19,9 +19,10 @@ function initiateCPExtConfig(src, outdir) {
     let inputs = [];
     let count = -1;
     if (src.length > 1) {
+        let count = 0;
         inputs = src.map((srcPath, pos) => {
-            let (count++),
-            cpname = 'CPProjInit' + '_' + count + '.js',
+            count++;
+            let cpname = 'CPProjInit' + '_' + count + '.js',
                 xcomname = 'ExtraComponents' + '_' + count + '.js';
             return {
                 srcPath: path.resolve(srcPath),
