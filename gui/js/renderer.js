@@ -1,5 +1,6 @@
 var { remote } = require('electron');
 let api = remote.require('./api');
+let cp = require('child_process');
 
 function clearNode(node) {
     while (node.firstChild) {
@@ -60,20 +61,89 @@ function handleSingleSelect(e) {
     chosenFile.appendChild(newDescriptor(file));
 }
 
+function showProgress(section, state) {
+    let progress = section.querySelector('#progress');
+    if (!progress) return;
+    progress.style.display = 'inline-block';
+    switch (state) {
+        case 'running':
+            progress.className = 'fa fa-cog fa-spin';
+            break;
+        case 'success':
+            progress.className = 'fa fa-check';
+            break;
+        case 'fail':
+            progress.className = 'fa fa-times';
+            break;
+        default:
+            process.className = '';
+            break;
+    }
+}
+
+function showMessage(section, msg) {
+    let info = section.querySelector('#info');
+    if (!info) return;
+    info.style.display = 'inline-block';
+    info.innerHTML = msg;
+}
+
+function fail(section, msg) {
+    showProgress(section, 'fail');
+    showMessage(section, msg);
+}
+
 // "Extract" section
 let extractSection = document.querySelector('section#extract');
 extractSection.querySelector('.chooser#src input[type=file]').addEventListener('change', handleMultipleSelect, false);
 extractSection.querySelector('.chooser#outdir input[type=file]').addEventListener('change', handleSingleSelect, false);
-extractSection.querySelector('button#btn-extract').addEventListener('click', _ => {
+let btnExtract = extractSection.querySelector('button#btn-extract');
+btnExtract.addEventListener('click', _ => {
     // Verify inputs
-    // TODO
     let src = [];
-    extractSection.querySelectorAll('.chooser#src .chosen .descriptor .path').forEach(fp => {
-        src.push(fp.getAttribute('value'));
-    });
-    let outdir = extractSection.querySelector('.chooser#outdir .chosen .descriptor .path').getAttribute('value');
+    try {
+        let srcDOM = extractSection.querySelectorAll('.chooser#src .chosen .descriptor .path');
+        srcDOM.forEach(fp => {
+            src.push(fp.getAttribute('value'));
+        });
+        src = src.filter(e => e != null);
+        if (src.length == 0) throw new Error('Invalid source(s)!');
+    } catch (error) {
+        fail(extractSection, 'Source(s) not found!' + error);
+        return;
+    }
+    let outdir = '';
+    try {
+        let outdirDOM = extractSection.querySelector('.chooser#outdir .chosen .descriptor .path');
+        outdir = outdirDOM.getAttribute('value');
+    } catch (error) {
+        fail(extractSection, 'Output directory not found!');
+        return;
+    }
     // Launch api
-    api.extract(src, outdir);
+    showProgress(extractSection, 'running');
+    showMessage(extractSection, 'Executing...');
+    btnExtract.disabled = true;
+    let extractProcess = cp.fork('./gui/js/subprocess', [], {
+        cwd: process.cwd(),
+    });
+    extractProcess.send({
+        command: 'extract',
+        args: {
+            src: src,
+            outdir: outdir
+        }
+    });
+    extractProcess.on('message', (msg) => {
+        // msg should be either true or false
+        if (msg == 'done') {
+            showProgress(extractSection, 'success');
+            showMessage(extractSection, 'Done!');
+            btnExtract.disabled = false;
+        } else {
+            fail(extractSection, error);
+        }
+    });
 });
 
 // "XcpExtract" section
@@ -82,14 +152,36 @@ xcpextractSection.querySelector('.chooser#src input[type=file]').addEventListene
 xcpextractSection.querySelector('.chooser#outdir input[type=file]').addEventListener('change', handleSingleSelect, false);
 xcpextractSection.querySelector('button#btn-xcpextract').addEventListener('click', _ => {
     // Verify inputs
-    // TODO
     let src = [];
     xcpextractSection.querySelectorAll('.chooser#src .chosen .descriptor .path').forEach(fp => {
         src.push(fp.getAttribute('value'));
     });
     let outdir = xcpextractSection.querySelector('.chooser#outdir .chosen .descriptor .path').getAttribute('value');
+    if (!src) {
+        showProgress(extractSection, 'fail');
+        showMessage(extractSection, 'Source(s) not found!');
+        return;
+    }
+    if (!outdir) {
+        showProgress(extractSection, 'fail');
+        showMessage(extractSection, 'Output directory not found!');
+        return;
+    }
     // Launch api
-    api.xcpextract(src, outdir, './resources/CPM-sample.js');
+    Promise.resolve()
+        .then(() => {
+            showProgress(extractSection, 'running');
+            showMessage(extractSection, 'Executing...');
+            api.xcpextract(src, outdir, './resources/CPM-sample.js');
+        })
+        .then(() => {
+            showProgress(extractSection, 'success');
+            showMessage(extractSection, 'Success!');
+        })
+        .catch((error) => {
+            showProgress(extractSection, 'fail');
+            showMessage(extractSection, error);
+        });
 });
 
 // "DirExtract" section
@@ -98,14 +190,36 @@ dirextractSection.querySelector('.chooser#src input[type=file]').addEventListene
 dirextractSection.querySelector('.chooser#outdir input[type=file]').addEventListener('change', handleSingleSelect, false);
 dirextractSection.querySelector('button#btn-dirextract').addEventListener('click', _ => {
     // Verify inputs
-    // TODO
     let src = [];
     dirextractSection.querySelectorAll('.chooser#src .chosen .descriptor .path').forEach(fp => {
         src.push(fp.getAttribute('value'));
     });
     let outdir = dirextractSection.querySelector('.chooser#outdir .chosen .descriptor .path').getAttribute('value');
+    if (!src) {
+        showProgress(extractSection, 'fail');
+        showMessage(extractSection, 'Source(s) not found!');
+        return;
+    }
+    if (!outdir) {
+        showProgress(extractSection, 'fail');
+        showMessage(extractSection, 'Output directory not found!!');
+        return;
+    }
     // Launch api
-    api.dirextract(src, outdir);
+    Promise.resolve()
+        .then(() => {
+            showProgress(extractSection, 'running');
+            showMessage(extractSection, 'Executing...');
+            api.dirextract(src, outdir);
+        })
+        .then(() => {
+            showProgress(extractSection, 'success');
+            showMessage(extractSection, 'Success!');
+        })
+        .catch((error) => {
+            showProgress(extractSection, 'fail');
+            showMessage(extractSection, error);
+        });
 });
 
 // "Soundfix" section
@@ -114,12 +228,34 @@ soundfixSection.querySelector('.chooser#src input[type=file]').addEventListener(
 soundfixSection.querySelector('.chooser#ulpath input[type=file]').addEventListener('change', handleSingleSelect, false);
 soundfixSection.querySelector('button#btn-soundfix').addEventListener('click', _ => {
     // Verify inputs
-    // TODO
     let src = [];
     soundfixSection.querySelectorAll('.chooser#src .chosen .descriptor .path').forEach(fp => {
         src.push(fp.getAttribute('value'));
     });
     let ulpath = soundfixSection.querySelector('.chooser#ulpath .chosen .descriptor .path').getAttribute('value');
+    if (!src) {
+        showProgress(extractSection, 'fail');
+        showMessage(extractSection, 'Source(s) not found!');
+        return;
+    }
+    if (!outdir) {
+        showProgress(extractSection, 'fail');
+        showMessage(extractSection, 'Unit loader\'s path not found!');
+        return;
+    }
     // Launch api
-    api.soundfix(src, ulpath);
+    Promise.resolve()
+        .then(() => {
+            showProgress(extractSection, 'running');
+            showMessage(extractSection, 'Executing...');
+            api.soundfix(src, ulpath);
+        })
+        .then(() => {
+            showProgress(extractSection, 'success');
+            showMessage(extractSection, 'Success!');
+        })
+        .catch((error) => {
+            showProgress(extractSection, 'fail');
+            showMessage(extractSection, error);
+        });
 });

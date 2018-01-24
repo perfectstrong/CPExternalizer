@@ -77,7 +77,7 @@ function prepareSampleData(samplePath) {
  * @param {String} outdir Where to save output. Default is the current directory
  */
 function extract(src, outdir) {
-    Promise.resolve()
+    return Promise.resolve()
         .then(() => initiateCPExtConfig(src, outdir))
         .then(initiateCPExts)
         .then(cpexts =>
