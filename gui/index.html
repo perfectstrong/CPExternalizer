@@ -15,7 +15,7 @@
 
       <!-- Extract -->
       <section id="extract">
-        <h2>CPProjInit</h2>
+        <h2>Project initiator</h2>
         <p>Extract the iniator of module.</p>
         <div class="block">
           <!-- File chooser -->
@@ -28,8 +28,8 @@
           </div>
         </div>
         <div class="block">
-          <p>Where to save the output.</p>
           <!-- Directory chooser -->
+          <p>Where to save the output.</p>
           <div class="chooser" id="outdir">
             <input type="file" webkitdirectory/>
             <div class="chosen">
@@ -37,7 +37,15 @@
             </div>
           </div>
         </div>
-        <div class="block stdio">
+        <div class="block wrapper-logger">
+          <div>
+            <p>Log</p>
+            <button class="btn btn-default" id="clear">Clear</button>
+            <button class="btn btn-default" id="show">Show</button>
+            <button class="btn btn-default" id="hide">Hide</button>
+          </div>
+          <div class="logger">
+          </div>
         </div>
         <div>
           <button class="btn btn-primary btn-large" id="btn-extract">Extract</button>
@@ -70,10 +78,20 @@
             </div>
           </div>
         </div>
+        <div class="block wrapper-logger">
+          <div>
+            <p>Log</p>
+            <button class="btn btn-default" id="clear">Clear</button>
+            <button class="btn btn-default" id="show">Show</button>
+            <button class="btn btn-default" id="hide">Hide</button>
+          </div>
+          <div class="logger">
+          </div>
+        </div>
         <div>
           <button class="btn btn-primary btn-large" id="btn-xcpextract">Extract</button>
           <span class="" id="progress"></span>
-          <span class="info" id="info" style="display: none"></span>
+          <span class="info" id="info"></span>
         </div>
       </section>
 
@@ -101,10 +119,20 @@
             </div>
           </div>
         </div>
+        <div class="block wrapper-logger">
+          <div>
+            <p>Log</p>
+            <button class="btn btn-default" id="clear">Clear</button>
+            <button class="btn btn-default" id="show">Show</button>
+            <button class="btn btn-default" id="hide">Hide</button>
+          </div>
+          <div class="logger">
+          </div>
+        </div>
         <div>
           <button class="btn btn-primary btn-large" id="btn-dirextract">Slim</button>
           <span class="" id="progress"></span>
-          <span class="info" id="info" style="display: none"></span>
+          <span class="info" id="info"></span>
         </div>
       </section>
 
@@ -133,10 +161,20 @@
             </div>
           </div>
         </div>
+        <div class="block wrapper-logger">
+          <div>
+            <p>Log</p>
+            <button class="btn btn-default" id="clear">Clear</button>
+            <button class="btn btn-default" id="show">Show</button>
+            <button class="btn btn-default" id="hide">Hide</button>
+          </div>
+          <div class="logger">
+          </div>
+        </div>
         <div>
           <button class="btn btn-primary btn-large" id="btn-soundfix">Fix</button>
           <span class="" id="progress"></span>
-          <span class="info" id="info" style="display: none"></span>
+          <span class="info" id="info"></span>
         </div>
       </section>
 
@@ -146,7 +184,7 @@
       </section>
 
       <!-- Scripts -->
-      <script src="./js/renderer.js"></script>
+      <script src="./js/renderer.js"></script>  
     </div>
   </div>
 </body>

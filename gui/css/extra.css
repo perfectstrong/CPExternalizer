@@ -5,11 +5,23 @@
     padding: 1em 0.5em;
 }
 
-.block.stdio {
+.logger {
     display: none;
     overflow-y: auto;
     height: 10em;
 }
+
+    .logger .log {
+        color: blue;
+    }
+
+    .logger .err {
+        color: red;
+    }
+
+    .logger * {
+        margin: 0 0 0.1em 0;
+    }
 
 .window-content {
     display: flex;
