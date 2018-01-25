@@ -94,7 +94,7 @@ function replaceAudioSrc(text, srcPath, ulPath) {
  * @param {String} ulpath file path or directory of common unit loader
  */
 function soundfix(src, ulpath) {
-    initiateJSFilesArray(src)
+    return initiateJSFilesArray(src)
         .then(
             jspaths => Promise.all(
                 jspaths.map(

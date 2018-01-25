@@ -94,7 +94,7 @@ function extract(src, outdir) {
  * @param {String} samplePath path to CPM-sample.js
  */
 function xcpExtract(src, outdir, samplePath) {
-    prepareSampleData(samplePath)
+    return prepareSampleData(samplePath)
         .then(() => initiateCPExtConfig(src, outdir))
         .then(initiateCPExts)
         .then(cpexts =>
@@ -139,7 +139,7 @@ function dirExtract(src, outdir) {
             dest: outdir + path.basename(dir)
         };
     });
-    Promise.all(configs.map(cfg => dirProcessing(cfg.dir, cfg.dest)))
+    return Promise.all(configs.map(cfg => dirProcessing(cfg.dir, cfg.dest)))
         .catch(console.error);
 }
 
