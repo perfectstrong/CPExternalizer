@@ -259,6 +259,8 @@ class Section {
                     if (msg) this._done()
                     else this._fail('Un error occured! Check the log to get detail.');
                     ev.target.disabled = false;
+                    // Stop the subprocess
+                    subprocess.kill();
                 } else if (typeof msg === 'string') {
                     this._logger.log(msg);
                 }
