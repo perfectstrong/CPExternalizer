@@ -265,7 +265,7 @@ class Section {
             // Launch api
             this._showProgress('running');
             this._showMessage('Running...');
-            ev.target.disabled = true;
+            this.lock();
             this._logger.show();
             let subprocess = cp.fork('./gui/js/subprocess', [], {
                 cwd: process.cwd(),
@@ -279,7 +279,7 @@ class Section {
                 if (typeof msg === 'boolean') {
                     if (msg) this._done()
                     else this._fail('Un error occured! Check the log to get detail.');
-                    ev.target.disabled = false;
+                    this.unlock();
                     // Stop the subprocess
                     subprocess.kill();
                 } else if (typeof msg === 'string') {
@@ -343,6 +343,20 @@ class Section {
         this._showProgress('success');
         this._showMessage('Done!');
     }
+
+    lock() {
+        this._choosers.forEach(chooser =>
+            chooser.querySelectorAll('*').forEach(ele => {
+                ele.disabled = true;
+            }));
+    }
+
+    unlock() {
+        this._choosers.forEach(chooser =>
+            chooser.querySelectorAll('*').forEach(ele => {
+                ele.disabled = false;
+            }));
+    }
 }
 
 // Render the sections above
@@ -351,4 +365,4 @@ let sectionIds = ['extract', 'xcpextract', 'dirextract', 'soundfix'],
 sections.forEach(section => section.render());
 
 // Set default samplePath
-setDefaultValue({path: path.join(process.cwd(), './resources/CPM-sample.js')}, document.querySelector('section#xcpextract .chooser#samplePath'));
+setDefaultValue({ path: path.join(process.cwd(), './resources/CPM-sample.js') }, document.querySelector('section#xcpextract .chooser#samplePath'));
