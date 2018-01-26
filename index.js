@@ -17,7 +17,7 @@ app.on('ready', () => {
         protocol: 'file:',
         slashes: true
     }));
-    window.webContents.openDevTools();
+    // window.webContents.openDevTools();
     window.on('closed', () => {
         window = null;
     });
