@@ -5,6 +5,7 @@ const optdef = require('./optdef');
 const api = require('./api');
 const importDataSync = require('./util/iopromise').importDataSync;
 const tlog = require('./util/tlog');
+const path = require('path');
 
 // Parse the input command
 const validCommands = [null, 'extract', 'soundfix', 'help', 'dirext', 'xcpext'];
@@ -15,7 +16,7 @@ const {
 
 // Loading the config
 let settings = {};
-let cfgpath = './config.json';
+let cfgpath = path.join('./config.json');
 try {
     let d = importDataSync(cfgpath, cfgpath + '::settings');
     settings = JSON.parse(d);
@@ -58,7 +59,7 @@ switch (command) {
         api.xcpextract(
             parsedOptions.src,
             parsedOptions.outdir,
-            settings.samplePath
+            path.join(settings.samplePath)
         );
         break;
     case 'soundfix':

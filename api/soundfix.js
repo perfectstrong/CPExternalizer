@@ -3,6 +3,7 @@ const Promise = require('bluebird');
 const io = require('../util/iopromise');
 const sander = require('sander');
 const path = require('path');
+const tlog = require('../util/tlog');
 
 /**
  * Finding all js files
@@ -11,23 +12,28 @@ const path = require('path');
  * @returns {Promise.<Array<String>>}
  */
 function initiateJSFilesArray(srcPaths) {
-    const findJS = dir => sander.lsrSync(dir).filter(p => path.extname(p).toLowerCase() === '.js');
-    console.log('Finding all js files...');
+    tlog('', 'Finding all js files...');
+    const findJS = dir =>
+        sander.lsrSync(dir)
+            .filter(p => path.extname(p).toLowerCase() === '.js')
+            .map(p => path.join(dir, p));
     let jspaths = [];
-    srcPaths.forEach(p => {
-        try {
-            console.log('Checking ' + p);
-            if (sander.statSync(p).isDirectory()) {
-                console.log(p + ' is a dir.');
-                jspaths = jspaths.concat(findJS(p));
-            } else if (path.extname(p).toLowerCase() === '.js') {
-                console.log(p + ' is a js file.');
-                jspaths.push(p);
+    srcPaths
+        .map(p => path.normalize(p))
+        .forEach(p => {
+            try {
+                tlog(p, 'Checking if a js file...');
+                if (sander.statSync(p).isDirectory()) {
+                    tlog(p, 'A dir. Finding inside.');
+                    jspaths = jspaths.concat(findJS(p));
+                } else if (path.extname(p).toLowerCase() === '.js') {
+                    tlog(p, 'A js file. Picked.');
+                    jspaths.push(p);
+                }
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.log(error);
-        }
-    });
+        });
     return Promise.resolve(jspaths);
 }
 
@@ -35,7 +41,7 @@ function initiateJSFilesArray(srcPaths) {
  * Check if the file is a cp initiator (containing CPProjInit)
  * 
  * @param {String} text 
- * @returns {Promise.<String>} text itself if true, otherwise ignore
+ * @returns {Promise.<String>} text itself if true, otherwise rejected promise
  */
 function checkCPProjInit(text) {
     if (text.indexOf('cp.CPProjInit') > -1) {
@@ -92,19 +98,24 @@ function replaceAudioSrc(text, srcPath, ulPath) {
  * 
  * @param {Array.<String>} src file path or directory to find CPProjInit
  * @param {String} ulpath file path or directory of common unit loader
+ * @returns {Promise}
  */
 function soundfix(src, ulpath) {
     return initiateJSFilesArray(src)
-        .then(
-            jspaths => Promise.all(
-                jspaths.map(
-                    p => io.importData(p, p + '::input').then(checkCPProjInit).then(
-                        // If a cpprojinit
-                        // Fix it and export it
-                        text => replaceAudioSrc(text, p, ulpath).then(fixedData => io.exportData(fixedData, p, p + '::output'))
-                    ).catch(console.error)
-                )
-            )
+        .then(jspaths =>
+            Promise.all(jspaths.map(p =>
+                io.importData(p, p + '::input')
+                    .then(checkCPProjInit)
+                    .then(
+                    // If a cpprojinit
+                    // Fix it and export it
+                    text => replaceAudioSrc(text, p, ulpath).then(fixedData => io.exportData(fixedData, p, p + '::output')),
+                    // If not a cpprojinit
+                    // Print the reject's reason
+                    reason => tlog(p, reason)
+                    )
+                    .catch(console.error)
+            ))
         )
         .catch(console.error);
 }

@@ -7,6 +7,7 @@
 function tlog() {
 	let args = Array.from(arguments),
 		tag = args.shift();
+	if (!tag) tag = 'CPExternalizer';
 	console.log(tag + ' >>>>  '  + args.join(' '));
 }
 
