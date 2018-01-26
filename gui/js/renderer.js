@@ -301,9 +301,9 @@ class Section {
     }
 
     _addLoggerListeners() {
-        this._dom.querySelector('button#clear').addEventListener('click', this._logger.clear);
-        this._dom.querySelector('button#show').addEventListener('click', this._logger.show);
-        this._dom.querySelector('button#hide').addEventListener('click', this._logger.hide);
+        this._dom.querySelector('button#clear').addEventListener('click', _ => this._logger.clear());
+        this._dom.querySelector('button#show').addEventListener('click', _ => this._logger.show());
+        this._dom.querySelector('button#hide').addEventListener('click', _ => this._logger.hide());
     }
 
     _showProgress(state) {
