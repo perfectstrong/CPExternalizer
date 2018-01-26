@@ -1,6 +1,12 @@
 // var { remote } = require('electron');
 let cp = require('child_process');
 
+/**
+ * Clear all child nodes
+ * 
+ * @param {Element} node 
+ * @returns {Boolean} false = failed
+ */
 function clearNode(node) {
     while (node.firstChild) {
         node.removeChild(node.firstChild);
@@ -8,6 +14,12 @@ function clearNode(node) {
     return true;
 }
 
+/**
+ * Add the "adding" button to a file descriptor
+ * 
+ * @param {Element} fileChooser the parent button to trigger file choosing window again
+ * @returns {Element}
+ */
 function btnPlus(fileChooser) {
     let btn = document.createElement('button');
     btn.classList.add('btn', 'btn-mini', 'btn-positive', 'fa', 'fa-plus');
@@ -17,6 +29,12 @@ function btnPlus(fileChooser) {
     return btn;
 }
 
+/**
+ * Add the "deleting" button to a file descriptor
+ * 
+ * @param {Element} descriptor the file descriptor itself
+ * @returns {Element}
+ */
 function btnDelete(descriptor) {
     let btn = document.createElement('button');
     btn.classList.add('btn', 'btn-mini', 'btn-negative', 'fa', 'fa-times');
@@ -26,6 +44,14 @@ function btnDelete(descriptor) {
     return btn;
 }
 
+/**
+ * Create a new file descriptor for a chosen file
+ * 
+ * @param {File} file 
+ * @param {Boolean} addable if the field allows multiple choice, this should be "true"
+ * @param {Element} fileChooser the file choosing button
+ * @returns {Element}
+ */
 function newDescriptor(file, addable, fileChooser) {
     let div = document.createElement('div');
     div.classList.add('descriptor');
@@ -45,6 +71,11 @@ function newDescriptor(file, addable, fileChooser) {
     return div;
 }
 
+/**
+ * Handler for multiple file chooser
+ * 
+ * @param {Event} e 
+ */
 function handleMultipleSelect(e) {
     let files = Array.from(e.target.files);
     // Render view
@@ -52,6 +83,11 @@ function handleMultipleSelect(e) {
     files.forEach(f => chosenFiles.appendChild(newDescriptor(f, true, e.target)));
 }
 
+/**
+ * Handler for single file chooser
+ * 
+ * @param {Event} e 
+ */
 function handleSingleSelect(e) {
     let file = e.target.files[0];
     // Render view
@@ -60,46 +96,8 @@ function handleSingleSelect(e) {
     chosenFile.appendChild(newDescriptor(file));
 }
 
-// function showProgress(section, state) {
-//     let progress = section.querySelector('#progress');
-//     if (!progress) return;
-//     progress.style.display = 'inline-block';
-//     switch (state) {
-//         case 'running':
-//             progress.className = 'fa fa-cog fa-spin';
-//             break;
-//         case 'success':
-//             progress.className = 'fa fa-check';
-//             break;
-//         case 'fail':
-//             progress.className = 'fa fa-times';
-//             break;
-//         default:
-//             process.className = '';
-//             break;
-//     }
-// }
-
-// function showMessage(section, msg) {
-//     let info = section.querySelector('#info');
-//     if (!info) return;
-//     info.style.display = 'inline-block';
-//     info.innerHTML = msg;
-// }
-
-// function fail(section, msg) {
-//     showProgress(section, 'fail');
-//     showMessage(section, msg);
-// }
-
-// function addLoggerListeners(section, logger) {
-//     section.querySelector('button#clear').addEventListener('click', logger.clear);
-//     section.querySelector('button#show').addEventListener('click', logger.show);
-//     section.querySelector('button#hide').addEventListener('click', logger.hide);
-// }
-
 /**
- * 
+ * Get value from single file chooser
  * 
  * @param {Element} chooser 
  * @returns {any} undefined if input not found
@@ -114,7 +112,7 @@ function getSingleValue(chooser) {
 }
 
 /**
- * 
+ * Get values from multiple file chooser
  * 
  * @param {Element} chooser 
  * @returns {any[]} [] if input not found
@@ -218,6 +216,12 @@ class Section {
         domSection.querySelectorAll('.chooser').forEach(chooser => this._choosers.push(chooser));
     }
 
+    /**
+     * Add handlers for file choosers, listeners for loggers and handler for main button
+     * 
+     * 
+     * @memberOf Section
+     */
     render() {
         this._addChooserHandler();
         this._addLoggerListeners();
@@ -240,6 +244,7 @@ class Section {
                 });
             } catch (error) {
                 this._fail(error);
+                return ;
             }
             // Launch api
             this._showProgress('running');
