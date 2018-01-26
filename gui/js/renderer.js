@@ -1,5 +1,5 @@
-// var { remote } = require('electron');
 let cp = require('child_process');
+let path = require('path');
 
 /**
  * Clear all child nodes
@@ -47,7 +47,7 @@ function btnDelete(descriptor) {
 /**
  * Create a new file descriptor for a chosen file
  * 
- * @param {File} file 
+ * @param {File} file or at least has "path" proprerty
  * @param {Boolean} addable if the field allows multiple choice, this should be "true"
  * @param {Element} fileChooser the file choosing button
  * @returns {Element}
@@ -126,6 +126,22 @@ function getMultipleValues(chooser) {
     values = values.filter(e => e != null);
     if (values.length == 0) throw new Error('Invalid input value(s)!');
     return values;
+}
+
+/**
+ * Set a single or multiple values for a chooser
+ * 
+ * @param {any} value if single value: have at least "path" property. If multiple values: each one has to have "path" property.
+ * @param {Element} chooser 
+ */
+function setDefaultValue(value, chooser) {
+    let chosenField = chooser.querySelector('.chosen');
+    if (Array.isArray(value)) {
+        value.forEach(f => chosenField.appendChild(newDescriptor(f, true, e.target)));
+    } else {
+        clearNode(chosenField);
+        chosenField.appendChild(newDescriptor(value));
+    }
 }
 
 /**
@@ -228,7 +244,7 @@ class Section {
         this._addButtonHandler();
     }
 
-    _addButtonHandler(){
+    _addButtonHandler() {
         let button = this._dom.querySelector('button[id^="btn-"]');
         if (!button) throw new Error('Main button not found!');
         button.addEventListener('click', ev => {
@@ -244,7 +260,7 @@ class Section {
                 });
             } catch (error) {
                 this._fail(error);
-                return ;
+                return;
             }
             // Launch api
             this._showProgress('running');
@@ -333,3 +349,6 @@ class Section {
 let sectionIds = ['extract', 'xcpextract', 'dirextract', 'soundfix'],
     sections = sectionIds.map(id => new Section(document.querySelector('section#' + id)));
 sections.forEach(section => section.render());
+
+// Set default samplePath
+setDefaultValue({path: path.join(process.cwd(), './resources/CPM-sample.js')}, document.querySelector('section#xcpextract .chooser#samplePath'));

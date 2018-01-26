@@ -16,55 +16,30 @@ const Promise = require('bluebird');
 let api = require(process.cwd() + '/api');
 
 process.on('message', (msg) => {
-    let args = msg.args;
+    let args = msg.args,
+        cmd = () => Promise.resolve();
     switch (msg.command) {
         case 'dirextract':
-            api.dirextract(args.src, args.outdir)
-                .then(() => {
-                    process.send(log + 'Done!');
-                    process.send(true);
-                })
-                .catch((error) => {
-                    process.send(err + error);
-                    process.send(false);
-                });
+            cmd = () => api.dirextract(args.src, args.outdir);
             break;
         case 'soundfix':
-            api.soundfix(args.src, args.ulpath)
-                .then(() => {
-                    process.send(log + 'Done!');
-                    process.send(true);
-                })
-                .catch((error) => {
-                    process.send(err + error);
-                    process.send(false);
-                });
+            cmd = () => api.soundfix(args.src, args.ulpath);
             break;
         case 'xcpextract':
-            api.xcpextract(args.src, args.outdir)
-                .then(() => {
-                    process.send(log + 'Done!');
-                    process.send(true);
-                })
-                .catch((error) => {
-                    process.send(err + error);
-                    process.send(false);
-                });
+            cmd = () => api.xcpextract(args.src, args.outdir, args.samplePath);
             break;
         case 'extract':
-            api.extract(args.src, args.outdir)
-                .then(() => {
-                    process.send(log + 'Done!');
-                    process.send(true);
-                })
-                .catch((error) => {
-                    process.send(err + error);
-                    process.send(false);
-                });
+            cmd = () => api.extract(args.src, args.outdir);
             break;
         default:
             process.send('Unknown command');
             process.send(false);
+            return ;
             break;
     }
+    // Run cmd
+    cmd().then(() => {
+        process.send(log + 'Done!');
+        process.send(true);
+    });
 });

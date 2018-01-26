@@ -58,10 +58,10 @@
       <!-- Soundfix -->
       <section id="soundfix">
         <h2>Sound fixing</h2>
-        <p>Fixing audio source in CPProjInit. Use it when the common loader does not find out the audio files.</p>
+        <p>Fixing missing audio source in project initiator. Use it when the common loader does not find out the audio files.</p>
         <div class="block">
           <!-- File chooser -->
-          <p>Initiator files and/or directories to find initiators. Only accept js file. All other types are ignored.</p>
+          <p>Initiators. Only accept js file. All other types are ignored.</p>
           <div class="chooser" id="src">
             <input type="file" accept=".js" multiple/>
             <div class="chosen">
@@ -141,10 +141,10 @@
       <!-- XcpExtract -->
       <section id="xcpextract">
         <h2>Extra components</h2>
-        <p>Extract the components which do not exist in CPM-full.js</p>
+        <p>Extract the components still uncovered.</p>
         <div class="block">
           <!-- File chooser -->
-          <p>Path(s) to CPM.js.</p>
+          <p>Path(s) to original CPM.js.</p>
           <div class="chooser" id="src">
             <input type="file" accept=".js" multiple/>
             <div class="chosen">
@@ -159,6 +159,16 @@
             <input type="file" webkitdirectory/>
             <div class="chosen">
               <!-- Currently chosen directory -->
+            </div>
+          </div>
+        </div>
+        <div class="block">
+          <p>Sample file to compare.</p>
+          <!-- File chooser -->
+          <div class="chooser" id="samplePath">
+            <input type="file" accept=".js" value="../resources/CPM-sample.js"/>
+            <div class="chosen">
+              <!-- Currently chosen file -->
             </div>
           </div>
         </div>
