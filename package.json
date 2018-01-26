@@ -26,7 +26,7 @@
     "url": "https://github.com/perfectstrong/CPExternalizer.git"
   },
   "devDependencies": {
-    "electron": "^1.7.10"
+    "electron": "^1.8.1"
   },
   "bundledDependencies": [
     "bluebird",
