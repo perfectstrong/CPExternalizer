@@ -1,4 +1,0 @@
-# ignore GUI to build CLI
-gui/
-.vscode/
-test/
