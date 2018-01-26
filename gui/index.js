@@ -13,7 +13,7 @@ app.on('ready', () => {
         titleBarStyle : 'hidden',
     });
     window.loadURL(url.format({
-        pathname: path.join(__dirname, 'gui', 'index.html'),
+        pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true
     }));

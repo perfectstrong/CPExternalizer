@@ -4,8 +4,7 @@
   "description": "Simplify Adobe Captivate HTML5 exported module",
   "main": "api.js",
   "scripts": {
-    "start:gui": "./node_modules/.bin/electron ./gui/index.js",
-    "build:cli": "npm pack"
+    "start:gui": "./node_modules/.bin/electron ./gui/index.js"
   },
   "keywords": [
     "Adobe Captivate",
