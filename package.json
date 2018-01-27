@@ -1,6 +1,6 @@
 {
   "name": "cpexternalizer",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "Simplify Adobe Captivate HTML5 exported module",
   "main": "main.js",
   "scripts": {},
