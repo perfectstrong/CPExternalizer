@@ -88,11 +88,11 @@ function extract(src, outdir) {
 }
 
 /**
- * Extracting components in CPM.js which does not exist in CPM-sample.js at moment
+ * Extracting components in CPM.js which are not covered in the sample at moment
  * 
  * @param {Array.<String>} src File paths to exported CPM.js by Adobe Captivate
  * @param {String} outdir Where to save output. Default is the current directory
- * @param {String} samplePath path to CPM-sample.js
+ * @param {String} samplePath path to sample CPM.js file
  * @returns {Promise}
  */
 function xcpExtract(src, outdir, samplePath) {

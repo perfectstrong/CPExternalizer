@@ -2,21 +2,25 @@
   "name": "cpexternalizer",
   "version": "0.5.0",
   "description": "Simplify Adobe Captivate HTML5 exported module",
-  "main": "api.js",
-  "scripts": {
-    "start:gui": "./node_modules/.bin/electron ./gui/index.js"
-  },
+  "main": "main.js",
+  "scripts": {},
   "keywords": [
     "Adobe Captivate",
-    "HTML5"
+    "HTML5",
+    "javascript",
+    "refactoring tools"
   ],
-  "author": "TRAN Quoc Nhat Han",
+  "bugs": {
+    "url": "https://github.com/perfectstrong/CPExternalizer/issues",
+    "email": "quoc_nhat_han.tran@utt.fr"
+  },
+  "author": {
+    "name": "TRAN Quoc Nhat Han",
+    "email": "quoc_nhat_han.tran@utt.fr"
+  },
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.5.1",
-    "command-line-args": "^4.0.7",
-    "command-line-commands": "^2.0.1",
-    "command-line-usage": "^4.0.1",
     "js-beautify": "^1.7.4",
     "sander": "^0.6.0",
     "text-diff": "^1.0.1"
@@ -25,16 +29,5 @@
     "type": "git",
     "url": "https://github.com/perfectstrong/CPExternalizer.git"
   },
-  "devDependencies": {
-    "electron": "^1.8.1"
-  },
-  "bundledDependencies": [
-    "bluebird",
-    "command-line-args",
-    "command-line-commands",
-    "command-line-usage",
-    "js-beautify",
-    "sander",
-    "text-diff"
-  ]
+  "devDependencies": {}
 }
