@@ -4,13 +4,19 @@
   "description": "Simplify Adobe Captivate HTML5 exported module",
   "main": "api.js",
   "scripts": {
-    "start:gui": "./node_modules/.bin/electron ./gui/index.js"
   },
   "keywords": [
     "Adobe Captivate",
     "HTML5"
   ],
-  "author": "TRAN Quoc Nhat Han",
+  "bugs": {
+    "url": "https://github.com/perfectstrong/CPExternalizer/issues",
+    "email": "quoc_nhat_han.tran@utt.fr"
+  },
+  "author": {
+    "name": "TRAN Quoc Nhat Han",
+    "email": "quoc_nhat_han.tran@utt.fr"
+  },
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.5.1",
